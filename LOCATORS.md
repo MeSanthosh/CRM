@@ -1,0 +1,249 @@
+# Locator reference — qa-crm.asquareab.com
+
+Captured from the live app (build v1.0 0510-44) on 2026-10-08. Every locator below was verified to match exactly one element (table-row locators match each row).
+
+Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` · CSS: `By.cssSelector("…")` (CSS using `:text-is()` is Playwright-only; in Selenium use the XPath). In code, import them from `tests/locators.ts`.
+
+## Reports & Analytics hub (`/reports-analytics`)
+
+| Element | XPath | CSS |
+|---|---|---|
+| KPI: Active Leads | `//div[contains(@class,'crm-module-hub-kpi')][span[normalize-space()='Active Leads']]/strong` | `div.crm-module-hub-kpi:has(> span:text-is("Active Leads")) > strong` |
+| KPI: Open Opportunities | `//div[contains(@class,'crm-module-hub-kpi')][span[normalize-space()='Open Opportunities']]/strong` | `div.crm-module-hub-kpi:has(> span:text-is("Open Opportunities")) > strong` |
+| KPI: Units Available | `//div[contains(@class,'crm-module-hub-kpi')][span[normalize-space()='Units Available']]/strong` | `div.crm-module-hub-kpi:has(> span:text-is("Units Available")) > strong` |
+| KPI: Units Reserved | `//div[contains(@class,'crm-module-hub-kpi')][span[normalize-space()='Units Reserved']]/strong` | `div.crm-module-hub-kpi:has(> span:text-is("Units Reserved")) > strong` |
+| KPI: Units Sold | `//div[contains(@class,'crm-module-hub-kpi')][span[normalize-space()='Units Sold']]/strong` | `div.crm-module-hub-kpi:has(> span:text-is("Units Sold")) > strong` |
+| KPI: Pipeline Value | `//div[contains(@class,'crm-module-hub-kpi')][span[normalize-space()='Pipeline Value']]/strong` | `div.crm-module-hub-kpi:has(> span:text-is("Pipeline Value")) > strong` |
+| KPI: Weighted Pipeline | `//div[contains(@class,'crm-module-hub-kpi')][span[normalize-space()='Weighted Pipeline']]/strong` | `div.crm-module-hub-kpi:has(> span:text-is("Weighted Pipeline")) > strong` |
+| KPI: SPA Value Signed (This Month) | `//div[contains(@class,'crm-module-hub-kpi')][span[normalize-space()='SPA Value Signed (This Month)']]/strong` | `div.crm-module-hub-kpi:has(> span:text-is("SPA Value Signed (This Month)")) > strong` |
+| Module card: Lead Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/leads']` | `a.crm-module-hub-card[href="/reports/leads"]` |
+| Module card: Sales Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/sales']` | `a.crm-module-hub-card[href="/reports/sales"]` |
+| Module card: Inventory Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/inventory']` | `a.crm-module-hub-card[href="/reports/inventory"]` |
+| Module card: Customer Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/customers']` | `a.crm-module-hub-card[href="/reports/customers"]` |
+| Module card: Broker Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/brokers']` | `a.crm-module-hub-card[href="/reports/brokers"]` |
+| Module card: Marketing Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/marketing']` | `a.crm-module-hub-card[href="/reports/marketing"]` |
+| Module card: Reservation Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/reservations']` | `a.crm-module-hub-card[href="/reports/reservations"]` |
+| Module card: SPA Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/spa']` | `a.crm-module-hub-card[href="/reports/spa"]` |
+| Module card: Collection Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/collections']` | `a.crm-module-hub-card[href="/reports/collections"]` |
+| Module card: Executive Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/']` | `a.crm-module-hub-card[href="/"]` |
+| Module card: Exception Reports | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/exceptions']` | `a.crm-module-hub-card[href="/reports/exceptions"]` |
+| Module status badge (e.g. Lead Reports) | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/leads']//span[contains(@class,'crm-module-hub-status')]` | `a.crm-module-hub-card[href="/reports/leads"] span.crm-module-hub-status` |
+| "11 live" summary | `//span[contains(@class,'crm-module-hub-status') and contains(@class,'is-live')][contains(normalize-space(),'live')]` | `span.crm-module-hub-status.is-live` |
+| Open Dashboard button | `//a[contains(@class,'crm-secondary-button')][normalize-space()='Open Dashboard']` |  |
+
+## Leads (`/leads`)
+
+| Element | XPath | CSS |
+|---|---|---|
+| KPI: Total Leads | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Total Leads']]/strong` |  |
+| KPI: Assigned | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Assigned']]/strong` |  |
+| KPI: Qualified | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Qualified']]/strong` |  |
+| KPI: Disqualified | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Disqualified']]/strong` |  |
+| KPI: Avg Score | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Avg Score']]/strong` |  |
+| Tab badge: All Leads | `//a[@role='tab'][contains(@class,'crm-leads-tab')][starts-with(normalize-space(),'All Leads')]/span[contains(@class,'crm-leads-tab-count')]` |  |
+| Tab badge: My Leads | `//a[@role='tab'][contains(@class,'crm-leads-tab')][starts-with(normalize-space(),'My Leads')]/span[contains(@class,'crm-leads-tab-count')]` |  |
+| Tab badge: Unassigned | `//a[@role='tab'][contains(@class,'crm-leads-tab')][starts-with(normalize-space(),'Unassigned')]/span[contains(@class,'crm-leads-tab-count')]` |  |
+| Tab badge: To Qualify | `//a[@role='tab'][contains(@class,'crm-leads-tab')][starts-with(normalize-space(),'To Qualify')]/span[contains(@class,'crm-leads-tab-count')]` |  |
+| Tab badge: Ready to Convert | `//a[@role='tab'][contains(@class,'crm-leads-tab')][starts-with(normalize-space(),'Ready to Convert')]/span[contains(@class,'crm-leads-tab-count')]` |  |
+| Type chip: All | `//button[contains(@class,'crm-leads-type-chip')][normalize-space()='All']` |  |
+| Type chip: Individual | `//button[contains(@class,'crm-leads-type-chip')][normalize-space()='Individual']` |  |
+| Type chip: Corporate | `//button[contains(@class,'crm-leads-type-chip')][normalize-space()='Corporate']` |  |
+| Status filter | `//select[@aria-label='Filter by status']` | `select[aria-label="Filter by status"]` |
+| Campaign filter | `//select[@aria-label='Filter by campaign']` | `select[aria-label="Filter by campaign"]` |
+| Search box | `//input[@placeholder='Search name, lead no, company, phone, email']` | `input[placeholder="Search name, lead no, company, phone, email"]` |
+| Export button | `//button[contains(@class,'crm-export-button')]` | `button.crm-export-button` |
+| Leads table | `//table[contains(@class,'crm-leads-inbox-table')]` | `table.crm-leads-inbox-table` |
+| Table rows | `//table[contains(@class,'crm-leads-inbox-table')]/tbody/tr` | `table.crm-leads-inbox-table > tbody > tr` |
+| Pager text ("Page 1 of 25 · 615 leads") | `//div[contains(@class,'crm-pagination')]/span` | `div.crm-pagination > span` |
+| Next page | `//div[contains(@class,'crm-pagination')]//button[normalize-space()='Next']` |  |
+| Previous page | `//div[contains(@class,'crm-pagination')]//button[normalize-space()='Previous']` |  |
+
+## Executive Dashboard (`/`)
+
+| Element | XPath | CSS |
+|---|---|---|
+| KPI: Active Leads | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Active Leads']]/strong` |  |
+| KPI: Converted Leads | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Converted Leads']]/strong` |  |
+| KPI: Open Opportunities | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Open Opportunities']]/strong` |  |
+| KPI: Reserved Units | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Reserved Units']]/strong` |  |
+| KPI: SPAs Executed | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='SPAs Executed']]/strong` |  |
+| KPI: Units Available | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Units Available']]/strong` |  |
+| KPI: Sales Value (SPAs) | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Sales Value (SPAs)']]/strong` |  |
+| KPI: Collections Received | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Collections Received']]/strong` |  |
+| KPI: Outstanding Amount | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Outstanding Amount']]/strong` |  |
+| KPI: Won Opportunities | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Won Opportunities']]/strong` |  |
+
+## Report modules — common controls
+
+| Element | XPath | CSS |
+|---|---|---|
+| Period filter (This month, Last month, …) | `//select[contains(@class,'crm-input')][option[@value='this_month']]` | `select.crm-input:has(option[value="this_month"])` |
+| Reset filters | `//button[normalize-space()='Reset filters']` |  |
+| View: All | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='All']` |  |
+| View: You and your team | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='You and your team']` |  |
+| View: Mine | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='Mine']` |  |
+| Report tab (e.g. Sales) | `//button[contains(@class,'crm-tab-button')][normalize-space()='Sales']` | `button.crm-tab-button` |
+| Any KPI value (template) | `//article[contains(@class,'crm-card')][h3[normalize-space()='<Label>']]/div[contains(@class,'crm-kpi')]` | `article.crm-card:has(> h3) > div.crm-kpi` |
+| Table by heading (template) | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='<Heading>']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |  |
+| Table rows (template) | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='<Heading>']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]/tbody/tr` |  |
+| Panel Export (template) | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='<Heading>']]//button[contains(@class,'crm-export-button')]` |  |
+
+## Lead Reports (`/reports/leads`)
+
+| Element | XPath |
+|---|---|
+| KPI: Leads Captured | `//article[contains(@class,'crm-card')][h3[normalize-space()='Leads Captured']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Contact Rate | `//article[contains(@class,'crm-card')][h3[normalize-space()='Contact Rate']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Qualification Rate | `//article[contains(@class,'crm-card')][h3[normalize-space()='Qualification Rate']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Opportunity Conversion | `//article[contains(@class,'crm-card')][h3[normalize-space()='Opportunity Conversion']]/div[contains(@class,'crm-kpi')]` |
+| KPI: SPA Signed | `//article[contains(@class,'crm-card')][h3[normalize-space()='SPA Signed']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Won Value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Won Value']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Open Leads Now | `//article[contains(@class,'crm-card')][h3[normalize-space()='Open Leads Now']]/div[contains(@class,'crm-kpi')]` |
+
+## Sales Reports (`/reports/sales`)
+
+| Element | XPath |
+|---|---|
+| KPI: Open opportunities | `//article[contains(@class,'crm-card')][h3[normalize-space()='Open opportunities']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Pipeline value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Pipeline value']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Weighted pipeline | `//article[contains(@class,'crm-card')][h3[normalize-space()='Weighted pipeline']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Won in period | `//article[contains(@class,'crm-card')][h3[normalize-space()='Won in period']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Won value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Won value']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Win rate | `//article[contains(@class,'crm-card')][h3[normalize-space()='Win rate']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Past expected close | `//article[contains(@class,'crm-card')][h3[normalize-space()='Past expected close']]/div[contains(@class,'crm-kpi')]` |
+| Table: Open Pipeline by Stage | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Open Pipeline by Stage']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Salesperson Pipeline | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Salesperson Pipeline']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Open Opportunities | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Open Opportunities']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## Inventory Reports (`/reports/inventory`)
+
+| Element | XPath |
+|---|---|
+| KPI: Total units | `//article[contains(@class,'crm-card')][h3[normalize-space()='Total units']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Available | `//article[contains(@class,'crm-card')][h3[normalize-space()='Available']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Reserved | `//article[contains(@class,'crm-card')][h3[normalize-space()='Reserved']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Sold | `//article[contains(@class,'crm-card')][h3[normalize-space()='Sold']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Sold % | `//article[contains(@class,'crm-card')][h3[normalize-space()='Sold %']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Available value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Available value']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Average available price | `//article[contains(@class,'crm-card')][h3[normalize-space()='Average available price']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Sold in period | `//article[contains(@class,'crm-card')][h3[normalize-space()='Sold in period']]/div[contains(@class,'crm-kpi')]` |
+| Table: Availability Summary | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Availability Summary']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Inventory by Project | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Inventory by Project']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Inventory by Unit Type | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Inventory by Unit Type']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Inventory by Bedrooms | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Inventory by Bedrooms']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Available Units | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Available Units']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## Customer Reports (`/reports/customers`)
+
+| Element | XPath |
+|---|---|
+| KPI: Active customers | `//article[contains(@class,'crm-card')][h3[normalize-space()='Active customers']]/div[contains(@class,'crm-kpi')]` |
+| KPI: New in period | `//article[contains(@class,'crm-card')][h3[normalize-space()='New in period']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Customers with SPA | `//article[contains(@class,'crm-card')][h3[normalize-space()='Customers with SPA']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Repeat buyers | `//article[contains(@class,'crm-card')][h3[normalize-space()='Repeat buyers']]/div[contains(@class,'crm-kpi')]` |
+| KPI: SPA value | `//article[contains(@class,'crm-card')][h3[normalize-space()='SPA value']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Average value per buyer | `//article[contains(@class,'crm-card')][h3[normalize-space()='Average value per buyer']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Portal access | `//article[contains(@class,'crm-card')][h3[normalize-space()='Portal access']]/div[contains(@class,'crm-kpi')]` |
+| Table: Customers by Nationality | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Customers by Nationality']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Customers by Country of Residence | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Customers by Country of Residence']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Customers by Type | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Customers by Type']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: New Customers in Period | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='New Customers in Period']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## Broker Reports (`/reports/brokers`)
+
+| Element | XPath |
+|---|---|
+| KPI: Active brokers | `//article[contains(@class,'crm-card')][h3[normalize-space()='Active brokers']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Brokers with SPA | `//article[contains(@class,'crm-card')][h3[normalize-space()='Brokers with SPA']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Broker leads | `//article[contains(@class,'crm-card')][h3[normalize-space()='Broker leads']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Broker reservations | `//article[contains(@class,'crm-card')][h3[normalize-space()='Broker reservations']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Broker SPAs | `//article[contains(@class,'crm-card')][h3[normalize-space()='Broker SPAs']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Broker SPA value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Broker SPA value']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Broker share of SPAs | `//article[contains(@class,'crm-card')][h3[normalize-space()='Broker share of SPAs']]/div[contains(@class,'crm-kpi')]` |
+| Table: Broker Performance | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Broker Performance']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## Marketing Reports (`/reports/marketing`)
+
+| Element | XPath |
+|---|---|
+| KPI: Running today | `//article[contains(@class,'crm-card')][h3[normalize-space()='Running today']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Campaign budget | `//article[contains(@class,'crm-card')][h3[normalize-space()='Campaign budget']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Campaign leads | `//article[contains(@class,'crm-card')][h3[normalize-space()='Campaign leads']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Leads to SPA | `//article[contains(@class,'crm-card')][h3[normalize-space()='Leads to SPA']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Revenue | `//article[contains(@class,'crm-card')][h3[normalize-space()='Revenue']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Cost per lead | `//article[contains(@class,'crm-card')][h3[normalize-space()='Cost per lead']]/div[contains(@class,'crm-kpi')]` |
+| KPI: ROI | `//article[contains(@class,'crm-card')][h3[normalize-space()='ROI']]/div[contains(@class,'crm-kpi')]` |
+| Table: Campaign Performance | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Campaign Performance']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Performance by Channel | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Performance by Channel']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## Reservation Reports (`/reports/reservations`)
+
+| Element | XPath |
+|---|---|
+| KPI: Reservations in period | `//article[contains(@class,'crm-card')][h3[normalize-space()='Reservations in period']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Reservation amount | `//article[contains(@class,'crm-card')][h3[normalize-space()='Reservation amount']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Converted to SPA | `//article[contains(@class,'crm-card')][h3[normalize-space()='Converted to SPA']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Conversion rate | `//article[contains(@class,'crm-card')][h3[normalize-space()='Conversion rate']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Active now | `//article[contains(@class,'crm-card')][h3[normalize-space()='Active now']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Expiring in 7 days | `//article[contains(@class,'crm-card')][h3[normalize-space()='Expiring in 7 days']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Past expiry, still active | `//article[contains(@class,'crm-card')][h3[normalize-space()='Past expiry, still active']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Deposit not received | `//article[contains(@class,'crm-card')][h3[normalize-space()='Deposit not received']]/div[contains(@class,'crm-kpi')]` |
+| Table: Reservations by Month | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Reservations by Month']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Reservations by Project | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Reservations by Project']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Reservations by Salesperson | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Reservations by Salesperson']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Active Reservations | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Active Reservations']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## SPA Reports (`/reports/spa`)
+
+| Element | XPath |
+|---|---|
+| KPI: SPAs signed in period | `//article[contains(@class,'crm-card')][h3[normalize-space()='SPAs signed in period']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Signed value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Signed value']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Average SPA value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Average SPA value']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Awaiting signature | `//article[contains(@class,'crm-card')][h3[normalize-space()='Awaiting signature']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Handed off to ERP | `//article[contains(@class,'crm-card')][h3[normalize-space()='Handed off to ERP']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Signed, KYC not approved | `//article[contains(@class,'crm-card')][h3[normalize-space()='Signed, KYC not approved']]/div[contains(@class,'crm-kpi')]` |
+| Table: SPAs Signed by Month | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='SPAs Signed by Month']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: SPAs by Project | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='SPAs by Project']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: SPAs by Salesperson | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='SPAs by Salesperson']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: SPAs Needing Action | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='SPAs Needing Action']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## Collection Reports (`/reports/collections`)
+
+| Element | XPath |
+|---|---|
+| KPI: Scheduled | `//article[contains(@class,'crm-card')][h3[normalize-space()='Scheduled']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Received | `//article[contains(@class,'crm-card')][h3[normalize-space()='Received']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Outstanding | `//article[contains(@class,'crm-card')][h3[normalize-space()='Outstanding']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Overdue | `//article[contains(@class,'crm-card')][h3[normalize-space()='Overdue']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Collection rate | `//article[contains(@class,'crm-card')][h3[normalize-space()='Collection rate']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Due in next 30 days | `//article[contains(@class,'crm-card')][h3[normalize-space()='Due in next 30 days']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Due in period | `//article[contains(@class,'crm-card')][h3[normalize-space()='Due in period']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Received of due in period | `//article[contains(@class,'crm-card')][h3[normalize-space()='Received of due in period']]/div[contains(@class,'crm-kpi')]` |
+| Table: Outstanding by Age | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Outstanding by Age']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Collections by Project | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Collections by Project']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table: Overdue Instalments | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Overdue Instalments']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## Exception Reports (`/reports/exceptions`)
+
+| Element | XPath |
+|---|---|
+| KPI: Open exceptions | `//article[contains(@class,'crm-card')][h3[normalize-space()='Open exceptions']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Overdue instalments | `//article[contains(@class,'crm-card')][h3[normalize-space()='Overdue instalments']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Reservations past expiry | `//article[contains(@class,'crm-card')][h3[normalize-space()='Reservations past expiry']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Expiring in 7 days | `//article[contains(@class,'crm-card')][h3[normalize-space()='Expiring in 7 days']]/div[contains(@class,'crm-kpi')]` |
+| KPI: SPAs unsigned > 14 days | `//article[contains(@class,'crm-card')][h3[normalize-space()='SPAs unsigned > 14 days']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Leads not contacted | `//article[contains(@class,'crm-card')][h3[normalize-space()='Leads not contacted']]/div[contains(@class,'crm-kpi')]` |
+| Table: Exception Summary | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Exception Summary']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## Ask the developers for `data-testid`
+
+The app has no test IDs. These attributes would make every locator above a one-liner that never breaks:
+
+| Element | Suggested attribute |
+|---|---|
+| KPI value (all pages) | `data-testid="kpi-<slug>"` e.g. `kpi-active-leads` |
+| Leads tab badge | `data-testid="leads-tab-count-<slug>"` |
+| Report table | `data-testid="report-table-<slug>"` |
+| Pager text | `data-testid="pager-summary"` |
+| Period filter | `aria-label="Report period"` (other filters on report pages also lack labels) |

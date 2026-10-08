@@ -1,0 +1,284 @@
+<title>CRM Reports Test Scope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, wide tables scroll in place; IDs set in mono like a test ledger */
+:root {
+  --bg: #f6f7f8;
+  --surface: #ffffff;
+  --fg: #1c2328;
+  --muted: #5b6770;
+  --line: #dde2e6;
+  --accent: #1f6b6b;
+  --accent-soft: #e3efee;
+  --warn: #8a5a00;
+  --warn-soft: #fbf0d9;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171a; --surface: #192024; --fg: #e3e8eb; --muted: #9aa6ae; --line: #2b353b;
+    --accent: #6cc3bd; --accent-soft: #1d3332; --warn: #e3b35c; --warn-soft: #33291a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171a; --surface: #192024; --fg: #e3e8eb; --muted: #9aa6ae; --line: #2b353b;
+  --accent: #6cc3bd; --accent-soft: #1d3332; --warn: #e3b35c; --warn-soft: #33291a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15.5px; line-height: 1.6; }
+.wrap { max-width: 880px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(2rem, 5vw, 2.6rem); }
+h2 { font-size: 1.55rem; }
+h3 { font-size: 1.1rem; font-family: var(--body); font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+section { display: grid; gap: 14px; }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.lede { font-size: 1.08rem; color: var(--muted); }
+header { display: grid; gap: 14px; border-bottom: 1px solid var(--line); padding-bottom: 28px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 0.88rem; color: var(--muted); }
+.meta b { color: var(--fg); font-weight: 600; }
+code, .id { font-family: var(--mono); font-size: 0.85em; }
+.id { color: var(--accent); white-space: nowrap; }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tfoot td { font-weight: 600; border-top: 1px solid var(--line); }
+.checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.check { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.check p { font-size: 0.92rem; color: var(--muted); }
+.check .ex { font-size: 0.85rem; color: var(--fg); }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.two > div { display: grid; gap: 10px; align-content: start; min-width: 0; }
+ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+li { max-width: 68ch; }
+.out li::marker { content: "✕  "; color: var(--muted); }
+.in li::marker { content: "✓  "; color: var(--accent); }
+.note { background: var(--warn-soft); border-radius: 6px; padding: 14px 16px; display: grid; gap: 8px; }
+.note h3 { color: var(--warn); }
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+.pill.opt { background: var(--warn-soft); color: var(--warn); }
+.src { color: var(--muted); }
+.src b { color: var(--fg); font-weight: 500; }
+ol.steps { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">QA automation · Test scope</div>
+  <h1>CRM Reports Test Scope</h1>
+  <p class="lede">What our automated suite checks in the CRM's Reports &amp; Analytics area, what it leaves out, and how to read the results.</p>
+  <div class="meta">
+    <span>Environment <b>qa-crm.asquareab.com</b></span>
+    <span>App build <b>v1.0 0510-44</b></span>
+    <span>Suite size <b>82 tests</b></span>
+    <span>Tool <b>Playwright (Chromium)</b></span>
+    <span>Updated <b>8 Oct 2026</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="eyebrow">Purpose</div>
+  <h2>Why we test this</h2>
+  <p>Management decisions rest on the numbers in these reports: lead counts, pipeline value, units sold, collections. A wrong or inconsistent number is a business defect even when the page looks fine. The suite checks that every number on these pages is valid, that the same metric shows the same value everywhere it appears, and that totals and percentages add up.</p>
+  <p>We only read data. No test creates, edits or deletes anything in the CRM or the database.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Coverage</div>
+  <h2>Pages in scope</h2>
+  <p>Report modules open on their default period, <b>This month</b>, which is the same period the hub and dashboard use.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Page</th><th>Route</th><th class="num">KPI cards</th><th class="num">Tables</th><th>Also covered</th></tr></thead>
+      <tbody>
+        <tr><td>Reports &amp; Analytics hub</td><td><code>/reports-analytics</code></td><td class="num">8</td><td class="num">–</td><td>11 module cards and their status badges</td></tr>
+        <tr><td>Executive Dashboard</td><td><code>/</code></td><td class="num">10</td><td class="num">–</td><td></td></tr>
+        <tr><td>Leads</td><td><code>/leads</code></td><td class="num">5</td><td class="num">1</td><td>5 tabs, 10 status filters, type chips, search, pagination, Excel export</td></tr>
+        <tr><td>Lead Reports</td><td><code>/reports/leads</code></td><td class="num">7</td><td class="num">0</td><td></td></tr>
+        <tr><td>Sales Reports</td><td><code>/reports/sales</code></td><td class="num">7</td><td class="num">3</td><td></td></tr>
+        <tr><td>Inventory Reports</td><td><code>/reports/inventory</code></td><td class="num">8</td><td class="num">5</td><td></td></tr>
+        <tr><td>Customer Reports</td><td><code>/reports/customers</code></td><td class="num">7</td><td class="num">4</td><td></td></tr>
+        <tr><td>Broker Reports</td><td><code>/reports/brokers</code></td><td class="num">7</td><td class="num">1</td><td></td></tr>
+        <tr><td>Marketing Reports</td><td><code>/reports/marketing</code></td><td class="num">7</td><td class="num">2</td><td></td></tr>
+        <tr><td>Reservation Reports</td><td><code>/reports/reservations</code></td><td class="num">8</td><td class="num">4</td><td></td></tr>
+        <tr><td>SPA Reports</td><td><code>/reports/spa</code></td><td class="num">6</td><td class="num">4</td><td></td></tr>
+        <tr><td>Collection Reports</td><td><code>/reports/collections</code></td><td class="num">8</td><td class="num">3</td><td></td></tr>
+        <tr><td>Exception Reports</td><td><code>/reports/exceptions</code></td><td class="num">6</td><td class="num">1</td><td></td></tr>
+      </tbody>
+      <tfoot><tr><td>13 pages</td><td></td><td class="num">94</td><td class="num">28</td><td></td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Approach</div>
+  <h2>Six kinds of checks</h2>
+  <div class="checks">
+    <div class="check">
+      <h3>Valid values</h3>
+      <p>Every KPI shows a real number: not blank, not "—", NaN, undefined or negative. Every table renders. Pages load with no JavaScript errors and no failed API calls.</p>
+    </div>
+    <div class="check">
+      <h3>UI matches API</h3>
+      <p>The hub's snapshot cards must match the numbers the backend actually returned.</p>
+      <p class="ex">This shows whether a wrong value comes from the front end or the backend.</p>
+    </div>
+    <div class="check">
+      <h3>Same metric, same value</h3>
+      <p>A metric that appears on several pages must show the same value on all of them (16 cases, listed below).</p>
+    </div>
+    <div class="check">
+      <h3>Math inside a page</h3>
+      <p>Parts add up to totals and percentages are correct (8 cases).</p>
+      <p class="ex">Example: Scheduled − Received = Outstanding on Collection Reports.</p>
+    </div>
+    <div class="check">
+      <h3>List counts</h3>
+      <p>On Leads: card = tab badge = pager = exported rows, and every tab and filter count adds up to the total (13 tests).</p>
+    </div>
+    <div class="check">
+      <h3>UI matches database <span class="pill opt">Optional</span></h3>
+      <p>KPI values compared with SQL counts on the QA PostgreSQL database (18 tests). Runs only when database access is set up.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Test inventory</div>
+  <h2>What each suite contains</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Suite</th><th>IDs</th><th class="num">Tests</th><th>Checks</th></tr></thead>
+      <tbody>
+        <tr><td>Reports hub</td><td><span class="id">RA-01…05</span></td><td class="num">5</td><td>Snapshot values valid, match the API, stable after reload, no errors, "N live" summary matches the cards</td></tr>
+        <tr><td>Module navigation</td><td><span class="id">RA-MOD-01…11</span></td><td class="num">11</td><td>Each module card opens the right page</td></tr>
+        <tr><td>Report modules</td><td><span class="id">RM-01…11</span></td><td class="num">11</td><td>Every KPI and table on each module page and the Executive Dashboard</td></tr>
+        <tr><td>Leads</td><td><span class="id">L-01…10</span></td><td class="num">13</td><td>Totals, assigned/unassigned split, tab badges, Individual + Corporate, status breakdown, search, pagination, export, Active Leads formula</td></tr>
+        <tr><td>Cross-page</td><td><span class="id">X-01…16</span></td><td class="num">16</td><td>Same metric agrees across pages</td></tr>
+        <tr><td>In-page math</td><td><span class="id">M-01…08</span></td><td class="num">8</td><td>Sums, differences and percentages</td></tr>
+        <tr><td>Database <span class="pill opt">Optional</span></td><td><span class="id">DB-RA-01…08</span>, <span class="id">DB-L-01…10</span></td><td class="num">18</td><td>Hub and Leads values against SQL</td></tr>
+      </tbody>
+      <tfoot><tr><td>Total</td><td></td><td class="num">82</td><td></td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Cross-page consistency</div>
+  <h2>Metrics that must agree across pages</h2>
+  <p>If any one of these sources shows a different value, the test fails and the report lists every value it read.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>ID</th><th>Metric</th><th>Compared on</th></tr></thead>
+      <tbody>
+        <tr><td class="id">X-01</td><td>Active leads</td><td class="src"><b>Hub</b> Active Leads · <b>Dashboard</b> Active Leads · <b>Lead Reports</b> Open Leads Now</td></tr>
+        <tr><td class="id">X-02</td><td>Open opportunities</td><td class="src"><b>Hub</b> · <b>Dashboard</b> · <b>Sales Reports</b> KPI and table rows</td></tr>
+        <tr><td class="id">X-03</td><td>Pipeline value</td><td class="src"><b>Hub</b> · <b>Sales Reports</b></td></tr>
+        <tr><td class="id">X-04</td><td>Weighted pipeline</td><td class="src"><b>Hub</b> · <b>Sales Reports</b></td></tr>
+        <tr><td class="id">X-05</td><td>Units available</td><td class="src"><b>Hub</b> · <b>Dashboard</b> · <b>Inventory Reports</b> KPI and Available Units rows</td></tr>
+        <tr><td class="id">X-06</td><td>Units reserved</td><td class="src"><b>Hub</b> · <b>Dashboard</b> Reserved Units · <b>Inventory Reports</b> Reserved</td></tr>
+        <tr><td class="id">X-07</td><td>Units sold</td><td class="src"><b>Hub</b> · <b>Inventory Reports</b></td></tr>
+        <tr><td class="id">X-08</td><td>SPA value signed this month</td><td class="src"><b>Hub</b> · <b>Dashboard</b> Sales Value (SPAs) · <b>SPA Reports</b> Signed value</td></tr>
+        <tr><td class="id">X-09</td><td>SPAs signed this month</td><td class="src"><b>Dashboard</b> SPAs Executed · <b>SPA Reports</b> · <b>Lead Reports</b> SPA Signed</td></tr>
+        <tr><td class="id">X-10</td><td>Won opportunities this month</td><td class="src"><b>Dashboard</b> · <b>Sales Reports</b> Won in period</td></tr>
+        <tr><td class="id">X-11</td><td>Collections received</td><td class="src"><b>Dashboard</b> · <b>Collection Reports</b> Received</td></tr>
+        <tr><td class="id">X-12</td><td>Outstanding amount</td><td class="src"><b>Dashboard</b> · <b>Collection Reports</b> Outstanding</td></tr>
+        <tr><td class="id">X-13</td><td>Reservations past expiry</td><td class="src"><b>Reservation Reports</b> · <b>Exception Reports</b></td></tr>
+        <tr><td class="id">X-14</td><td>Active reservations</td><td class="src"><b>Reservation Reports</b> Active now KPI and Active Reservations rows</td></tr>
+        <tr><td class="id">X-15</td><td>Reservations expiring in 7 days</td><td class="src"><b>Reservation Reports</b> · <b>Exception Reports</b></td></tr>
+        <tr><td class="id">X-16</td><td>Won value</td><td class="src"><b>Lead Reports</b> · <b>Sales Reports</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Boundaries</div>
+  <h2>In scope and out of scope</h2>
+  <div class="two">
+    <div>
+      <h3>In scope</h3>
+      <ul class="in">
+        <li>Correctness and consistency of every count, amount and percentage on the 13 pages above</li>
+        <li>Default period (This month) and default view</li>
+        <li>Leads list: tabs, status filter, Individual/Corporate chips, search, first-page pagination, Excel export row count</li>
+        <li>Navigation from the hub to each report module</li>
+        <li>JavaScript errors and failed API calls on report pages</li>
+        <li>UI against API responses, and UI against the database when access is set up</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Out of scope</h3>
+      <ul class="out">
+        <li>Creating, editing or deleting records</li>
+        <li>Other periods (Last month, custom ranges) and the "You and your team" / "Mine" views</li>
+        <li>Campaign filter, report-tab switching and per-panel exports on module pages</li>
+        <li>Charts and graphs (we read KPI cards and tables only)</li>
+        <li>Field-level accuracy of individual records (we check counts and totals)</li>
+        <li>Login and permissions, security, performance and load</li>
+        <li>Browsers other than Chromium, mobile layouts (tests use a 1440×900 desktop window), accessibility, visual design</li>
+        <li>Production. Tests run against QA only</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Read before acting on results</div>
+  <h2>Assumptions and known limits</h2>
+  <div class="note">
+    <h3>Things that can cause a failure that isn't an app bug</h3>
+    <ul>
+      <li><b>Live data.</b> QA data changes while tests run. A cross-page test reads pages one after another, so a record added in between can cause a one-off mismatch. Re-run before you log a defect.</li>
+      <li><b>Rounded display values.</b> Amounts like "2.18B" are rounded on screen, so value comparisons allow 0.5% tolerance. Counts must match exactly.</li>
+      <li><b>Label-based locators.</b> The app has no <code>data-testid</code> attributes, so tests find elements by their visible labels. Renaming a KPI or table heading breaks the test, not the feature. We've asked the developers for test IDs (see <code>LOCATORS.md</code>).</li>
+      <li><b>Login session.</b> Tests reuse a saved login. When it expires, every test fails until someone logs in again.</li>
+      <li><b>Database checks are provisional.</b> The SQL table and column names are first guesses until we map them to the real schema. <span class="id">DB-L-09</span> (My Leads) is skipped because it depends on who is logged in. Database access is not yet working; we're waiting on valid credentials.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Output</div>
+  <h2>How results reach the team</h2>
+  <p>Every run writes an Excel defect report to <code>reports/CRM_Defect_Report_&lt;date&gt;_&lt;time&gt;.xlsx</code>, with three sheets:</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Sheet</th><th>Contents</th></tr></thead>
+      <tbody>
+        <tr><td>Summary</td><td>Run date, environment, pass/fail/skip totals, pass rate, defects by severity and module</td></tr>
+        <tr><td>Defects</td><td>One row per failed case: defect ID, test case ID, module, page URL, severity (P1–P4), steps to reproduce, expected vs actual, observed values, screenshot, and <b>Status / Assigned To / Dev Comments</b> columns for developers</td></tr>
+        <tr><td>All Results</td><td>Every test case with its status, duration and a one-line failure summary</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>When sharing the report, send the <code>test-results</code> folder with it so the screenshot links work. A Playwright HTML report with traces is also available for debugging.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Running it</div>
+  <h2>How to run the suite</h2>
+  <ol class="steps">
+    <li>One-time setup: <code>npm install</code>, then <code>npx playwright install chromium</code></li>
+    <li>Save a login: <code>npm run login</code>, sign in to QA in the browser that opens, then close it</li>
+    <li>Run everything: <code>npm test</code> (about 4 tests in parallel, headless)</li>
+    <li>Run one area: <code>npx playwright test consistency</code>, or one case: <code>npx playwright test -g "X-05"</code></li>
+    <li>Optional database checks: fill in <code>.env</code>, then <code>npm run db:check</code> and <code>npm run test:db</code></li>
+  </ol>
+</section>
+
+<footer>Source of truth for test wording, severity and steps: <code>tests/test-catalog.ts</code>. Locators: <code>tests/locators.ts</code>.</footer>
+
+</div>
