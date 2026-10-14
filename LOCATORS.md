@@ -1,6 +1,6 @@
 # Locator reference — qa-crm.asquareab.com
 
-Captured from the live app (build v1.0 0510-44) on 2026-10-08. Every locator below was verified to match exactly one element (table-row locators match each row).
+Captured from the live app (build v1.0 0510-44) on 2026-10-08; re-checked on 2026-10-09 (no UI changes; coverage extended). Every locator below was verified to match exactly one element (table-row locators match each row).
 
 Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` · CSS: `By.cssSelector("…")` (CSS using `:text-is()` is Playwright-only; in Selenium use the XPath). In code, import them from `tests/locators.ts`.
 
@@ -30,6 +30,9 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | Module status badge (e.g. Lead Reports) | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/leads']//span[contains(@class,'crm-module-hub-status')]` | `a.crm-module-hub-card[href="/reports/leads"] span.crm-module-hub-status` |
 | "11 live" summary | `//span[contains(@class,'crm-module-hub-status') and contains(@class,'is-live')][contains(normalize-space(),'live')]` | `span.crm-module-hub-status.is-live` |
 | Open Dashboard button | `//a[contains(@class,'crm-secondary-button')][normalize-space()='Open Dashboard']` |  |
+| Module card title (e.g. Sales) | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/sales']//strong` | `a.crm-module-hub-card[href="/reports/sales"] strong` |
+| Module card description | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/sales']/p` | `a.crm-module-hub-card[href="/reports/sales"] > p` |
+| Module card "Open module →" | `//a[contains(@class,'crm-module-hub-card')][@href='/reports/sales']/small` | `a.crm-module-hub-card[href="/reports/sales"] > small` |
 
 ## Leads (`/leads`)
 
@@ -72,13 +75,19 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | KPI: Collections Received | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Collections Received']]/strong` |  |
 | KPI: Outstanding Amount | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Outstanding Amount']]/strong` |  |
 | KPI: Won Opportunities | `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()='Won Opportunities']]/strong` |  |
+| KPI card link (e.g. Active Leads) | `//a[contains(@class,'crm-exec-kpi-card')][.//div[contains(@class,'crm-exec-kpi-copy')]/span[normalize-space()='Active Leads']]` |  |
+| Dashboard View (Executive Dashboard / Lead Dashboard) | `//main//select[option[@value='operations']]` |  |
+| Period (This month, Last 30 days, This quarter, Year to date) | `//main//select[option[@value='last_30_days']]` |  |
+| Panel by heading (e.g. Collections Summary) | `(//main//*[contains(concat(' ',normalize-space(@class),' '),' crm-panel ')][.//*[self::h2 or self::h3][normalize-space()='Collections Summary']])[last()]` |  |
 
 ## Report modules — common controls
 
 | Element | XPath | CSS |
 |---|---|---|
-| Period filter (This month, Last month, …) | `//select[contains(@class,'crm-input')][option[@value='this_month']]` | `select.crm-input:has(option[value="this_month"])` |
-| Reset filters | `//button[normalize-space()='Reset filters']` |  |
+| Period filter (opens on Last 12 months; This month, Last month, …, Custom dates) | `//select[contains(@class,'crm-input')][option[@value='this_month']]` | `select.crm-input:has(option[value="this_month"])` |
+| Reset filters (disabled until a filter changes) | `//button[normalize-space()='Reset filters']` |  |
+| Custom dates: From / To | `//main//label[starts-with(normalize-space(),'From')]//input[@type='date']` (and `'To'`) |  |
+| Filter dropdown by first option (e.g. All projects) | `//main//select[option[1][normalize-space()='All projects']]` |  |
 | View: All | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='All']` |  |
 | View: You and your team | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='You and your team']` |  |
 | View: Mine | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='Mine']` |  |
@@ -98,7 +107,18 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | KPI: Opportunity Conversion | `//article[contains(@class,'crm-card')][h3[normalize-space()='Opportunity Conversion']]/div[contains(@class,'crm-kpi')]` |
 | KPI: SPA Signed | `//article[contains(@class,'crm-card')][h3[normalize-space()='SPA Signed']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Won Value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Won Value']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Avg Time to First Contact | `//article[contains(@class,'crm-card')][h3[normalize-space()='Avg Time to First Contact']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Open Leads Now | `//article[contains(@class,'crm-card')][h3[normalize-space()='Open Leads Now']]/div[contains(@class,'crm-kpi')]` |
+
+**Lead Reports tabs** (`//button[contains(@class,'crm-tab-button')][normalize-space()='<Tab>']`, URL `?tab=…`). KPIs use the KPI template above; panels the panel template.
+
+| Tab | URL | KPI cards | Panels |
+|---|---|---|---|
+| Overview & Funnel | (none) | the 8 KPIs above | Lead Funnel (`div.crm-report-funnel-step`), Data Completeness, 12-Month Trend (`div.crm-report-trend-month`) |
+| Source & Channel | `?tab=source` | — | Performance by Lead Source |
+| Aging & Follow-up | `?tab=aging` | Open Leads, Idle Over 30 Days, Never Contacted, Overdue Follow-ups | Idle Time, Lead Age, Open Leads by Salesperson, Open Leads by Status, Longest Idle Leads |
+| Qualification & Conversion | `?tab=qualification` | Capture → First Contact, Capture → Qualified, Capture → Opportunity, Capture → SPA Signed | Conversion by Lead Rating, Conversion by Lead Score, Where the Leads Are Now, Lost Reasons |
+| Salesperson Scorecard | `?tab=scorecard` | — | Salesperson Scorecard |
 
 ## Sales Reports (`/reports/sales`)
 
@@ -110,6 +130,7 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | KPI: Won in period | `//article[contains(@class,'crm-card')][h3[normalize-space()='Won in period']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Won value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Won value']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Win rate | `//article[contains(@class,'crm-card')][h3[normalize-space()='Win rate']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Average days to win | `//article[contains(@class,'crm-card')][h3[normalize-space()='Average days to win']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Past expected close | `//article[contains(@class,'crm-card')][h3[normalize-space()='Past expected close']]/div[contains(@class,'crm-kpi')]` |
 | Table: Open Pipeline by Stage | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Open Pipeline by Stage']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 | Table: Salesperson Pipeline | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Salesperson Pipeline']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
@@ -201,6 +222,7 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | KPI: Signed value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Signed value']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Average SPA value | `//article[contains(@class,'crm-card')][h3[normalize-space()='Average SPA value']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Awaiting signature | `//article[contains(@class,'crm-card')][h3[normalize-space()='Awaiting signature']]/div[contains(@class,'crm-kpi')]` |
+| KPI: Average days reservation to SPA | `//article[contains(@class,'crm-card')][h3[normalize-space()='Average days reservation to SPA']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Handed off to ERP | `//article[contains(@class,'crm-card')][h3[normalize-space()='Handed off to ERP']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Signed, KYC not approved | `//article[contains(@class,'crm-card')][h3[normalize-space()='Signed, KYC not approved']]/div[contains(@class,'crm-kpi')]` |
 | Table: SPAs Signed by Month | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='SPAs Signed by Month']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
@@ -235,6 +257,14 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | KPI: SPAs unsigned > 14 days | `//article[contains(@class,'crm-card')][h3[normalize-space()='SPAs unsigned > 14 days']]/div[contains(@class,'crm-kpi')]` |
 | KPI: Leads not contacted | `//article[contains(@class,'crm-card')][h3[normalize-space()='Leads not contacted']]/div[contains(@class,'crm-kpi')]` |
 | Table: Exception Summary | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Exception Summary']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Detail list: Overdue instalments | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Overdue instalments']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Detail list: Reservations past expiry | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Reservations past expiry']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Detail list: Reservation deposit not received after 7 days | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Reservation deposit not received after 7 days']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Detail list: SPAs not signed after 14 days | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='SPAs not signed after 14 days']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Detail list: Signed SPAs with KYC not approved | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Signed SPAs with KYC not approved']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Detail list: Signed SPAs not handed off to ERP after 3 days | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Signed SPAs not handed off to ERP after 3 days']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Detail list: Open opportunities past expected close date | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Open opportunities past expected close date']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Detail list: Leads not contacted after 2 days | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Leads not contacted after 2 days']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 
 ## Ask the developers for `data-testid`
 

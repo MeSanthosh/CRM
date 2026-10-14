@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page } from './auth';
 import * as XLSX from 'xlsx';
 import { kpi, tabBadge, listCount, act, open } from './helpers';
 import { ROUTES, XP, at, LEADS_TABS, LEAD_STATUSES, INACTIVE_LEAD_STATUSES } from './locators';

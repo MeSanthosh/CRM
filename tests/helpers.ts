@@ -1,4 +1,5 @@
-import { Page, expect } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
+import * as XLSX from 'xlsx';
 import { XP, at, kpiLocator } from './locators';
 
 /** "1,234" -> 1234, "2.18B USD" -> 2180000000, "1.23M" -> 1230000, "52.8%" -> 52.8 */
@@ -16,12 +17,28 @@ export async function open(page: Page, path: string) {
   await expect(page.locator('main')).not.toContainText(/^\s*loading/i);
 }
 
+/**
+ * Reads a value, and while it still looks like a loading placeholder (a 0 or an empty list that the
+ * app shows before its data arrives) reads it again for up to `ms`. Returns the last value read, so a
+ * real 0 is still returned, just a few seconds later.
+ */
+export async function settle<T>(read: () => Promise<T>, placeholder: (v: T) => boolean, ms = 5_000): Promise<T> {
+  const until = Date.now() + ms;
+  let v = await read();
+  while (placeholder(v) && Date.now() < until) {
+    await new Promise(r => setTimeout(r, 250));
+    v = await read();
+  }
+  return v;
+}
+
 /** Raw text of a KPI card value on any page, e.g. "2.18B USD". */
 export async function kpiText(page: Page, label: string): Promise<string> {
   const loc = kpiLocator(page, label);
   await expect(loc, `KPI "${label}" is visible`).toBeVisible();
   await expect(loc, `KPI "${label}" loaded`).not.toHaveText(/^\s*[—–-]?\s*$/, { timeout: 15_000 });
-  return (await loc.innerText()).trim();
+  // after a load or reload the app shows 0 until its data arrives
+  return settle(async () => (await loc.innerText()).trim(), t => /^0(\.0+)?\s*%?$/.test(t));
 }
 
 /** Numeric value of a KPI card on any page. */
@@ -48,11 +65,15 @@ export async function listCount(page: Page): Promise<number> {
   const table = at(page, XP.leadsTable);
   await expect(table).toBeVisible();
   const pager = at(page, XP.leadsPager);
-  if (await pager.isVisible()) {
-    const m = (await pager.innerText()).replace(/,/g, '').match(/(\d+)\s+leads?\s*$/i);
-    if (m) return Number(m[1]);
-  }
-  return table.locator('tbody tr').filter({ has: page.locator('a.crm-record-link') }).count();
+  const read = async () => {
+    if (await pager.isVisible()) {
+      const m = (await pager.innerText()).replace(/,/g, '').match(/(\d+)\s+leads?\s*$/i);
+      if (m) return Number(m[1]);
+    }
+    return table.locator('tbody tr').filter({ has: page.locator('a.crm-record-link') }).count();
+  };
+  // the list is briefly empty while it loads
+  return settle(read, n => n === 0);
 }
 
 /** Waits until a KPI shows real data (not the "—" loading placeholder). */
@@ -129,3 +150,34 @@ export function watchErrors(page: Page) {
   });
   return { errors, failed };
 }
+
+// ── Numbers ──────────────────────────────────────────────────────────────────
+/** parseNum that treats blank and "—" as 0 (tables show "—" for no value). */
+export const num = (s: string) => (/^\s*[—–-]?\s*$/.test(s) ? 0 : parseNum(s));
+export const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+
+/** Equal within display rounding: exact for small numbers, `rel` (default 1%) for rounded amounts. */
+export function near(a: number, b: number, rel = 0.01, abs = 0.05): boolean {
+  return Math.abs(a - b) <= Math.max(abs, rel * Math.max(Math.abs(a), Math.abs(b)));
+}
+export function expectNear(actual: number, expected: number, what: string, rel = 0.01, abs = 0.05) {
+  expect.soft(near(actual, expected, rel, abs), `${what}: ${actual} vs ${expected}`).toBeTruthy();
+}
+
+// ── Exports ──────────────────────────────────────────────────────────────────
+/** Data rows of the first sheet; `total` is the "Total" row panel exports add at the bottom, if any. */
+export type Sheet = { name: string; rows: Record<string, unknown>[]; header: string[]; total?: Record<string, unknown> };
+
+/** Clicks an export button and reads the first sheet of the downloaded workbook. */
+export async function download(page: Page, button: Locator, timeout = 60_000): Promise<Sheet> {
+  const [d] = await Promise.all([page.waitForEvent('download', { timeout }), button.click()]);
+  const wb = XLSX.readFile((await d.path())!);
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const header = (XLSX.utils.sheet_to_json<unknown[]>(ws, { header: 1 })[0] ?? []).map(String);
+  const all = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws);
+  const isTotal = (r: Record<string, unknown>) => /^\s*(grand\s+)?total\b/i.test(String(r[header[0]] ?? ''));
+  return { name: d.suggestedFilename(), rows: all.filter(r => !isTotal(r)), header, total: all.find(isTotal) };
+}
+
+// ── Dates ────────────────────────────────────────────────────────────────────
+export const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;

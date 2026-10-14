@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { Client } from 'pg';
 
-export const dbConfigured = Boolean(process.env.PGHOST && process.env.PGDATABASE && process.env.PGUSER);
+/** DB tests run only when the PG* values are set and SKIP_DB_TESTS is not "true" (set it in .env to turn them off). */
+export const dbConfigured = Boolean(process.env.PGHOST && process.env.PGDATABASE && process.env.PGUSER) && process.env.SKIP_DB_TESTS !== 'true';
 
 /** Runs one read-only query and returns the rows. A fresh connection per call keeps parallel workers simple. */
 export async function dbRows<T = Record<string, unknown>>(sql: string): Promise<T[]> {

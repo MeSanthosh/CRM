@@ -27,6 +27,13 @@ const pad = (n: number) => String(n).padStart(2, '0');
 /** Excel has no time zones: store the local clock time so the sheet shows the tester's time. */
 const local = (d: Date) => new Date(d.getTime() - d.getTimezoneOffset() * 60_000);
 
+/** Catalog info, with the expected result a test declares (annotation "expected") taking precedence. */
+function infoOf(r: Row) {
+  const info = caseInfo(r.id, r.title);
+  const expected = r.test.annotations.find(a => a.type === 'expected')?.description;
+  return expected ? { ...info, expected } : info;
+}
+
 function splitId(title: string) {
   const m = title.match(/^([A-Z]+(?:-[A-Z]+)*-\d+(?:\.\d+)?)\s+(.*)$/);
   return m ? { id: m[1], title: m[2] } : { id: title.slice(0, 20), title };
@@ -42,7 +49,8 @@ function actualResult(result: TestResult): { actual: string; details: string } {
     const head = msg.split(/\n\s*(?:expect\(|Call log:)/)[0].replace(/^Error:\s*/, '').trim();
     const exp = msg.match(/^\s*Expected(?: pattern)?:\s*(.+)$/m)?.[1]?.trim();
     const rec = msg.match(/^\s*Received(?: string)?:\s*(.+)$/m)?.[1]?.trim();
-    if (head.includes('\n') || !rec) lines.push(head || msg.split('\n')[0]);
+    // toBeTruthy() checks carry the values in their message and have no "Expected:" line
+    if (head.includes('\n') || !rec || !exp) lines.push(head || msg.split('\n')[0]);
     else lines.push(`${head}: expected ${exp}, actual ${rec}`);
   }
   return { actual: lines.join('\n'), details: details.join('\n\n') };
@@ -75,6 +83,7 @@ class ExcelReporter implements Reporter {
   }
 
   async onEnd(full: FullResult) {
+    if (!this.rows.size) return; // nothing ran (e.g. --list): don't write an empty report
     const rows = [...this.rows.values()].sort((a, b) => a.id.localeCompare(b.id, 'en', { numeric: true }));
     const failed = rows.filter(r => r.status === 'Failed' || r.status === 'Timed out');
     const root = this.config.rootDir ? path.dirname(this.config.configFile ?? this.config.rootDir) : process.cwd();
@@ -119,11 +128,11 @@ class ExcelReporter implements Reporter {
     ];
 
     failed.forEach((r, i) => {
-      const info = caseInfo(r.id, r.title);
+      const info = infoOf(r);
       const { actual, details } = actualResult(r.result);
       const values = r.test.annotations
         .concat(r.result.annotations ?? [])
-        .filter(a => a.description)
+        .filter(a => a.description && a.type !== 'expected')
         .map(a => `${a.type}: ${a.description}`)
         .filter((v, idx, arr) => arr.indexOf(v) === idx)
         .join('\n');
@@ -187,7 +196,7 @@ class ExcelReporter implements Reporter {
       { header: 'Spec File', key: 'file', width: 34 },
     ];
     for (const r of rows) {
-      const info = caseInfo(r.id, r.title);
+      const info = infoOf(r);
       const row = all.addRow({
         id: r.id, title: r.title, module: info.module, severity: info.severity, status: r.status,
         dur: Math.round(r.result.duration / 100) / 10, att: r.attempts,

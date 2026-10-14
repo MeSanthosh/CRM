@@ -1,11 +1,11 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page } from './auth';
 import { cardValue, tabBadge, listCount, act } from './helpers';
 import { dbConfigured, dbNumber, dbRows, sameValue } from './db';
 import { DB_CHECKS, STATUS_BREAKDOWN_SQL, UiSource } from './db-queries';
 
 const PAGES = { reports: '/reports-analytics', leads: process.env.LEADS_PATH ?? '/leads' };
 
-test.skip(!dbConfigured, 'Database not configured — copy .env.example to .env');
+test.skip(!dbConfigured, 'Database tests off (SKIP_DB_TESTS=true) or not configured — see .env');
 
 async function readUi(page: Page, ui: UiSource): Promise<number> {
   if (ui.kind === 'card') return cardValue(page, ui.label);
