@@ -1,14 +1,23 @@
 /**
  * Cross-page consistency: the same metric shown on different pages must agree.
- * All report modules default to "This month", the same period the hub and dashboard use.
+ * The hub and dashboard always show "This month"; report modules open on "Last 12 months", so each
+ * module is switched to "This month" before it is read.
  */
-import { test, expect, Page } from '@playwright/test';
-import { kpi, kpiText, open, tableRows, tableColumn, parseNum } from './helpers';
-import { ROUTES } from './locators';
+import { test, expect, Page } from './auth';
+import { kpi, kpiText, open, act, tableRows, tableColumn, parseNum } from './helpers';
+import { ROUTES, XP, at } from './locators';
 import { SAME, R, Src, where } from './consistency-cases';
 
 async function read(page: Page, s: Src): Promise<{ v: number; shown: string }> {
   await open(page, s.page);
+  const period = at(page, XP.reportPeriod);
+  if (s.page.startsWith('/reports/') && (await period.inputValue()) !== 'this_month') {
+    // wait for the This month data itself, not just any request, so the old period's value is never read
+    const resp = page.waitForResponse(r => r.url().includes('period=this_month'), { timeout: 30_000 }).catch(() => null);
+    await period.selectOption('this_month');
+    await resp;
+    await page.waitForLoadState('networkidle').catch(() => {});
+  }
   if (s.table) {
     const n = await tableRows(page, s.table);
     return { v: n, shown: `${n} rows` };

@@ -4,6 +4,8 @@
  * and an optional hint for the developers. Edit the wording here — the tests don't change.
  */
 import { SAME, where } from './consistency-cases';
+import { SCENARIOS, isScenarioId } from './scenarios/catalog';
+import { LEAD_CASES } from './lead-reports/catalog';
 import { HUB_MODULES, REPORT_PAGES, LEADS_TABS, DASHBOARD_KPIS, ROUTES } from './locators';
 
 export type Severity = 'Critical' | 'High' | 'Medium' | 'Low';
@@ -124,9 +126,46 @@ for (const [id, p, what, exp] of math) add(id, {
   module: 'Calculations', page: url(p), severity: 'High', category: 'Calculation error',
   steps: [`Open ${url(p)} (period: This month)`, `Calculate: ${what}`], expected: exp });
 
+/** Page Object Model tests (tests/modules/): ID prefix → hub card / page. */
+const PAGE_TESTS: Record<string, { module: string; path: string }> = {
+  HUB: { module: 'Reports & Analytics hub', path: ROUTES.hub },
+  LDR: { module: 'Lead Reports', path: ROUTES.reports.leads },
+  SAL: { module: 'Sales Reports', path: ROUTES.reports.sales },
+  INV: { module: 'Inventory Reports', path: ROUTES.reports.inventory },
+  CUS: { module: 'Customer Reports', path: ROUTES.reports.customers },
+  BRK: { module: 'Broker Reports', path: ROUTES.reports.brokers },
+  MKT: { module: 'Marketing Reports', path: ROUTES.reports.marketing },
+  RES: { module: 'Reservation Reports', path: ROUTES.reports.reservations },
+  SPA: { module: 'SPA Reports', path: ROUTES.reports.spa },
+  COL: { module: 'Collection Reports', path: ROUTES.reports.collections },
+  EXE: { module: 'Executive Reports', path: ROUTES.dashboard },
+  EXC: { module: 'Exception Reports', path: ROUTES.reports.exceptions },
+};
+
 /** Info for a test ID, with a generic fallback (e.g. DB-* tests). */
 export function caseInfo(id: string, title: string): CaseInfo {
   if (C[id]) return C[id];
+  if (id.startsWith('LR-')) {
+    const leads = url(ROUTES.reports.leads);
+    const c = LEAD_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      return { module: `Lead Reports · ${c.tab}`, page: leads, severity, category: c.component, steps: c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')), expected: c.expected };
+    }
+    const kind = id.startsWith('LR-MAP') ? 'Clickable Map' : id.startsWith('LR-OBS') ? 'Observations' : id.startsWith('LR-DDV') ? 'Drill-down Verification' : 'Coverage';
+    return { module: `Lead Reports · ${kind}`, page: leads, severity: kind === 'Observations' ? 'Low' : 'Medium', category: kind, steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  const pageTest = PAGE_TESTS[id.split('-')[0]];
+  if (pageTest && /^[A-Z]+-\d+$/.test(id)) {
+    return { module: `Page · ${pageTest.module}`, page: url(pageTest.path), severity: 'Medium', category: 'Page test',
+      steps: [`Open ${url(pageTest.path)}`, title], expected: 'See the expected result recorded by the test' };
+  }
+  if (isScenarioId(id) && SCENARIOS[id]) {
+    const s = SCENARIOS[id];
+    const severity: Severity = (['Critical', 'High', 'Medium', 'Low'] as const).find(x => x === s.priority) ?? 'Medium';
+    return { module: `Scenario · ${s.area}`, page: BASE, severity, category: s.area,
+      steps: [s.scenario], expected: s.expected || 'See the expected result recorded by the test' };
+  }
   if (id.startsWith('DB-')) return {
     module: 'UI vs Database', page: url(id.startsWith('DB-RA') ? ROUTES.hub : ROUTES.leads), severity: 'High', category: 'UI vs database mismatch',
     steps: ['Open the page and read the value', 'Run the SQL shown in the error against the QA database'],

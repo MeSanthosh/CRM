@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './auth';
 import { kpi, kpiText, open, tableRows, collectJson, numbersIn, matchesApi, watchErrors } from './helpers';
 import { ROUTES, XP, at, HUB_SNAPSHOT, HUB_MODULES, REPORT_PAGES, DASHBOARD_KPIS } from './locators';
 
