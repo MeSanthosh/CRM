@@ -172,8 +172,8 @@ test.describe('Scenarios · Export Scenarios', () => {
 
   test(...scenario('RA-082', 'The Open Opportunities export has the same columns and the same records (reference, customer, stage) as the table'), async ({ page }) => {
     await openReport(page, R.sales);
+    const refs = await tableColumn(page, 'Open Opportunities', 'Opportunity'); // waits for the table to render
     const headers = (await at(page, XP.reportTable('Open Opportunities')).locator('thead th').allInnerTexts()).map(h => h.replace(/[↕▼▲]/g, '').trim());
-    const refs = await tableColumn(page, 'Open Opportunities', 'Opportunity');
     const sheet = await exportPanel(page, 'Open Opportunities');
     expect.soft(sheet.header, 'Export columns').toEqual(headers);
     const exported = sheet.rows.map(r => String(r['Opportunity'] ?? ''));

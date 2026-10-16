@@ -90,6 +90,7 @@ export async function tableRows(page: Page, heading: string): Promise<number> {
 /** Values of one column in a report table (by header text). */
 export async function tableColumn(page: Page, heading: string, column: string): Promise<string[]> {
   const table = at(page, XP.reportTable(heading));
+  await expect(table.locator('thead th').first(), `Table "${heading}" header`).toBeVisible({ timeout: 15_000 });
   const headers = (await table.locator('thead th').allInnerTexts()).map(h => h.replace(/[↕▼▲]/g, '').trim());
   const idx = headers.findIndex(h => h.toLowerCase() === column.toLowerCase());
   if (idx < 0) throw new Error(`Column "${column}" not in "${heading}" (${headers.join(' | ')})`);
