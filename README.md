@@ -51,7 +51,7 @@ Every sheet of the Lead Reports workbook is automated in `tests/lead-reports/`:
 
 | Sheet | Tests | Spec |
 |---|---|---|
-| Test Cases | LR-001 … LR-146, one test each, titled from the sheet | `general-tabs`, `filters-views`, `overview`, `drill-down`, `source-channel`, `aging`, `qualification`, `scorecard`, `cross-page` |
+| Test Cases | LR-001 … LR-166, one test each, titled from the sheet | `general-tabs`, `filters-views`, `filter-combinations`, `filter-counts`, `overview`, `drill-down`, `source-channel`, `aging`, `qualification`, `scorecard`, `cross-page` |
 | Drill-down Verification | LR-DDV-01 … 13: every count link on the page, live | `drill-verification.spec.ts` |
 | Clickable Map | LR-MAP-01 … 32: each element is (or is not) clickable and does what the sheet says | `clickable-map.spec.ts` |
 | Observations | LR-OBS-01 … 13: defects fail until fixed; questions record the current behaviour | `observations.spec.ts` |
