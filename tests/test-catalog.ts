@@ -6,6 +6,12 @@
 import { SAME, where } from './consistency-cases';
 import { SCENARIOS, isScenarioId } from './scenarios/catalog';
 import { LEAD_CASES } from './lead-reports/catalog';
+import { SALES_CASES } from './sales-reports/catalog';
+import { OPP_CASES, USE_CASES } from './opportunities/catalog';
+import { RSV_CASES } from './reservations/catalog';
+import { CB_CASES } from './customers-brokers/catalog';
+import { BC_CASES } from './brokers-channels/catalog';
+import { CU_CASES } from './construction-updates/catalog';
 import { HUB_MODULES, REPORT_PAGES, LEADS_TABS, DASHBOARD_KPIS, ROUTES } from './locators';
 
 export type Severity = 'Critical' | 'High' | 'Medium' | 'Low';
@@ -154,6 +160,76 @@ export function caseInfo(id: string, title: string): CaseInfo {
     }
     const kind = id.startsWith('LR-MAP') ? 'Clickable Map' : id.startsWith('LR-OBS') ? 'Observations' : id.startsWith('LR-DDV') ? 'Drill-down Verification' : 'Coverage';
     return { module: `Lead Reports · ${kind}`, page: leads, severity: kind === 'Observations' ? 'Low' : 'Medium', category: kind, steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('SR-')) {
+    const sales = url(ROUTES.reports.sales);
+    const c = SALES_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      return { module: `Sales Reports · ${c.area}`, page: sales, severity, category: c.component, steps: c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')), expected: c.expected };
+    }
+    return { module: 'Sales Reports · Coverage', page: sales, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('BC-')) {
+    const page = url(ROUTES.brokersChannels);
+    const c = BC_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      const steps = c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
+      return { module: `Brokers & Channels · ${c.area}`, page, severity, category: c.type || c.component,
+        steps: [...(c.preconditions ? [`Precondition: ${c.preconditions}`] : []), ...steps, ...(c.data ? [`Test data: ${c.data}`] : [])],
+        expected: c.expected };
+    }
+    return { module: 'Brokers & Channels · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('CU-')) {
+    const page = url(ROUTES.constructionUpdates);
+    const c = CU_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      const steps = c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
+      return { module: `Construction Updates · ${c.area}`, page, severity, category: c.type || c.component,
+        steps: [...(c.preconditions ? [`Precondition: ${c.preconditions}`] : []), ...steps, ...(c.data ? [`Test data: ${c.data}`] : [])],
+        expected: c.expected };
+    }
+    return { module: 'Construction Updates · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('CB-')) {
+    const page = url(ROUTES.customers);
+    const c = CB_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      const steps = c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
+      return { module: `Customers & Brokers · ${c.area}`, page, severity, category: c.type || c.component,
+        steps: [...(c.preconditions ? [`Precondition: ${c.preconditions}`] : []), ...steps, ...(c.data ? [`Test data: ${c.data}`] : [])],
+        expected: c.expected };
+    }
+    return { module: 'Customers & Brokers · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('UR-')) {
+    const page = url(ROUTES.reservations);
+    const c = RSV_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      const steps = c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
+      return { module: `Reservations · ${c.area}`, page, severity, category: c.type || c.component,
+        steps: [...(c.preconditions ? [`Precondition: ${c.preconditions}`] : []), ...steps, ...(c.data ? [`Test data: ${c.data}`] : [])],
+        expected: c.expected };
+    }
+    return { module: 'Reservations · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('OPP-')) {
+    const opps = url(ROUTES.opportunities);
+    const c = OPP_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      const steps = c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
+      const name = c.useCase || c.uc.map(u => USE_CASES[u]?.name ?? u).join(' / ');
+      return { module: `Opportunities · ${name}`, page: opps, severity, category: c.type || c.uc.join(', '),
+        steps: [...(c.preconditions ? [`Precondition: ${c.preconditions}`] : []), ...steps, ...(c.data ? [`Test data: ${c.data}`] : [])],
+        expected: c.expected };
+    }
+    return { module: 'Opportunities · Coverage', page: opps, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
   }
   const pageTest = PAGE_TESTS[id.split('-')[0]];
   if (pageTest && /^[A-Z]+-\d+$/.test(id)) {
