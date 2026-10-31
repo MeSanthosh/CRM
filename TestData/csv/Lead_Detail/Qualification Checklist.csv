@@ -1,0 +1,13 @@
+﻿Checklist Item,Field Label,Value
+Buyer Type,Buyer Type,Investor
+Funding Source,Funding,Cash
+Purpose of Purchase,Purpose of Purchase,Investment
+Decision Maker Status,Decision Maker Status,Primary Decision Maker
+Affordability Status,Affordability Assessment,Strong
+Last Interaction Date & Time,Last Interaction,{today-1} 11:00
+Interaction Type,Interaction Type,Site Visit
+Interaction Outcome,Interaction Outcome,Positive
+Purchase Timeline,Timeline,0-3 Months
+Budget,Budget,450000
+Qualification Notes,Notes,Visited the show apartment and confirmed the budget; ready to move to an opportunity.
+"Unit Preference (type, bedroom, or view)",Bedrooms,3 Bedrooms

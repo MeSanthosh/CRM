@@ -1,0 +1,10 @@
+﻿Setting,Value,What it means
+Unique Token,{unique},"Replaced at run time by a number unique to each test run (from the clock), so emails never repeat."
+Random Digit,#,Every # in a Mobile pattern is replaced by a random digit.
+Name Slug,{first} / {last} / {company},"Replaced by the row's First Name / Last Name / Company Name in lower case, spaces → dots."
+Relative Date,{today} / {today+N} / {today-N},"Replaced by today's date, or N days after / before today."
+Lead No. Format,LD-YYYYMMDDhhmmss-XXXX,"Expected Lead No. pattern: Y M D h m s = digits, X = letter or digit."
+New Lead Status,Assigned,Status a new lead gets when the creator becomes its owner.
+Individual Type Label,IND,Text in the Type column for an Individual lead.
+Corporate Type Label,CORP,Text in the Type column for a Corporate lead.
+Data Selection,random,"""random"" = each run picks a different row; a Data ID (e.g. IND-03) = always use that row."

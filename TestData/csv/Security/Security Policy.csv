@@ -1,0 +1,4 @@
+﻿Policy,Expected Value,Where
+Session Timeout (Minutes),60,Preferences → Security
+Max Failed Login Attempts,5,Preferences → Security
+Interval Time For Next Login After Max Failed Attempts (Minutes),15,Preferences → Security

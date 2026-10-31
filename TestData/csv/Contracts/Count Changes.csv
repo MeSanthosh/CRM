@@ -1,0 +1,6 @@
+﻿Action,Total,Draft / Issued,Signed
+Create Contract,1,1,0
+Issue,0,0,0
+Sign,0,-1,1
+Replace Draft,1,0,0
+Cancel Draft,0,-1,0

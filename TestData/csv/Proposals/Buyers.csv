@@ -1,0 +1,4 @@
+﻿Data ID,Title,First Name,Last Name,Mobile,Email,Lead Source
+BUY-01,Mr,Oliver,Bennett,+44 7700 900###,{first}.{last}.{unique}@example.co.uk,Referrals
+BUY-02,Ms,Charlotte,Hayes,+44 7700 900###,{first}.{last}.{unique}@example.co.uk,Referrals
+BUY-03,Mr,Daniel,Okafor,+44 7700 900###,{first}.{last}.{unique}@example.co.uk,Referrals

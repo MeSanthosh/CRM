@@ -1,0 +1,6 @@
+﻿Action,All Leads,My Leads,Unassigned,To Qualify,Ready to Convert,Total Leads card,Assigned card,Qualified card,Disqualified card
+Create,1,1,0,1,0,1,1,0,0
+Assign,0,-1,0,-1,0,0,0,0,0
+Qualify,0,0,0,-1,1,0,-1,1,0
+Disqualify,0,0,0,-1,0,0,-1,0,1
+Convert,0,0,0,0,-1,0,0,-1,0

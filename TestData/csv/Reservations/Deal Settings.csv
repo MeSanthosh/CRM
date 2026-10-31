@@ -1,0 +1,26 @@
+﻿Setting,Value,What it means
+Opportunities Route,/opportunities,Opportunities page
+Reservations Route,/reservations,Reservations page
+Customers Route,/customers,Customers & Brokers page (KYC documents)
+Inventory Route,/inventory,Inventory page (the test project and its units)
+Test Project Name,Coral Bay Residences,Project that holds every unit the tests reserve; created once if missing (real projects are never used)
+Test Project Code Pattern,CBR######,Code for that project when it has to be created (# = random digit)
+Test Project Location,MALINDI,Location of the test project
+Test Project Currency,USD - United States Dollar,Currency of the test project
+Test Project Legal Entity,CORAL BAY DEVELOPERS,Legal entity of the test project
+Test Project Description,Beachfront residences used for CRM testing,Description of the test project
+Test Project Active Status,ACTIVE,Status of the test project in the Project Register (an inactive one is not used)
+Unit Search Placeholder,"Search unit, project, status",Search box of the Unit Register
+Projects Tab,Projects,Inventory tab with the Project Register
+Units Tab,Units,Inventory tab with the Unit Register
+New Project Button,New Project,Opens the New Project form
+Create Project Button,Create Project,Saves a new project
+New Unit Button,New Unit,Opens the New Unit form
+Create Unit Button,Create Unit,Saves a new unit
+New Reservation Button,New Reservation,Opens the New Reservation form
+Choose Unit Button,Choose Unit,Opens the unit picker
+New Proposal Button,New Proposal,Opens the New Proposal form
+Create Proposal Button,Create Proposal,Saves the New Proposal form
+Deposit Percent,10,Reservation deposit the app proposes: this % of the unit price
+Reservation Ready Stage,Reservation Ready,Opportunity stage needed before a reservation
+Reservation Approved Status,Approved,Reservation status after Approve Reservation

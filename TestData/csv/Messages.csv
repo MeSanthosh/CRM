@@ -1,0 +1,16 @@
+﻿Message Key,Expected Text,Where it appears
+Required Title,Required Fields Missing,Pop-up when Create Lead is pressed with mandatory fields empty
+Required Intro,Please complete the required fields:,"Same pop-up, above the list of fields"
+Invalid Title,Invalid Entry,Pop-up for a field in the wrong format
+Created Title,Lead Created,Pop-up after a successful save
+Created Body,{name} was created successfully.,Same pop-up; {name} = the person (Individual) or the primary contact (Corporate)
+Duplicate Title,Duplicate Lead — Blocked,Pop-up when name + mobile + email match an existing lead
+Duplicate Body,Creation is blocked,Same pop-up
+Duplicate Use Case Text,This lead has already been created,Wording required by use cases HLUC-01 / HLUC-02
+Mobile Used,This mobile number is already used by lead,Pop-up when the mobile belongs to another lead
+Email Used,This email is already used by lead,Pop-up when the email belongs to another lead
+Lead Exists Title,Lead Already Exists,Title of the mobile / email pop-up
+Qualify Missing Title,Qualification Details Missing,Pop-up when Qualify Lead is pressed without the checklist
+Convert Confirm Title,Convert lead to opportunity?,Confirmation before converting
+Discard Title,Discard changes?,Pop-up when Close is pressed on a form with entered data
+Score Placeholder,Calculated on save,Placeholder of the read-only Score field

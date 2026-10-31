@@ -1,0 +1,21 @@
+﻿Where,Field Label,Options
+Qualify Lead,Rating,Nurture | Cold | Warm | Hot
+Qualify Lead,Buyer Type,Investor | End User | Holiday Home Buyer | Retirement Buyer
+Qualify Lead,Funding,Cash | Mortgage | Mixed Funding | Undecided
+Qualify Lead,Purpose of Purchase,Self Use | Investment | Rental Income | Holiday Home | Other
+Qualify Lead,Decision Maker Status,Primary Decision Maker | Joint Decision Maker | Influencer Only | Not Decision Maker
+Qualify Lead,Affordability Assessment,Strong | Moderate | Weak | Insufficient Data
+Qualify Lead,Timeline,Immediate | 0-3 Months | 3-6 Months | 6-12 Months | 12+ Months
+Qualify Lead,Interaction Type,Call | WhatsApp | Email | Roadshow | Meeting | Site Visit | Virtual Visit
+Qualify Lead,Interaction Outcome,Positive | Neutral | Negative | No Response | Callback Requested
+Qualify Lead,Preferred Unit Type,Apartment | Residence | Penthouse
+Qualify Lead,Bedrooms,3 Bedrooms | 4 Bedrooms | 5+ Bedrooms
+Qualify Lead,Preferred View,V1 - Panoramic Ocean View | V2 - Direct Ocean View | V3 - Partial Ocean View | V4 - Garden / Landscape View | V5 - Pool / Amenity View | V6 - Mixed View | V7 - Inland / Building View | V8 - Restricted / Obstructed View
+Qualify Lead,Income Range,"Less than 50,000 | 50,000 to 100,000 | 100,000 to 250,000 | 250,000 to 500,000 | 500,000 to 1,000,000 | Above 1,000,000"
+Qualify Lead,Gender,Male | Female | Transgender | Don't Know | Not Preferred
+Change Status,Disqualification Reason,Unreachable after repeated attempts | Invalid contact details | Not interested | Budget does not match | Bought elsewhere | Duplicate of another lead | Spam / test enquiry | Other
+Change Status,Reopen As,Assigned | Contacted | Nurturing
+Log call,Direction,Outgoing | Incoming
+Log call,Outcome,Connected | No answer | Busy | Left a message | Call back later | Wrong number
+Call / Task / Meeting,Priority,Low | Normal | High
+Task / Meeting,Reminder,No reminder | At due time | 15 minutes before | 1 hour before | 1 day before

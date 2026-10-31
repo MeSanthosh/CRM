@@ -1,0 +1,2 @@
+﻿Data ID,Unit Code,Unit Name,Block,Floor,Unit Type,Bedrooms,Net Area,Gross Area,Base Price,Currency,Remarks
+DU-01,{project}-D{seq},Coral Bay Apartment D{seq},Block A,Floor 03,Apartment,2,110,125,420000,USD - United States Dollar,Unit reserved by the deal-chain tests

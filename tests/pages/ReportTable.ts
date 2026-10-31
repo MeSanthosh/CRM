@@ -42,6 +42,22 @@ export class ReportTable {
     return cells.filter(r => r.length === headers.length).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i]])));
   }
 
+  /** The Total row (tfoot) keyed by column header, if the table has one. */
+  async total(): Promise<Record<string, string> | undefined> {
+    // with no data the table is replaced by "Nothing matches these filters."
+    if (!(await this.root.count())) return undefined;
+    const headers = await this.headers();
+    const foot = at(this.page, XP.reportTableTotal(this.heading));
+    if (!(await foot.count())) return undefined;
+    const cells = (await foot.first().locator('th, td').allInnerTexts()).map(c => c.trim());
+    return Object.fromEntries(headers.map((h, i) => [h, cells[i] ?? '']));
+  }
+
+  /** Record links in the table body (e.g. Customer IDs). */
+  get links() {
+    return at(this.page, XP.reportTableLinks(this.heading));
+  }
+
   /** Clicks the panel's Export and reads the downloaded sheet (the "Total" row is kept apart). */
   export(): Promise<Sheet> {
     return download(this.page, this.exportButton);

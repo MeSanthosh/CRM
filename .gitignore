@@ -7,3 +7,4 @@ db-schema.md
 reports/
 .auth/
 ~$*
+__pycache__/

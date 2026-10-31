@@ -1,0 +1,7 @@
+﻿Action,Total,Needs Approval,Approved
+Create Proposal,1,0,0
+Submit,0,1,0
+Reject,0,-1,0
+Approve,0,-1,1
+Accept,0,0,0
+Replace Draft,1,0,0

@@ -1,0 +1,49 @@
+﻿Setting,Value,What it means
+Inventory Route,/inventory,Inventory page
+Page Title,Projects and Units,Title of the page
+Test Project Name,Coral Bay Residences,Project that holds every unit the tests reserve; created once if missing (real projects are never used)
+Test Project Code Pattern,CBR######,Code for that project when it has to be created (# = random digit)
+Test Project Location,MALINDI,Location of the test project
+Test Project Currency,USD - United States Dollar,Currency of the test project
+Test Project Legal Entity,CORAL BAY DEVELOPERS,Legal entity of the test project
+Test Project Description,Beachfront residences used for CRM testing,Description of the test project
+Test Project Active Status,ACTIVE,Status of the test project in the Project Register (an inactive one is not used)
+Projects Tab,Projects,Inventory tab with the Project Register
+Units Tab,Units,Inventory tab with the Unit Register
+New Project Button,New Project,Opens the New Project form
+Create Project Button,Create Project,Saves a new project
+New Unit Button,New Unit,Opens the New Unit form
+Create Unit Button,Create Unit,Saves a new unit
+New Reservation Button,New Reservation,Opens the New Reservation form
+Choose Unit Button,Choose Unit,Opens the unit picker
+New Proposal Button,New Proposal,Opens the New Proposal form
+Create Proposal Button,Create Proposal,Saves the New Proposal form
+Active Status,ACTIVE,Status of a project in use
+Inactive Status,INACTIVE,Status after Deactivate
+New Unit Status,Available,Status every new unit starts with
+New Unit Status Note,New units always start as Available.,Hint under Availability in the New Unit form
+Default Unit Currency Option,Default project currency,Currency option a new unit should start with
+All Statuses Option,All Statuses,Unit Register status filter: no filter
+Project Search Placeholder,"Search project, location",Search box of the Project Register
+Product Search Placeholder,Search product code or name,Search box of the Unit Product Catalogue
+Unit Search Placeholder,"Search unit, project, status",Search box of the Unit Register
+Value Tolerance %,0.5,Allowed difference between amounts shown rounded (e.g. 210.48M vs $210M)
+Never Click,Recalculate All Units Live,Pricing Matrix button that re-prices every real unit: the tests never click it
+Base Rate Note,Governed by Business Rules,Text of the read-only Matrix Base Rate field in New Product
+Pricing Total Label,Total Units Displayed,Pricing Matrix figure: number of units shown
+Pricing Value Label,Operative Portfolio Value,Pricing Matrix figure: value of the units shown
+Summary Units Word,units in,"Availability Summary line ""<project>: N units in M blocks · K available"""
+Summary Available Word,available,Same line: the number before this word is the available units
+Building All Chip,All,Building View status chip with every unit of the block
+Holds Scope All,All,"Holds: first filter, every user"
+Holds Active,Active,"Holds: second filter, active holds only (also the Status of an active hold)"
+Holds History,All (incl. history),"Holds: second filter, every hold"
+Hold Time Left Word,left,"Held Until of an active hold ends with ""<time> left"""
+Edit Button,Edit,Row button that opens a project / product for editing
+Project Update Button,Update Project,Save button of the Edit Project form
+Deactivate Button,Deactivate,Row button that deactivates a project
+View Button,View,Row button that opens Product Details
+Open Button,Open,Row button that opens a unit
+Export Button,Export,Unit Register export
+Unit Edit Button,Edit,Unit view: button that switches Identification to edit mode
+Unit Update Button,Update Identification,Unit view: save button of Identification

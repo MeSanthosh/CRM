@@ -12,6 +12,13 @@ export const PERIODS = ['this_month', 'last_month', 'this_quarter', 'last_quarte
 export type Period = (typeof PERIODS)[number];
 export type View = 'All' | 'You and your team' | 'Mine';
 
+/** The module tab bar, in order, with the page each tab opens. */
+export const MODULE_TABS: Record<string, string> = {
+  Sales: ROUTES.reports.sales, Inventory: ROUTES.reports.inventory, Customers: ROUTES.reports.customers, Brokers: ROUTES.reports.brokers,
+  Marketing: ROUTES.reports.marketing, Reservations: ROUTES.reports.reservations, SPA: ROUTES.reports.spa, Collections: ROUTES.reports.collections,
+  Exceptions: ROUTES.reports.exceptions, Leads: ROUTES.reports.leads,
+};
+
 export abstract class ReportModulePage extends BasePage {
   /** Filter dropdowns other than the period, by their first option ("All projects", …). */
   abstract readonly filters: string[];
@@ -117,6 +124,60 @@ export abstract class ReportModulePage extends BasePage {
   async backToHub() {
     await at(this.page, XP.reportHubLink).first().click();
     await expect(this.page).toHaveURL(new RegExp(`${ROUTES.hub}$`));
+  }
+
+  // ── Module tab bar, messages, cards as shown, filters by position ─────────
+  moduleTab(name: string) {
+    return at(this.page, XP.moduleTab(name));
+  }
+
+  async moduleTabLabels(): Promise<string[]> {
+    return (await at(this.page, XP.moduleTabs).allInnerTexts()).map(t => t.trim());
+  }
+
+  get emptyMessage() {
+    return at(this.page, XP.reportEmpty);
+  }
+
+  get dateError() {
+    return at(this.page, XP.reportDateError);
+  }
+
+  get fromInput() {
+    return at(this.page, XP.reportFrom);
+  }
+
+  get toInput() {
+    return at(this.page, XP.reportTo);
+  }
+
+  /** Card text as shown ("—" included), without waiting for a number. */
+  async shown(label: string): Promise<string> {
+    await expect(this.kpiValue(label), `KPI "${label}"`).toBeVisible();
+    return (await this.kpiValue(label).innerText()).trim();
+  }
+
+  /** Every card as shown, after the report has loaded. */
+  async shownAll(): Promise<Record<string, string>> {
+    await this.kpiText(this.mainKpi);
+    const out: Record<string, string> = {};
+    for (const l of this.kpiLabels) out[l] = await this.shown(l);
+    return out;
+  }
+
+  /** Name of the signed-in user, from the user menu ("CA / CRM Administrator / role"). */
+  async signedInUser(): Promise<string> {
+    const lines = (await at(this.page, XP.userMenu).innerText()).split('\n').map(s => s.trim()).filter(Boolean);
+    return lines[1] ?? lines[0];
+  }
+
+  /** Selects a filter option by position (1 = first after "All …"); two options can share a label. */
+  async setFilterIndex(allOption: string, index: number) {
+    const resp = this.dataResponse().catch(() => null);
+    await this.filterSelect(allOption).selectOption({ index });
+    await resp;
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(300);
   }
 
   // ── internals ─────────────────────────────────────────────────────────────

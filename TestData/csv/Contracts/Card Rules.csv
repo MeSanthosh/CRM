@@ -1,0 +1,5 @@
+﻿Card,Statuses,Measure
+Total,all,count
+Draft / Issued,"Draft, Issued",count
+Signed,Signed,count
+Value,Signed,sum of Value

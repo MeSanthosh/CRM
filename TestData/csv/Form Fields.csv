@@ -1,0 +1,40 @@
+﻿Form,Field Label,Field Name,Field Type,Mandatory
+Individual,Title,titleRefId,Dropdown,Yes
+Individual,First Name,firstName,Text,Yes
+Individual,Last Name,lastName,Text,No
+Individual,Mobile,mobileNo,Text,Yes
+Individual,Email,email,Text,Yes
+Individual,WhatsApp,whatsappNo,Text,No
+Individual,Lead Source,leadSourceRefId,Dropdown,Yes
+Individual,Gender,genderRefId,Dropdown,No
+Individual,Nationality / Citizenship Country,nationalityCode,Dropdown,No
+Individual,Current Residence,currentResidenceCountryCode,Dropdown,No
+Individual,City,city,Text,No
+Individual,Buyer Type,buyerTypeRefId,Dropdown,No
+Individual,Budget,budgetMax,Text,No
+Individual,Timeline,purchaseTimelineRefId,Dropdown,No
+Individual,Qualification Notes,qualificationNotes,Text,No
+Individual,Marketing Budget,acquisitionCost,Text,No
+Individual,Units Interested,unitsInterestedCount,Text,No
+Individual,Interaction Count,interactionCount,Text,No
+Individual,Date of Birth,Date of Birth,Date picker,No
+Individual,Score,scoreTotal,Read-only,No
+Corporate,Entity Title,titleRefId,Dropdown,Yes
+Corporate,Legal Entity / Company Name,companyName,Text,Yes
+Corporate,Customer / Entity Type,entityTypeRefId,Dropdown,Yes
+Corporate,Industry / Sector,industryRefId,Dropdown,No
+Corporate,Website,website,Text,No
+Corporate,Primary Contact Designation,primaryContactDesignation,Text,Yes
+Corporate,Primary Contact First Name,firstName,Text,Yes
+Corporate,Primary Contact Last Name,lastName,Text,Yes
+Corporate,Mobile,mobileNo,Text,Yes
+Corporate,Email,email,Text,Yes
+Corporate,WhatsApp,whatsappNo,Text,No
+Corporate,Lead Source,leadSourceRefId,Dropdown,Yes
+Corporate,Investment Mandate,investmentMandate,Text,No
+Corporate,Date of Incorporation,dateOfIncorporation,Date,No
+Corporate,Marketing Budget,acquisitionCost,Text,No
+Corporate,Budget,budgetMax,Text,No
+Corporate,Units Interested,unitsInterestedCount,Text,No
+Corporate,Interaction Count,interactionCount,Text,No
+Corporate,Score,scoreTotal,Read-only,No

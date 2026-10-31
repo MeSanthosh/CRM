@@ -1,0 +1,7 @@
+﻿Case ID,Form,Field Left Empty,Expected Message Contains,Checked When
+IVP-013,Project,Project Code,Project code and name are required.,On save
+IVP-013,Project,Project Name,Project code and name are required.,On save
+IVP-022,Product,Product Code,Product code and product name are required.,On save
+IVP-022,Product,Product Name,Product code and product name are required.,On save
+IVP-032,Unit,Project,Project and unit code are required.,On save
+IVP-032,Unit,Unit Code,Project and unit code are required.,On save

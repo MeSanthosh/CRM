@@ -1,0 +1,6 @@
+﻿Tab,Route,Owner Rule,Allowed Statuses,Page Description Starts With
+All Leads,/leads,Any owner,"New, Assigned, Contacted, Qualified, Nurturing, Converted, Opportunity Created, Lost, Disqualified, Duplicate",All Leads
+My Leads,/leads/my,Signed-in user,"New, Assigned, Contacted, Qualified, Nurturing, Converted, Opportunity Created, Lost, Disqualified, Duplicate",My Leads
+Unassigned,/leads/unassigned,No owner,"New, Assigned, Contacted, Qualified, Nurturing, Converted, Opportunity Created, Lost, Disqualified, Duplicate",Unassigned
+To Qualify,/leads/qualification,Signed-in user,"New, Assigned, Contacted, Nurturing",To Qualify
+Ready to Convert,/leads/conversion,Any owner,Qualified,Ready to Convert

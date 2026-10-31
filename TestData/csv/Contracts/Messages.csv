@@ -1,0 +1,18 @@
+﻿Message Key,Expected Text,Where it appears
+Reservation Required Title,Reservation Required,Pop-up when New Contract is saved without a reservation
+Reservation Required Body,Select an approved reservation before creating the contract.,Same pop-up
+Created Title,Contract Created,Pop-up after Create Contract
+Created Body,Contract {contract} draft is ready.,Same pop-up
+Issued Title,Contract Issued,Pop-up after 1. Issue Contract
+Due Date Title,Due Date Required,Payment plan saved without due dates
+Due Date Body,Select a due date for every installment stage.,Same pop-up
+Percentages Title,Percentages Incomplete,Payment plan stages not adding up to 100% of SPA
+Plan Saved Title,Payment Plan Saved,Pop-up after Save Payment Plan
+Sign Confirm Title,Sign contract?,Confirmation before signing
+Signed Title,Contract Signed,Pop-up after signing
+Handoff Ready Title,ERP Handoff Ready,Pop-up after Move to Handoff
+Replaced Title,Contract Replaced,Pop-up after Replace Contract
+Go Back,Go back,Button that cancels a confirmation
+After Issue,AFTER ISSUE,State of Sign Contract before the contract is issued
+Unavailable,UNAVAILABLE,State of an action that can no longer be used
+Sign Requirements,"Requires Issued status, a saved Payment Plan (100% scheduled), and Buyer KYC Approved.",Text of step 3

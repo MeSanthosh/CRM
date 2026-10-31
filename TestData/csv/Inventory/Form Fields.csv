@@ -1,0 +1,33 @@
+﻿Form,Field Label,Field Name,Field Type,Mandatory
+Project,Project Code,projectCode,Text,Yes
+Project,Project Name,name,Text,Yes
+Project,Location,locationCode,Text,No
+Project,Currency,currencyCode,Dropdown,No
+Project,Legal Entity,legalEntityCode,Text,No
+Project,Status,status,Dropdown,No
+Project,Description,description,Text,No
+Project,Remarks,remarks,Text,No
+Product,Product Code,productCode,Text,Yes
+Product,Product Name,productName,Text,Yes
+Product,Unit Type,unitTypeRefId,Dropdown,No
+Product,Unit Sub-Type,unitSubTypeRefId,Dropdown,No
+Product,Bedrooms,bedroomCount,Number,No
+Product,Carpet Area,carpetArea,Number,No
+Product,Target Buyer,targetBuyer,Text,No
+Product,Typical Floor,typicalFloorLocation,Text,No
+Product,Typical View,typicalView,Text,No
+Product,Buyer Profile,typicalBuyerProfile,Text,No
+Product,Rate Band,targetRateBand,Text,No
+Product,Remarks,remarks,Text,No
+Unit,Project,projectId,Dropdown,Yes
+Unit,Unit Code,unitCode,Text,Yes
+Unit,Unit Name,unitName,Text,No
+Unit,Block,blockCode,Dropdown,No
+Unit,Floor,floorNo,Dropdown,No
+Unit,Unit Type,unitTypeRefId,Dropdown,No
+Unit,Bedrooms,bedroomCount,Text,No
+Unit,Net Area,netArea,Text,No
+Unit,Gross Area,grossArea,Text,No
+Unit,Base Price,basePrice,Text,No
+Unit,Currency,currencyCode,Dropdown,No
+Unit,Remarks,remarks,Text,No

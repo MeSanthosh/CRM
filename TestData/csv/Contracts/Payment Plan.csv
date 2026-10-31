@@ -1,0 +1,5 @@
+﻿Stage No,Due In Days,Wrong Percentage,Percentage Field Name
+2,7,,stages.0.percentage
+3,90,,stages.1.percentage
+4,180,,stages.2.percentage
+5,365,10,stages.3.percentage

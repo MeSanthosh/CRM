@@ -1,0 +1,5 @@
+﻿Step,Permission,View,Create,Update,Delete,Approve,Export
+Base,DASHBOARD,Y,,,,,
+Base,LEADS,Y,,,,,
+Grant,LEADS,Y,Y,,,,
+Grant,CUSTOMERS,Y,,,,,

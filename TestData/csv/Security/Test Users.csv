@@ -1,0 +1,8 @@
+﻿Data ID,Full Name,Username,Email,Mobile,Primary Role,Used For
+U-SE,Kavya Raman,{first}.{last}{unique},{first}.{last}.{unique}@example.com,+2547########,Sales Executive,RBAC and PII checks for a sales executive
+U-SM,Arjun Pillai,{first}.{last}{unique},{first}.{last}.{unique}@example.com,+2547########,Sales Manager,PII check for a sales manager
+U-ADM,Meera Iyer,{first}.{last}{unique},{first}.{last}.{unique}@example.com,+2547########,CRM Administrator,PII check for an administrator
+U-LOCK,Rohan Desai,{first}.{last}{unique},{first}.{last}.{unique}@example.com,+2547########,Sales Executive,Wrong-password lockout
+U-PWD,Nisha Kapoor,{first}.{last}{unique},{first}.{last}.{unique}@example.com,+2547########,Sales Executive,"Change password, admin reset, disable login"
+U-ROLE,Vikram Rao,{first}.{last}{unique},{first}.{last}.{unique}@example.com,+2547########,Lead Desk Viewer,Custom role permissions
+U-SESS,Ananya Menon,{first}.{last}{unique},{first}.{last}.{unique}@example.com,+2547########,Sales Executive,Sessions and devices

@@ -1,0 +1,19 @@
+﻿Setting,Value,What it means
+Insights Route,/leads/sources,Leads → Insights → Sources
+All Leads Route,/leads,Leads → All Leads tab
+Page Description,"Lead Sources · Active leads grouped by capture source, with qualification and conversion rates.",Line under the Leads title on the Sources view
+Sub-tabs,Sources | Aging | Follow-up,Sub-tabs of Insights
+Active Leads Card,Active Leads,Card with the number of active leads
+Sources Card,Sources,Card with the number of sources
+Table Heading,By source,Heading of the source table
+Table Columns,Source | Total | Qualified | Converted | Unassigned | Qual. % | Conv. %,Columns of the source table
+All Leads Tab,All Leads,Leads tab whose count equals Active Leads
+Unassigned Tab,Unassigned,Leads tab whose count equals the sum of the Unassigned column
+Percent Decimals,1,Qual. % and Conv. % are shown with at most this many decimals
+Drill Hint,Click a source row to list its leads.,Text under the table before a row is clicked
+Drill Shown Text,Showing leads for the selected source. Click the row again to clear.,Text once a row is clicked
+Drill Count Word,matching,"Heading ""Leads N matching"" of the list"
+Drill Columns,# | Lead | Contact | Source | Owner | Idle | Captured,Columns of the drill-down list
+Unassigned Owner,Unassigned,Owner shown for a lead nobody owns
+Refresh Button,Refresh,Button that reloads the table
+Source For New Lead,Public Relations,Lead Source of the lead the count-update tests create (must be a Lead Source option of the form)

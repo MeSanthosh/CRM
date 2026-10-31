@@ -1,0 +1,39 @@
+﻿Case ID,Form,Field Label,Invalid Value,Expected Message,Checked When
+LP-005,Individual,Email,priya.nair@@example.com,Enter a valid email address (e.g. name@example.com).,On leaving the field
+LP-005,Individual,Email,priya.nair.example.com,Enter a valid email address (e.g. name@example.com).,On leaving the field
+LP-005,Individual,Email,priya nair@example.com,Enter a valid email address (e.g. name@example.com).,On leaving the field
+LP-005,Individual,Email,priya.nair@,Enter a valid email address (e.g. name@example.com).,On leaving the field
+LP-035,Corporate,Email,priya.nair@@example.com,Enter a valid email address (e.g. name@example.com).,On leaving the field
+LP-035,Corporate,Email,priya.nair.example.com,Enter a valid email address (e.g. name@example.com).,On leaving the field
+LP-035,Corporate,Email,priya nair@example.com,Enter a valid email address (e.g. name@example.com).,On leaving the field
+LP-035,Corporate,Email,priya.nair@,Enter a valid email address (e.g. name@example.com).,On leaving the field
+LP-006,Individual,Mobile,98abc,"Enter the number with country code, for example +91 98765 43210 or +254 712 345 678.",On leaving the field
+LP-006,Individual,Mobile,9876543210,"Enter the number with country code, for example +91 98765 43210 or +254 712 345 678.",On leaving the field
+LP-006,Individual,Mobile,+91 12,"Enter the number with country code, for example +91 98765 43210 or +254 712 345 678.",On leaving the field
+LP-006,Individual,WhatsApp,12345,"Enter the number with country code, for example +91 98765 43210 or +254 712 345 678.",On leaving the field
+LP-036,Corporate,Mobile,98abc,"Enter the number with country code, for example +91 98765 43210 or +254 712 345 678.",On leaving the field
+LP-036,Corporate,Mobile,9876543210,"Enter the number with country code, for example +91 98765 43210 or +254 712 345 678.",On leaving the field
+LP-036,Corporate,Mobile,+91 12,"Enter the number with country code, for example +91 98765 43210 or +254 712 345 678.",On leaving the field
+LP-036,Corporate,WhatsApp,12345,"Enter the number with country code, for example +91 98765 43210 or +254 712 345 678.",On leaving the field
+LP-007,Individual,Marketing Budget,12ab,Marketing Budget must be a non-negative number.,On Create Lead
+LP-007,Individual,Marketing Budget,-500,Marketing Budget must be a non-negative number.,On Create Lead
+LP-007,Individual,Budget,ten thousand,Budget must be a non-negative number.,On Create Lead
+LP-007,Individual,Units Interested,two,Units Interested must be a whole number.,On Create Lead
+LP-007,Individual,Units Interested,1.5,Units Interested must be a whole number.,On Create Lead
+LP-007,Individual,Interaction Count,x5,Interaction Count must be a whole number.,On Create Lead
+LP-038,Corporate,Marketing Budget,12ab,Marketing Budget must be a non-negative number.,On Create Lead
+LP-038,Corporate,Marketing Budget,-500,Marketing Budget must be a non-negative number.,On Create Lead
+LP-038,Corporate,Budget,ten thousand,Budget must be a non-negative number.,On Create Lead
+LP-038,Corporate,Units Interested,two,Units Interested must be a whole number.,On Create Lead
+LP-038,Corporate,Units Interested,1.5,Units Interested must be a whole number.,On Create Lead
+LP-038,Corporate,Interaction Count,x5,Interaction Count must be a whole number.,On Create Lead
+LP-008,Individual,First Name,Priya2,"First Name may contain letters, spaces, apostrophes, and hyphens only.",On Create Lead
+LP-008,Individual,First Name,Priya@Home,"First Name may contain letters, spaces, apostrophes, and hyphens only.",On Create Lead
+LP-008,Individual,Last Name,Nair3,"Last Name may contain letters, spaces, apostrophes, and hyphens only.",On Create Lead
+LP-039,Corporate,Primary Contact First Name,Grace1,"Primary Contact First Name may contain letters, spaces, apostrophes, and hyphens only.",On Create Lead
+LP-039,Corporate,Primary Contact Last Name,Wanjiru#,"Primary Contact Last Name may contain letters, spaces, apostrophes, and hyphens only.",On Create Lead
+LP-009,Individual,Date of Birth,{today+30},Date of Birth cannot be a future date.,On leaving the field
+LP-037,Corporate,Website,not a website,Website must be a valid URL (e.g. https://example.com).,On Create Lead
+LP-037,Corporate,Website,www,Website must be a valid URL (e.g. https://example.com).,On Create Lead
+LP-037,Corporate,Website,coastlineholdings,Website must be a valid URL (e.g. https://example.com).,On Create Lead
+LP-040,Corporate,Date of Incorporation,{today+30},Date of Incorporation must be a past date.,On Create Lead

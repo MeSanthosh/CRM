@@ -1,0 +1,45 @@
+﻿Export,Column
+Leads,Lead No
+Leads,Name
+Leads,Prospect Type
+Leads,Status
+Leads,Rating
+Leads,Score
+Leads,Source
+Leads,Source Category
+Leads,Campaign
+Leads,Broker
+Leads,Mobile
+Leads,WhatsApp
+Leads,Email
+Leads,Nationality
+Leads,Country
+Leads,City
+Leads,Budget Min
+Leads,Budget Max
+Leads,Currency
+Leads,Preferred Project
+Leads,Preferred Unit Type
+Leads,Assigned To
+Leads,Assigned At
+Leads,Last Interaction
+Leads,Qualified At
+Leads,Converted At
+Leads,Created At
+Tasks & Calls,Type
+Tasks & Calls,Subject
+Tasks & Calls,Status
+Tasks & Calls,Priority
+Tasks & Calls,Due
+Tasks & Calls,Reminder
+Tasks & Calls,Occurred
+Tasks & Calls,Call Direction
+Tasks & Calls,Call Outcome
+Tasks & Calls,Duration (min)
+Tasks & Calls,Related To
+Tasks & Calls,Related Name
+Tasks & Calls,Assigned To
+Tasks & Calls,Completed At
+Tasks & Calls,Created By
+Tasks & Calls,Created At
+Tasks & Calls,Description

@@ -1,0 +1,9 @@
+﻿Reason,Remarks
+Unreachable after repeated attempts,Called five times over two weeks without an answer.
+Invalid contact details,Mobile number is not in service and the email bounced.
+Not interested,Customer said they are no longer planning to buy this year.
+Budget does not match,Budget is well below the starting price of the project.
+Bought elsewhere,Customer has bought an apartment in another development.
+Duplicate of another lead,Same customer already exists as an open lead.
+Spam / test enquiry,Enquiry form was filled with random text.
+Other,Customer moved abroad and stopped the search.

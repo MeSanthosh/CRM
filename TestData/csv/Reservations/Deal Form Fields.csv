@@ -1,0 +1,24 @@
+﻿Form,Field Label,Field Name
+Project,Project Code,projectCode
+Project,Project Name,name
+Project,Location,locationCode
+Project,Currency,currencyCode
+Project,Legal Entity,legalEntityCode
+Project,Description,description
+Unit,Project,projectId
+Unit,Unit Code,unitCode
+Unit,Unit Name,unitName
+Unit,Block,blockCode
+Unit,Floor,floorNo
+Unit,Unit Type,unitTypeRefId
+Unit,Bedrooms,bedroomCount
+Unit,Net Area,netArea
+Unit,Gross Area,grossArea
+Unit,Base Price,basePrice
+Unit,Currency,currencyCode
+Unit,Remarks,remarks
+Reservation,Opportunity,opportunityId
+Reservation,Deposit,reservationAmount
+Reservation,Remarks,remarks
+Proposal,Opportunity,opportunityId
+Proposal,Proposed Price,proposedPrice

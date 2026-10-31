@@ -1,0 +1,5 @@
+﻿Action,Projects,Products,Units,Available,Value
+Create Project,1,0,0,0,0
+Create Product,0,1,0,0,0
+Create Unit,0,0,1,1,Base Price
+Deactivate Project,0,0,0,0,0

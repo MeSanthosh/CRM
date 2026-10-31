@@ -36,8 +36,25 @@ async function type(page: Page, name: string, value: string) {
   }).toPass({ timeout: 20_000 });
 }
 
-/** Logs in through the login form; throws with the page's message when the login is rejected. */
+/**
+ * Logs in through the login form; throws with the page's message when the login is rejected.
+ * QA rate-limits sign-ins per network ("Too many authentication attempts"): then it waits a minute and
+ * tries again (up to LOGIN_RATE_LIMIT_RETRIES times, default 8), so security tests that make many
+ * attempts do not knock out the admin sessions of the other tests.
+ */
 export async function login(page: Page, user: string, pass: string) {
+  const retries = Number(process.env.LOGIN_RATE_LIMIT_RETRIES ?? 8);
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await loginOnce(page, user, pass);
+    } catch (e) {
+      if (attempt >= retries || !/too many authentication attempts/i.test(String(e))) throw e;
+      await page.waitForTimeout(60_000);
+    }
+  }
+}
+
+async function loginOnce(page: Page, user: string, pass: string) {
   await page.goto('/login');
   await page.waitForLoadState('networkidle').catch(() => {}); // login options load after the page and re-render the form
   await page.getByRole('button', { name: 'Password Login' }).click();

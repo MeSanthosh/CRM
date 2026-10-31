@@ -67,7 +67,8 @@ export async function listCount(page: Page): Promise<number> {
   const pager = at(page, XP.leadsPager);
   const read = async () => {
     if (await pager.isVisible()) {
-      const m = (await pager.innerText()).replace(/,/g, '').match(/(\d+)\s+leads?\s*$/i);
+      // "Showing 1–20 of 616 leads · Page 1 of 31" (older builds: "Page 1 of 25 · 615 leads")
+      const m = (await pager.innerText()).replace(/,/g, '').match(/(\d+)\s+leads?\b/i);
       if (m) return Number(m[1]);
     }
     return table.locator('tbody tr').filter({ has: page.locator('a.crm-record-link') }).count();
@@ -167,17 +168,18 @@ export function expectNear(actual: number, expected: number, what: string, rel =
 
 // ── Exports ──────────────────────────────────────────────────────────────────
 /** Data rows of the first sheet; `total` is the "Total" row panel exports add at the bottom, if any. */
-export type Sheet = { name: string; rows: Record<string, unknown>[]; header: string[]; total?: Record<string, unknown> };
+export type Sheet = { name: string; rows: Record<string, unknown>[]; header: string[]; total?: Record<string, unknown>; path?: string; sheetName?: string };
 
 /** Clicks an export button and reads the first sheet of the downloaded workbook. */
 export async function download(page: Page, button: Locator, timeout = 60_000): Promise<Sheet> {
   const [d] = await Promise.all([page.waitForEvent('download', { timeout }), button.click()]);
-  const wb = XLSX.readFile((await d.path())!);
+  const file = (await d.path())!;
+  const wb = XLSX.readFile(file);
   const ws = wb.Sheets[wb.SheetNames[0]];
   const header = (XLSX.utils.sheet_to_json<unknown[]>(ws, { header: 1 })[0] ?? []).map(String);
   const all = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws);
   const isTotal = (r: Record<string, unknown>) => /^\s*(grand\s+)?total\b/i.test(String(r[header[0]] ?? ''));
-  return { name: d.suggestedFilename(), rows: all.filter(r => !isTotal(r)), header, total: all.find(isTotal) };
+  return { name: d.suggestedFilename(), rows: all.filter(r => !isTotal(r)), header, total: all.find(isTotal), path: file, sheetName: wb.SheetNames[0] };
 }
 
 // ── Dates ────────────────────────────────────────────────────────────────────
