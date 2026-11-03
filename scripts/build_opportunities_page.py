@@ -72,45 +72,45 @@ DEAL = 'An opportunity created by the test (buyer lead → qualified → convert
 UC1, UC2, UC3, UC4 = 'OUC-01 Opportunity register (List)', 'OUC-02 Kanban pipeline board', 'OUC-03 Hold a unit for a deal', 'OUC-04 Mark an opportunity Lost'
 
 A = 'Table Register'
-C('OPP-001', UC1, A, 'Opportunities page shows its cards, views and list', ADMIN, st(OPEN, 'Read the cards, the view buttons and the list columns'), f'{TD} → Settings, Card Rules, Register Columns',
+C('OPP-101', UC1, A, 'Opportunities page shows its cards, views and list', ADMIN, st(OPEN, 'Read the cards, the view buttons and the list columns'), f'{TD} → Settings, Card Rules, Register Columns',
   'Cards Total, Open, Pipeline Value and Avg Probability with their formulas; views List and Board; Export; columns Opportunity, Customer, Stage, Probability, Budget, Project, Created Date.', 'Medium')
-C('OPP-002', UC1, A, 'Total card = Open + Won + Lost = opportunities listed', ADMIN, st(OPEN, 'Read Total', 'Read "Showing … of N opportunities"', 'Count Won and Lost rows'), f'{TD} → Card Rules',
+C('OPP-102', UC1, A, 'Total card = Open + Won + Lost = opportunities listed', ADMIN, st(OPEN, 'Read Total', 'Read "Showing … of N opportunities"', 'Count Won and Lost rows'), f'{TD} → Card Rules',
   'Total = N = Open + Won + Lost.')
-C('OPP-003', UC1, A, 'Open card = opportunities in an open stage', ADMIN, st(OPEN, 'Read Open', 'Count rows whose Stage is an open stage (all pages)'), f'{TD} → Settings (Open Stages)', 'Open equals that count.')
-C('OPP-004', UC1, A, 'Pipeline Value = total budget of open opportunities', ADMIN, st(OPEN, 'Read Pipeline Value', 'Add up Budget of the open rows'), f'{TD} → Settings (Value Tolerance %)', 'Pipeline Value equals that total (within rounding).')
-C('OPP-005', UC1, A, 'Avg Probability = average probability of open opportunities', ADMIN, st(OPEN, 'Read Avg Probability', 'Average the Probability of the open rows'), '—', 'Avg Probability equals that average (rounded).', 'Medium')
-C('OPP-006', UC1, A, 'Search the list', DEAL, st(OPEN, 'Search the opportunity number, the buyer and the lead number'), f'{TD} → Settings (Search Placeholder)', 'Each search lists the opportunity; every row listed contains the text.', 'Medium')
-C('OPP-007', UC1, A, 'Export matches the list', ADMIN, st(OPEN, 'Click Export'), '—', 'The file has one row per opportunity of the list and contains the opportunity numbers listed.', 'Medium')
+C('OPP-103', UC1, A, 'Open card = opportunities in an open stage', ADMIN, st(OPEN, 'Read Open', 'Count rows whose Stage is an open stage (all pages)'), f'{TD} → Settings (Open Stages)', 'Open equals that count.')
+C('OPP-104', UC1, A, 'Pipeline Value = total budget of open opportunities', ADMIN, st(OPEN, 'Read Pipeline Value', 'Add up Budget of the open rows'), f'{TD} → Settings (Value Tolerance %)', 'Pipeline Value equals that total (within rounding).')
+C('OPP-105', UC1, A, 'Avg Probability = average probability of open opportunities', ADMIN, st(OPEN, 'Read Avg Probability', 'Average the Probability of the open rows'), '—', 'Avg Probability equals that average (rounded).', 'Medium')
+C('OPP-106', UC1, A, 'Search the list', DEAL, st(OPEN, 'Search the opportunity number, the buyer and the lead number'), f'{TD} → Settings (Search Placeholder)', 'Each search lists the opportunity; every row listed contains the text.', 'Medium')
+C('OPP-107', UC1, A, 'Export matches the list', ADMIN, st(OPEN, 'Click Export'), '—', 'The file has one row per opportunity of the list and contains the opportunity numbers listed.', 'Medium')
 
 A = 'Kanban Board'
-C('OPP-011', UC2, A, 'Board columns add up to the open pipeline', ADMIN, st(OPEN, 'Click Board', 'Read each column (count, value) and the summary "Open pipeline: N deals · V USD"'), f'{TD} → Settings (Board Summary Start)',
+C('OPP-111', UC2, A, 'Board columns add up to the open pipeline', ADMIN, st(OPEN, 'Click Board', 'Read each column (count, value) and the summary "Open pipeline: N deals · V USD"'), f'{TD} → Settings (Board Summary Start)',
   'Sum of the open-stage column counts = N = the Open card; sum of their values = V = Pipeline Value.')
-C('OPP-012', UC2, A, 'Each column lists as many cards as its count', ADMIN, st(OPEN, 'Board → for each column count the cards'), '—', 'Cards in a column = the column count; the card budgets add up to the column value.', 'Medium')
-C('OPP-013', UC2, A, 'Board owner filter shows only that owner\'s deals', ADMIN, st(OPEN, 'Board → Owner = each owner in turn'), f'{TD} → Settings (Owner Filter)', 'Every card shows the chosen owner.', 'Medium')
-C('OPP-014', UC2, A, 'Board project filter shows only that project\'s deals', ADMIN, st(OPEN, 'Board → Project = each project in turn', 'Compare with the List filtered by search on the project'), f'{TD} → Settings (Project Filter)', 'Cards shown belong to the chosen project; the open count is not more than with All projects.', 'Medium')
-C('OPP-015', UC2, A, 'Move menu offers only allowed moves', ADMIN, st(OPEN, 'Board → open "Move / mark Lost…" on cards of each stage'), f'{TD} → Settings (Board Move Prompt, Not From Board)',
+C('OPP-112', UC2, A, 'Each column lists as many cards as its count', ADMIN, st(OPEN, 'Board → for each column count the cards'), '—', 'Cards in a column = the column count; the card budgets add up to the column value.', 'Medium')
+C('OPP-113', UC2, A, 'Board owner filter shows only that owner\'s deals', ADMIN, st(OPEN, 'Board → Owner = each owner in turn'), f'{TD} → Settings (Owner Filter)', 'Every card shows the chosen owner.', 'Medium')
+C('OPP-114', UC2, A, 'Board project filter shows only that project\'s deals', ADMIN, st(OPEN, 'Board → Project = each project in turn', 'Compare with the List filtered by search on the project'), f'{TD} → Settings (Project Filter)', 'Cards shown belong to the chosen project; the open count is not more than with All projects.', 'Medium')
+C('OPP-115', UC2, A, 'Move menu offers only allowed moves', ADMIN, st(OPEN, 'Board → open "Move / mark Lost…" on cards of each stage'), f'{TD} → Settings (Board Move Prompt, Not From Board)',
   'Every menu offers Lost; stages the workflow does not allow from the board are marked "(not from board)" and cannot be chosen.', 'Medium')
 
 A = 'Unit Hold'
-C('OPP-021', UC3, A, 'Hold a unit for a deal', DEAL + '; a new unit of the test project', st('Open the opportunity → Hold a Unit', 'Choose the unit, Hold for 2 days, reason', 'Hold Unit', 'Open Inventory → Holds (All, Active)'), f'{TD} → Opportunity Actions (Hold Unit), Deal Unit',
+C('OPP-121', UC3, A, 'Hold a unit for a deal', DEAL + '; a new unit of the test project', st('Open the opportunity → Hold a Unit', 'Choose the unit, Hold for 2 days, reason', 'Hold Unit', 'Open Inventory → Holds (All, Active)'), f'{TD} → Opportunity Actions (Hold Unit), Deal Unit',
   'The hold is listed in Inventory → Holds with the unit, the opportunity, status Active and a time left; the opportunity stage does not change.')
-C('OPP-022', UC3, A, 'Hold needs a unit', DEAL, st('Open the opportunity → Hold a Unit without choosing a unit → Hold Unit'), f'{TD} → Opportunity Actions (Hold Without Unit)', 'The hold is refused with a message (or the button stays disabled); no hold is created.', 'Medium', 'Negative')
-C('OPP-023', UC3, A, 'A held unit cannot be reserved by another deal', DEAL + ' with a held unit', st('Open New Reservation → Choose Unit', 'Search the held unit'), f'{TD} → Messages (Held By)',
+C('OPP-122', UC3, A, 'Hold needs a unit', DEAL, st('Open the opportunity → Hold a Unit without choosing a unit → Hold Unit'), f'{TD} → Opportunity Actions (Hold Without Unit)', 'The hold is refused with a message (or the button stays disabled); no hold is created.', 'Medium', 'Negative')
+C('OPP-123', UC3, A, 'A held unit cannot be reserved by another deal', DEAL + ' with a held unit', st('Open New Reservation → Choose Unit', 'Search the held unit'), f'{TD} → Messages (Held By)',
   'The unit is shown as "Held by …" and cannot be selected for another opportunity.', 'Medium')
 
 A = 'Mark Lost'
-C('OPP-031', UC4, A, 'Mark Lost needs a reason', DEAL, st('Open the opportunity → Mark Lost without a Lost Reason → Mark Lost'), f'{TD} → Opportunity Actions (Lost Without Reason)', 'A message asks for the reason; the opportunity stays open.', 'Medium', 'Negative')
-C('OPP-032', UC4, A, 'Mark an opportunity Lost', DEAL + ' with a held unit', st(OPEN, 'Read the cards', 'Open the opportunity → Mark Lost (Lost Reason, Remarks)', 'Read the cards and Inventory → Holds'), f'{TD} → Opportunity Actions (Mark Lost), Count Changes (Mark Lost)',
+C('OPP-131', UC4, A, 'Mark Lost needs a reason', DEAL, st('Open the opportunity → Mark Lost without a Lost Reason → Mark Lost'), f'{TD} → Opportunity Actions (Lost Without Reason)', 'A message asks for the reason; the opportunity stays open.', 'Medium', 'Negative')
+C('OPP-132', UC4, A, 'Mark an opportunity Lost', DEAL + ' with a held unit', st(OPEN, 'Read the cards', 'Open the opportunity → Mark Lost (Lost Reason, Remarks)', 'Read the cards and Inventory → Holds'), f'{TD} → Opportunity Actions (Mark Lost), Count Changes (Mark Lost)',
   'Stage Lost; Open −1 and Total unchanged (Count Changes); the unit hold of the deal is released (no longer Active in Holds).')
 
 IMPACT = {
-    'OPP-002': 'The Total card does not match the list, so the pipeline size reported to management is wrong.',
-    'OPP-004': 'The pipeline value is wrong, so forecasts based on it are wrong.',
-    'OPP-011': 'The board and the cards show a different pipeline, so sales managers cannot trust either.',
-    'OPP-015': 'The board would let users skip workflow steps (or block allowed ones).',
-    'OPP-021': 'Units cannot be held for a buyer, or the hold is not visible to others, so the same unit could be promised twice.',
-    'OPP-023': 'A unit held for one buyer can be reserved for another.',
-    'OPP-032': 'A lost deal keeps its unit on hold (or keeps counting as open), so units stay blocked and the pipeline is overstated.',
+    'OPP-102': 'The Total card does not match the list, so the pipeline size reported to management is wrong.',
+    'OPP-104': 'The pipeline value is wrong, so forecasts based on it are wrong.',
+    'OPP-111': 'The board and the cards show a different pipeline, so sales managers cannot trust either.',
+    'OPP-115': 'The board would let users skip workflow steps (or block allowed ones).',
+    'OPP-121': 'Units cannot be held for a buyer, or the hold is not visible to others, so the same unit could be promised twice.',
+    'OPP-123': 'A unit held for one buyer can be reserved for another.',
+    'OPP-132': 'A lost deal keeps its unit on hold (or keeps counting as open), so units stay blocked and the pipeline is overstated.',
 }
 AREA_IMPACT = {'Table Register': 'Opportunity figures cannot be trusted.', 'Kanban Board': 'The board does not reflect the pipeline.', 'Unit Hold': 'Unit holds do not protect units for buyers.', 'Mark Lost': 'Losing a deal does not update the pipeline or release its unit.'}
 OVERVIEW = [

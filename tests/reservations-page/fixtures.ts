@@ -5,7 +5,7 @@
  */
 import fs from 'fs';
 import path from 'path';
-import { test as base, expect, note } from '../opportunities/fixtures';
+import { test as base, expect, note } from '../opportunities-page/fixtures';
 import { ReservationsPage } from './ReservationsPage';
 
 export { expect, note };

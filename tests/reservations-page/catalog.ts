@@ -1,5 +1,5 @@
 /**
- * Reads Testcase/Reservations_Test_Cases.xlsx — the source of truth for the Unit Reservations suite (UR-001…).
+ * Reads Testcase/Reservations_Page_Test_Cases.xlsx (Maha's Reservations_Test_Cases.xlsx merged into it) — the source of truth for the Unit Reservations suite (UR-001…).
  * Titles, steps and expected results shown in test names and the Excel defect report come from its
  * "Test Cases" sheet; the tests only hold the checks. Edit wording in the workbook.
  */
@@ -7,8 +7,8 @@ import path from 'path';
 import * as XLSX from 'xlsx';
 import { test, type TestDetails } from '../auth';
 
-export const RSV_WORKBOOK = path.resolve(__dirname, '../../Testcase/Reservations_Test_Cases.xlsx');
-export const TAG = '@rsv-workbook';
+export const RSV_WORKBOOK = path.resolve(__dirname, '../../Testcase/Reservations_Page_Test_Cases.xlsx');
+export const TAG = '@reservations-page';
 
 export type RsvCase = {
   id: string; area: string; component: string; title: string; preconditions: string; steps: string;

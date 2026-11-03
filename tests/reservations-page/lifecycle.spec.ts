@@ -13,7 +13,7 @@ import { Locator, Response } from '@playwright/test';
 import { test, expect, note, writesOf, testFile, lifecycle, saveLifecycle, need, Res } from './fixtures';
 import { ur, urSkipped } from './catalog';
 import { RSV } from '../locators';
-import { CrmApi } from '../opportunities/api';
+import { CrmApi } from '../opportunities-page/api';
 import { ReservationsPage } from './ReservationsPage';
 import { reservationReadyOpportunity } from './prepare';
 

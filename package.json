@@ -11,7 +11,7 @@
     "db:discover": "node scripts/db-discover.mjs",
     "test:db": "playwright test db",
     "test:scenarios": "playwright test --grep @scenario",
-    "test:core": "playwright test --grep-invert \"@scenario|@pages|@lead-workbook|@customer-workbook|@broker-workbook|@marketing-workbook|@reservation-workbook|@spa-workbook|@collection-workbook|@exception-workbook|@executive-workbook|@leads-page|@lead-detail|@security|@inventory-page|@proposals-page|@contracts-page|@lead-insights-page|@opportunities-page|@reservations-page|@sales-workbook|@opp-workbook|@rsv-workbook|@cb-workbook|@bc-workbook|@cu-workbook\"",
+    "test:core": "playwright test --grep-invert \"@scenario|@pages|@lead-workbook|@customer-workbook|@broker-workbook|@marketing-workbook|@reservation-workbook|@spa-workbook|@collection-workbook|@exception-workbook|@executive-workbook|@leads-page|@lead-detail|@security|@inventory-page|@proposals-page|@contracts-page|@lead-insights-page|@opportunities-page|@reservations-page|@sales-workbook|@cb-workbook|@bc-workbook|@cu-workbook\"",
     "test:pages": "playwright test --grep @pages",
     "test:hub": "playwright test --grep @hub",
     "test:lead-reports": "playwright test --grep @lead-reports",
@@ -44,8 +44,6 @@
     "test:opportunities-page": "playwright test tests/opportunities-page --workers=1 --retries=1",
     "test:reservations-page": "playwright test tests/reservations-page --workers=1 --retries=1",
     "test:sales-workbook": "playwright test tests/sales-reports",
-    "test:opportunities": "playwright test tests/opportunities",
-    "test:reservations": "playwright test tests/reservations",
     "test:customers-brokers": "playwright test tests/customers-brokers",
     "test:brokers-channels": "playwright test tests/brokers-channels",
     "test:construction-updates": "playwright test tests/construction-updates"

@@ -10,7 +10,7 @@ import { Response } from '@playwright/test';
 import { test, expect, note, writesOf, editable, testFile, restoreRemarks, state, save, TEST_BROKER, EDIT_MARK } from './fixtures';
 import { cb, cbSkipped } from './catalog';
 import { CustomersBrokersPage } from './CustomersBrokersPage';
-import { CrmApi } from '../opportunities/api';
+import { CrmApi } from '../opportunities-page/api';
 
 test.describe.configure({ mode: 'default' });
 

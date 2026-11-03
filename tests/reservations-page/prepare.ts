@@ -6,8 +6,8 @@
 import { Response } from '@playwright/test';
 import { expect } from '../auth';
 import { OPP } from '../locators';
-import { OpportunitiesPage } from '../opportunities/OpportunitiesPage';
-import { LeadsConversion } from '../opportunities/LeadsConversion';
+import { OpportunitiesPage } from '../opportunities-page/OpportunitiesPage';
+import { LeadsConversion } from '../opportunities-page/LeadsConversion';
 
 const REMARKS = 'Automated test - Reservations lifecycle';
 const isConvert = (r: Response) => /\/api\/v1\/leads\/[0-9a-f-]{36}\/convert$/.test(r.url()) && r.request().method() === 'POST';

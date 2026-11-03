@@ -13,7 +13,7 @@
  */
 import { test, expect, note, update, testDraft, needDraft, testFile, thisMonth, Update, TEST_TITLE, TEST_FILE } from './fixtures';
 import { cu, cuSkipped } from './catalog';
-import { CrmApi } from '../opportunities/api';
+import { CrmApi } from '../opportunities-page/api';
 
 test.describe.configure({ mode: 'default' });
 

@@ -90,11 +90,11 @@ run it with `SALES_LONG=1`. SR-126's time limits come from the workbook (3 s / 2
 As with Lead Reports, expected figures come from the page itself. Amount checks allow each shown value's rounding (at least 0.5%).
 Counts must match exactly.
 
-## Opportunities test cases (Testcase/Opportunities_Test_Cases.xlsx)
-The 12 use cases in `Testcase/Asquare_CRM_Opportunities_Use_Cases.xlsx` (UC-OPP-001 … 012) name their test IDs
-(OPP-001 … OPP-059) without describing them. `Testcase/Opportunities_Test_Cases.xlsx` writes each one out — use case,
+## Opportunities test cases (Testcase/Opportunities_Page_Test_Cases.xlsx, Maha's OPP-001 … 078)
+The 12 use cases (sheets "Use Case Summary", "Detailed Specifications", "Test Traceability", merged from Asquare_CRM_Opportunities_Use_Cases.xlsx) (UC-OPP-001 … 012) name their test IDs
+(OPP-001 … OPP-059) without describing them. Its "Test Cases" sheet writes each one out — use case,
 preconditions, steps, test data, expected result, type, priority, status — plus OPP-060 (UC-OPP-003's "record missing"
-exception), with a Summary sheet and an Observations sheet. Every test case is automated in `tests/opportunities/`,
+exception), with a Summary sheet and an Observations sheet. Every test case is automated in `tests/opportunities-page/`,
 and test names, steps and expected results are read from that sheet, so edit the wording there.
 
 | Use cases | Tests | Spec |
@@ -107,8 +107,8 @@ and test names, steps and expected results are read from that sheet, so edit the
 | (all) | OPP-COV-01 fails if a test case on the sheet has no test, or the two workbooks disagree | `coverage.spec.ts` |
 
 ```bash
-npm run test:opportunities
-npx playwright test tests/opportunities -g "OPP-038"
+npm run test:opportunities-page
+npx playwright test tests/opportunities-page -g "OPP-038"
 npx playwright test tests/opportunities --grep @uc-opp-007     # one use case
 ```
 
@@ -123,8 +123,8 @@ change through workflow actions, and close as Won (when a proposal is accepted) 
 OPP-059 (other roles: needs more accounts) are Skipped with the reason, and the delete use case is checked as
 "refused and the record kept".
 
-## Unit Reservations test cases (Testcase/Reservations_Test_Cases.xlsx)
-The "Test Cases" sheet (UR-001 … UR-069) is automated in `tests/reservations/`, one test per case, titled from the sheet
+## Unit Reservations test cases (Testcase/Reservations_Page_Test_Cases.xlsx, Maha's UR-001 … 069)
+The "Test Cases" sheet (UR-001 … UR-069) is automated in `tests/reservations-page/`, one test per case, titled from the sheet
 (the Summary and Observations sheets hold the counts and the findings):
 
 | Area | Tests | Spec |
@@ -138,7 +138,7 @@ The "Test Cases" sheet (UR-001 … UR-069) is automated in `tests/reservations/`
 | (all) | UR-COV-01 fails if a test case on the sheet has no test | `coverage.spec.ts` |
 
 ```bash
-npm run test:reservations
+npm run test:reservations-page
 npx playwright test tests/reservations -g "UR-034"
 npx playwright test tests/reservations --grep-invert Lifecycle   # skip the tests that change QA data
 ```
@@ -327,8 +327,8 @@ Separate modules, each with its own test cases, test data and report:
 | Inventory | `npm run test:inventory-page` | `Testcase/Inventory_Page_Test_Cases.xlsx` (IVP-) | `TestData/Inventory_Test_Data.xlsx` | `reports/Inventory_Page_Test_Report_…xlsx` |
 | Proposals | `npm run test:proposals-page` | `Testcase/Proposals_Page_Test_Cases.xlsx` (PRO-) | `TestData/Proposals_Test_Data.xlsx` | `reports/Proposals_Page_Test_Report_…xlsx` |
 | SPA / Sales Contracts | `npm run test:contracts-page` | `Testcase/SPA_Contracts_Page_Test_Cases.xlsx` (SPC-) | `TestData/Contracts_Test_Data.xlsx` | `reports/SPA_Contracts_Page_Test_Report_…xlsx` |
-| Opportunities | `npm run test:opportunities-page` | `Testcase/Opportunities_Page_Test_Cases.xlsx` (OPP-) | `TestData/Opportunities_Test_Data.xlsx` | `reports/Opportunities_Page_Test_Report_…xlsx` |
-| Reservations | `npm run test:reservations-page` | `Testcase/Reservations_Page_Test_Cases.xlsx` (RSV-) | `TestData/Reservations_Test_Data.xlsx` | `reports/Reservations_Page_Test_Report_…xlsx` |
+| Opportunities | `npm run test:opportunities-page` | `Testcase/Opportunities_Page_Test_Cases.xlsx` (OPP-001…078 Maha, OPP-101…132) | `TestData/Opportunities_Test_Data.xlsx` | `reports/Opportunities_Page_Test_Report_…xlsx` |
+| Reservations | `npm run test:reservations-page` | `Testcase/Reservations_Page_Test_Cases.xlsx` (UR- Maha, RSV-) | `TestData/Reservations_Test_Data.xlsx` | `reports/Reservations_Page_Test_Report_…xlsx` |
 
 - **Inventory:** cards vs registers, projects (create, validations, duplicate, search, edit, deactivate), products (Product Details sections and values, Units / Available vs the register, virtual tour link and floor plan), units (create in the test project, currency default, duplicate, status filter, search, edit, export; unit view sections, price breakdown, Linked Modules, media), Pricing Matrix, Availability Summary (Summary Table, Stack Plan) and Holds.
 - **Proposals / Contracts:** the suites build the deal they need: buyer lead → opportunity → site visit → Reservation Ready → reservation on a *new unit of the test project* → approval → proposal → accept → buyer KYC. Then they test the register and cards, the New Proposal / New Contract forms and their validations, and the whole workflow (submit, reject, approve, accept, replace; issue, payment plan, sign, ERP handoff, replace, cancel). Contracts also cover register sorting and paging, the Total card formula, Copy link, contract documents (upload, wrong file type) and History.

@@ -1,5 +1,5 @@
 /**
- * Opportunities page (OPP-001 … OPP-032). One worker, in this order: the list and its cards, the Kanban board,
+ * Opportunities page (OPP-101 … OPP-132). One worker, in this order: the list and its cards, the Kanban board,
  * then one opportunity built by the test: hold a new test unit for it, then mark it Lost (which releases the hold).
  */
 import { test, expect, opp, note, DATA, S, list, runDeal, runUnit, oppRows, cards, cardNames, isOpen, tolerance, openOpportunity, oppAction, holdsOf } from './shared';
@@ -12,7 +12,7 @@ const lower = (s: string) => s.toLowerCase();
 test.describe('Opportunities · Table register', () => {
   test.describe.configure({ timeout: 300_000 });
 
-  test(...opp('OPP-001'), async ({ opps }) => {
+  test(...opp('OPP-101'), async ({ opps }) => {
     await opps.open();
     const title = await opps.title();
     note('title', title);
@@ -22,7 +22,7 @@ test.describe('Opportunities · Table register', () => {
     expect.soft(await opps.headers(), 'List columns').toEqual(DATA.sheet('Register Columns').map(r => r['Column']));
   });
 
-  test(...opp('OPP-002'), async ({ opps }) => {
+  test(...opp('OPP-102'), async ({ opps }) => {
     const c = await cards(opps);
     const total = await opps.pagerTotal();
     const rows = await oppRows(opps);
@@ -32,7 +32,7 @@ test.describe('Opportunities · Table register', () => {
     expect(c['Total'], 'Total card = Open card + Won rows + Lost rows').toBe(c['Open'] + won + lost);
   });
 
-  test(...opp('OPP-003'), async ({ opps }) => {
+  test(...opp('OPP-103'), async ({ opps }) => {
     const c = await cards(opps);
     const rows = await oppRows(opps);
     const open = rows.filter(r => isOpen(r.stage));
@@ -40,7 +40,7 @@ test.describe('Opportunities · Table register', () => {
     expect(c['Open'], `Open card = opportunities in an open stage (${list('Open Stages').join(', ')})`).toBe(open.length);
   });
 
-  test(...opp('OPP-004'), async ({ opps }) => {
+  test(...opp('OPP-104'), async ({ opps }) => {
     const c = await cards(opps);
     const open = (await oppRows(opps)).filter(r => isOpen(r.stage));
     const sum = open.reduce((a, r) => a + r.budget, 0);
@@ -48,7 +48,7 @@ test.describe('Opportunities · Table register', () => {
     expect(Math.abs(c['Pipeline Value'] - sum), 'Pipeline Value − total budget of the open opportunities').toBeLessThanOrEqual(tolerance(sum, open.length));
   });
 
-  test(...opp('OPP-005'), async ({ opps }) => {
+  test(...opp('OPP-105'), async ({ opps }) => {
     const c = await cards(opps);
     const open = (await oppRows(opps)).filter(r => isOpen(r.stage));
     const avg = open.length ? open.reduce((a, r) => a + r.probability, 0) / open.length : 0;
@@ -56,7 +56,7 @@ test.describe('Opportunities · Table register', () => {
     expect(Math.abs(c['Avg Probability'] - avg), 'Avg Probability − average probability of the open opportunities').toBeLessThanOrEqual(1);
   });
 
-  test(...opp('OPP-006'), async ({ opps, chain }) => {
+  test(...opp('OPP-106'), async ({ opps, chain }) => {
     const d = await runDeal(chain);
     for (const text of [d.opportunity, d.buyer.name, d.leadNo]) {
       await opps.open();
@@ -68,7 +68,7 @@ test.describe('Opportunities · Table register', () => {
     }
   });
 
-  test(...opp('OPP-007'), async ({ opps }) => {
+  test(...opp('OPP-107'), async ({ opps }) => {
     const rows = await oppRows(opps);
     await opps.open();
     const file = await opps.export(S('Export Button'));
@@ -82,7 +82,7 @@ test.describe('Opportunities · Table register', () => {
 test.describe('Opportunities · Kanban board', () => {
   test.describe.configure({ timeout: 600_000 });
 
-  test(...opp('OPP-011'), async ({ opps, page }) => {
+  test(...opp('OPP-111'), async ({ opps, page }) => {
     const c = await cards(opps);
     const board = new PipelineBoard(page);
     await board.open(S('Board View'));
@@ -97,7 +97,7 @@ test.describe('Opportunities · Kanban board', () => {
     expect(Math.abs(sum.value - c['Pipeline Value']), 'Summary value − Pipeline Value card').toBeLessThanOrEqual(tolerance(c['Pipeline Value'], 1));
   });
 
-  test(...opp('OPP-012'), async ({ opps, page }) => {
+  test(...opp('OPP-112'), async ({ opps, page }) => {
     await opps.open();
     const board = new PipelineBoard(page);
     await board.open(S('Board View'));
@@ -109,7 +109,7 @@ test.describe('Opportunities · Kanban board', () => {
     }
   });
 
-  test(...opp('OPP-013'), async ({ opps, page }) => {
+  test(...opp('OPP-113'), async ({ opps, page }) => {
     await opps.open();
     const board = new PipelineBoard(page);
     await board.open(S('Board View'));
@@ -124,7 +124,7 @@ test.describe('Opportunities · Kanban board', () => {
     await board.filter(S('Owner Filter'), all);
   });
 
-  test(...opp('OPP-014'), async ({ opps, page }) => {
+  test(...opp('OPP-114'), async ({ opps, page }) => {
     const rows = await oppRows(opps);
     await opps.open();
     const board = new PipelineBoard(page);
@@ -141,7 +141,7 @@ test.describe('Opportunities · Kanban board', () => {
     await board.filter(S('Project Filter'), all);
   });
 
-  test(...opp('OPP-015'), async ({ opps, page }) => {
+  test(...opp('OPP-115'), async ({ opps, page }) => {
     await opps.open();
     const board = new PipelineBoard(page);
     await board.open(S('Board View'));
@@ -162,7 +162,7 @@ test.describe('Opportunities · Kanban board', () => {
 test.describe('Opportunities · Unit hold', () => {
   test.describe.configure({ timeout: 1_200_000 });
 
-  test(...opp('OPP-022'), async ({ opps, chain }) => {
+  test(...opp('OPP-122'), async ({ opps, chain }) => {
     const d = await runDeal(chain);
     const panel = await openOpportunity(opps, d.opportunity);
     const before = await panel.status();
@@ -173,7 +173,7 @@ test.describe('Opportunities · Unit hold', () => {
     await panel.close();
   });
 
-  test(...opp('OPP-021'), async ({ opps, chain, page }) => {
+  test(...opp('OPP-121'), async ({ opps, chain, page }) => {
     const d = await runDeal(chain);
     const unit = await runUnit(chain);
     if (!runValue.get<boolean>('opportunities-held')) {
@@ -194,9 +194,9 @@ test.describe('Opportunities · Unit hold', () => {
     expect.soft(holds[0].until, 'Hold shows a time left').toMatch(/left/i);
   });
 
-  test(...opp('OPP-023'), async ({ chain, page }) => {
+  test(...opp('OPP-123'), async ({ chain, page }) => {
     const unit = await runUnit(chain);
-    test.skip(!runValue.get<boolean>('opportunities-held'), 'The unit could not be held (OPP-021)');
+    test.skip(!runValue.get<boolean>('opportunities-held'), 'The unit could not be held (OPP-121)');
     const rsv = new ModulePage(page, S('Reservations Route'));
     await rsv.open();
     const form = new ModalForm(page);
@@ -227,7 +227,7 @@ test.describe('Opportunities · Unit hold', () => {
 test.describe('Opportunities · Mark Lost', () => {
   test.describe.configure({ timeout: 900_000 });
 
-  test(...opp('OPP-031'), async ({ opps, chain }) => {
+  test(...opp('OPP-131'), async ({ opps, chain }) => {
     const d = await runDeal(chain);
     test.skip(runValue.get<boolean>('opportunities-lost') === true, 'The opportunity was already marked Lost in this run');
     const panel = await openOpportunity(opps, d.opportunity);
@@ -239,7 +239,7 @@ test.describe('Opportunities · Mark Lost', () => {
     await panel.close();
   });
 
-  test(...opp('OPP-032'), async ({ opps, chain, page }) => {
+  test(...opp('OPP-132'), async ({ opps, chain, page }) => {
     const d = await runDeal(chain);
     const unit = await runUnit(chain);
     const before = await cards(opps);

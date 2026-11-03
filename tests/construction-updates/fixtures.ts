@@ -7,8 +7,8 @@
 import fs from 'fs';
 import path from 'path';
 import { Page } from '@playwright/test';
-import { test as base, expect, note } from '../opportunities/fixtures';
-import { CrmApi } from '../opportunities/api';
+import { test as base, expect, note } from '../opportunities-page/fixtures';
+import { CrmApi } from '../opportunities-page/api';
 import { ConstructionUpdatesPage } from './ConstructionUpdatesPage';
 
 export { expect, note };

@@ -3,7 +3,7 @@
  * Figures are checked against independent sources: the Customers & Brokers cards and Broker Register, and the
  * Leads export (leads created this month).
  */
-import { test as base, expect, note } from '../opportunities/fixtures';
+import { test as base, expect, note } from '../opportunities-page/fixtures';
 import { bc } from './catalog';
 import { ROUTES } from '../locators';
 import { download, Sheet } from '../helpers';

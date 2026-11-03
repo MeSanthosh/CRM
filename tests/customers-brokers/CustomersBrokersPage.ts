@@ -6,7 +6,7 @@
 import { Page, Locator, Request, Response, expect } from '@playwright/test';
 import { BasePage } from '../pages/BasePage';
 import { ROUTES, CB, CB_CARDS, CUSTOMER_COLUMNS, BROKER_COLUMNS } from '../locators';
-import { withRequest, stable } from '../opportunities/OpportunitiesPage';
+import { withRequest, stable } from '../opportunities-page/OpportunitiesPage';
 
 export type Tab = 'Customers' | 'Brokers';
 export type CustomerRow = { name: string; code: string; phone: string; email: string; buyerType: string; project: string; status: string; created: string; href: string };

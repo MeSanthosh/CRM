@@ -1,8 +1,8 @@
 /**
- * The Opportunities suite reads two workbooks in Testcase/ at runtime:
- *  - Opportunities_Test_Cases.xlsx, sheet "Test Cases": the test cases (OPP-001…OPP-060) — titles, steps,
+ * The Opportunities suite reads Testcase/Opportunities_Page_Test_Cases.xlsx at runtime (Maha's two workbooks merged into it):
+ *  - sheet "Test Cases": the test cases (OPP-001…OPP-060) — titles, steps,
  *    expected results, type and priority shown in test names and the Excel defect report. Edit wording there.
- *  - Asquare_CRM_Opportunities_Use_Cases.xlsx, sheet "Detailed Specifications": the 12 use cases and the
+ *  - sheet "Detailed Specifications" (from Asquare_CRM_Opportunities_Use_Cases.xlsx): the 12 use cases and the
  *    test IDs each one lists ("Related Test Case IDs"); coverage.spec.ts checks the two workbooks agree.
  * OPP-060 is extra (UC-OPP-003's "record missing" exception had no ID of its own).
  */
@@ -10,8 +10,8 @@ import path from 'path';
 import * as XLSX from 'xlsx';
 import { test, type TestDetails } from '../auth';
 
-export const OPP_WORKBOOK = path.resolve(__dirname, '../../Testcase/Asquare_CRM_Opportunities_Use_Cases.xlsx');
-export const TAG = '@opp-workbook';
+export const OPP_WORKBOOK = path.resolve(__dirname, '../../Testcase/Opportunities_Page_Test_Cases.xlsx');
+export const TAG = '@opportunities-page';
 
 export type UseCase = {
   id: string; name: string; objective: string; preconditions: string; trigger: string; basicFlow: string;
@@ -46,7 +46,7 @@ function readUseCases(): Record<string, UseCase> {
 }
 export const USE_CASES = readUseCases();
 
-export const OPP_TEST_CASES = path.resolve(__dirname, '../../Testcase/Opportunities_Test_Cases.xlsx');
+export const OPP_TEST_CASES = path.resolve(__dirname, '../../Testcase/Opportunities_Page_Test_Cases.xlsx');
 
 export type OppCase = {
   id: string; uc: string[]; useCase: string; title: string; preconditions: string; steps: string;

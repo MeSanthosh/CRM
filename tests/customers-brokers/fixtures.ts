@@ -5,9 +5,9 @@
 import fs from 'fs';
 import path from 'path';
 import { Page } from '@playwright/test';
-import { test as base, expect, note } from '../opportunities/fixtures';
+import { test as base, expect, note } from '../opportunities-page/fixtures';
 import { CustomersBrokersPage, CustomerRow } from './CustomersBrokersPage';
-import { CrmApi } from '../opportunities/api';
+import { CrmApi } from '../opportunities-page/api';
 
 export { expect, note };
 

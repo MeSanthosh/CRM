@@ -7,7 +7,7 @@ import { Page, Locator, Request, Response, expect } from '@playwright/test';
 import { BasePage } from '../pages/BasePage';
 import { ROUTES, RSV, RESERVATION_CARDS, RESERVATION_COLUMNS } from '../locators';
 import { parseNum } from '../helpers';
-import { withRequest, stable } from '../opportunities/OpportunitiesPage';
+import { withRequest, stable } from '../opportunities-page/OpportunitiesPage';
 
 export type RsvRow = {
   rsv: string; opp: string; customer: string; unit: string; status: string;

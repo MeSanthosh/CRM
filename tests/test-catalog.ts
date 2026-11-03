@@ -40,8 +40,8 @@ function moduleCase(prefix: string, id: string) {
   return moduleCases[prefix][id];
 }
 import { SALES_CASES } from './sales-reports/catalog';
-import { OPP_CASES, USE_CASES } from './opportunities/catalog';
-import { RSV_CASES } from './reservations/catalog';
+import { OPP_CASES, USE_CASES } from './opportunities-page/catalog';
+import { RSV_CASES } from './reservations-page/catalog';
 import { CB_CASES } from './customers-brokers/catalog';
 import { BC_CASES } from './brokers-channels/catalog';
 import { CU_CASES } from './construction-updates/catalog';
@@ -210,7 +210,8 @@ const PAGE_SUITES: Record<string, { cases: Record<string, PageCase>; module: str
 export function caseInfo(id: string, title: string): CaseInfo {
   if (C[id]) return C[id];
   const suite = PAGE_SUITES[id.split('-')[0]];
-  if (suite) {
+  // Maha's Opportunities rows (with a Use Case ID) keep their own mapping below
+  if (suite && !(id.startsWith('OPP-') && OPP_CASES[id]?.uc.length)) {
     // IVP-013.2 = row 2 of the test data for case IVP-013
     const c = suite.cases[id.replace(/\.\d+$/, '')];
     const page = url(suite.path);
@@ -337,11 +338,11 @@ export function caseInfo(id: string, title: string): CaseInfo {
     if (c) {
       const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
       const steps = c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
-      return { module: `Reservations · ${c.area}`, page, severity, category: c.type || c.component,
+      return { module: `Reservations Page · ${c.area}`, page, severity, category: c.type || c.component,
         steps: [...(c.preconditions ? [`Precondition: ${c.preconditions}`] : []), ...steps, ...(c.data ? [`Test data: ${c.data}`] : [])],
         expected: c.expected };
     }
-    return { module: 'Reservations · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+    return { module: 'Reservations Page · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
   }
   if (id.startsWith('OPP-')) {
     const opps = url(ROUTES.opportunities);
@@ -350,11 +351,11 @@ export function caseInfo(id: string, title: string): CaseInfo {
       const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
       const steps = c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
       const name = c.useCase || c.uc.map(u => USE_CASES[u]?.name ?? u).join(' / ');
-      return { module: `Opportunities · ${name}`, page: opps, severity, category: c.type || c.uc.join(', '),
+      return { module: `Opportunities Page · ${name}`, page: opps, severity, category: c.type || c.uc.join(', '),
         steps: [...(c.preconditions ? [`Precondition: ${c.preconditions}`] : []), ...steps, ...(c.data ? [`Test data: ${c.data}`] : [])],
         expected: c.expected };
     }
-    return { module: 'Opportunities · Coverage', page: opps, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+    return { module: 'Opportunities Page · Coverage', page: opps, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
   }
   const pageTest = PAGE_TESTS[id.split('-')[0]];
   if (pageTest && /^[A-Z]+-\d+$/.test(id)) {

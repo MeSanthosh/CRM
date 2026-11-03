@@ -6,7 +6,7 @@
 import { Page, Locator, Request, expect } from '@playwright/test';
 import { BasePage } from '../pages/BasePage';
 import { ROUTES, CUP } from '../locators';
-import { withRequest, stable } from '../opportunities/OpportunitiesPage';
+import { withRequest, stable } from '../opportunities-page/OpportunitiesPage';
 
 export type UpdateRow = { title: string; project: string; period: string; status: string };
 export type UpdateForm = { projectId: string; projectLocked: boolean; period: string; title: string; description: string; portalVisible: boolean; submit: string };
