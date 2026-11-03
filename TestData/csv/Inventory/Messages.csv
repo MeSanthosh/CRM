@@ -1,0 +1,5 @@
+﻿Message Key,Expected Text,Where it appears
+Project Required Title,Required Fields Missing,Pop-up when New Project is saved without code or name
+Project Required Body,Project code and name are required.,Same pop-up
+Project Duplicate Title,Project Not Saved,Pop-up when the project code already exists
+Duplicate Code,already exists,Words expected in the message when a product / unit code already exists

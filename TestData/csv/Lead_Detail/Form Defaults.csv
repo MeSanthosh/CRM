@@ -1,0 +1,14 @@
+﻿Form,Field Label,Default
+Log call,Subject,Phone call
+Log call,Direction,Outgoing
+Log call,Outcome,Connected
+Log call,Priority,Normal
+Log call,Logged for,(me)
+Task,Subject,
+Task,Reminder,15 minutes before
+Task,Priority,Normal
+Task,Assigned to,(me)
+Meeting,Subject,
+Meeting,Reminder,15 minutes before
+Meeting,Priority,Normal
+Meeting,Assigned to,(me)

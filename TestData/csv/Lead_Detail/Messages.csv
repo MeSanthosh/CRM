@@ -1,0 +1,35 @@
+﻿Message Key,Expected Text,Where it appears
+Required Title,Required Fields Missing,Pop-up when Disqualify / Change Status is pressed with required fields empty
+Disqualify Confirm Title,Disqualify Lead,"Confirmation after pressing ""Disqualify lead"""
+Disqualify Confirm Button,Disqualify,Button that confirms the disqualification
+Disqualify Cancel Button,Cancel,Button that cancels the disqualification
+Disqualified Title,Lead Disqualified,Pop-up after the disqualification is confirmed
+Disqualified Body,The lead is marked Disqualified.,Same pop-up
+Qualified Title,Lead Qualified,"Pop-up after ""Qualify lead"""
+Qualified Body,{name} was qualified successfully.,Same pop-up
+Current Owner Note,The current owner can't be picked again.,"Note under ""Assign to"""
+Status Changed Title,Status Changed,Pop-up after Change Status
+Status Changed Body,Lead moved to {status}.,Same pop-up
+Assigned Title,Lead Assigned,Pop-up after Assign Lead
+Assigned Body,Lead assigned to {user}.,Same pop-up
+Assignee Required Title,Assignee Required,Pop-up when a user who is not the owner presses Qualify Lead
+Assignee Required Body,Only the assigned user can complete qualification for this lead,Same pop-up
+Qualify Missing Title,Qualification Details Missing,Pop-up when Qualify Lead is pressed without the checklist
+Score Title,Score Recalculated,Pop-up after Recalculate Score
+Score Body,Computed score {score}. Suggested rating: {rating}.,Same pop-up
+Convert Confirm Title,Convert lead to opportunity?,Confirmation before converting
+Convert Go Back,Go back,Button that cancels the conversion
+Convert Button,Convert,Button that confirms the conversion
+Subject Required,Subject is required.,Call / task / meeting form
+Due Required,Due date and time is required.,Task / meeting form
+Call Future,Call time cannot be in the future.,Log call form
+Follow-up Required,Choose when to follow up.,Log call form with the follow-up box ticked
+Follow-up Subject,Follow up: {subject},Task created by a call with a follow-up
+Follow-up Notes,Follow-up after call ({outcome}).,Notes of that task
+Linked To,Linked to {leadNo},Under the title of the call / task / meeting form
+Done Line,Done {date} by {user},Completed task line ({date} = dd Mon yyyy)
+History Created,Lead created,First Status History entry
+History Qualified,Qualified with score {score},Status History entry after qualifying
+Owner Created,Assigned during lead creation,First Owner History entry
+Owner Reassigned,Assigned from lead detail,Owner History entry after Assign Lead
+Edit Save Button,Save changes,Save button of the Edit Call / Task / Meeting form

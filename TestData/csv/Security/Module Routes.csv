@@ -1,0 +1,19 @@
+﻿Permission,Menu Label,Route
+DASHBOARD,My Smart Workspace,/
+ACTIVITIES,Tasks & Calendar,/activities
+LEADS,Leads,/leads
+OPPORTUNITIES,Opportunities,/opportunities
+RESERVATIONS,Reservations,/reservations
+PROPOSALS,Proposals,/proposals
+CONTRACTS,SPA / Sales Contracts,/spa-contracts
+CUSTOMERS,Customers & Brokers,/customers
+INVENTORY,Inventory,/inventory
+BROKERS,Brokers & Channels,/brokers-channels
+CAMPAIGNS,Marketing,/marketing
+COMMUNICATIONS,Activities & Comm.,/activities-communication
+CONSTRUCTION_UPDATES,Construction Updates,/construction-updates
+SERVICE_REQUESTS,Service Requests,/service-requests
+REPORTS,Reports & Analytics,/reports-analytics
+USERS,Users & Roles,/admin
+AUDIT_LOG,Audit Log,/admin/audit-log
+CONFIGURATION,Preferences,/preferences

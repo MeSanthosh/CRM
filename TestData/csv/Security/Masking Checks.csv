@@ -1,0 +1,7 @@
+﻿Page,Route,Column,Kind
+Leads,/leads,Lead,name
+Leads,/leads,Phone / Email,phone
+Leads,/leads,Phone / Email,email
+Customers,/customers,Customer,name
+Customers,/customers,Contact,phone
+Customers,/customers,Contact,email

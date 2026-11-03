@@ -1,0 +1,7 @@
+﻿Event Key,Event,Result,Detail
+Login Success,Password login,Success,
+Login Failed,Password login,Failed,INVALID_CREDENTIALS
+Login Locked,Password login,Failed,ACCOUNT_LOCKED
+Password Changed,Password changed,Success,
+Password Change Failed,Password changed,Failed,CURRENT_PASSWORD_INVALID
+Password Reset,Password reset,Success,

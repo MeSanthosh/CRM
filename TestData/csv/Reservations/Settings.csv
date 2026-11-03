@@ -1,0 +1,14 @@
+﻿Setting,Value,What it means
+Page Title,Unit Reservations,Title of the page
+Search Placeholder,"Search reservation, customer, unit",Search box of the Reservation Register
+Export Button,Export,Export of the register
+Pending Heading,Pending My Approval,Table of reservations waiting for the signed-in approver
+Not Sent Pattern,Not sent,ERP SYNC text of a reservation that has not reached ERP
+Requested Status,Requested,
+Approved Status,Approved,
+Converted Status,Converted to Contract,
+Cancelled Status,Cancelled,
+Value Tolerance %,0.5,Allowed difference between amounts shown rounded
+Erp Sync Caption,ERP SYNC,Summary tile of the reservation panel with the ERP sync state
+Erp Retry Button,Retry ERP Sync,Button that sends an approved reservation to ERP again (offered when a sync has not gone through)
+Unit Status After Cancel,Available,Inventory status of the unit once its reservation is cancelled

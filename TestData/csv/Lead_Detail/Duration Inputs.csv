@@ -1,0 +1,5 @@
+﻿Typed,Expected Value,Why
+abc,,Letters are not accepted
+-5,5,Minus sign is not accepted
+45,45,Whole minutes are kept
+12.5,not 125,A decimal must not turn into a different number

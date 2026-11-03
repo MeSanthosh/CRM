@@ -1,0 +1,22 @@
+﻿Setting,Value,What it means
+Page Title,Opportunities,Title of the page
+Search Placeholder,"Search opportunity, customer, lead, project",Search box of the list
+List View,List,View button: table register
+Board View,Board,View button: Kanban board
+Export Button,Export,Export of the list
+Open Stages,"Qualified, Site Visit, Negotiation, Reservation Ready, Proposal",Stages counted as Open (active pipeline)
+Won Stage,Won,
+Lost Stage,Lost,
+Board Summary Start,Open pipeline:,"Start of the board summary ""Open pipeline: N deals · V USD · weighted W USD"""
+Board Move Prompt,Move / mark Lost…,First option of the move menu of a board card
+Not From Board,(not from board),Suffix of a stage the board cannot move a deal to
+Owner Filter,Owner,Board filter (aria-label)
+Project Filter,Project,Board filter (aria-label)
+Value Tolerance %,0.5,Allowed difference between amounts shown rounded
+Inventory Holds Tab,Holds,Inventory tab listing unit holds
+Holds Scope Filter,Whose holds,Holds: filter of whose holds are listed (aria-label)
+Holds Scope All,All,Every user
+Holds Status Filter,Show,Holds: filter of hold status (aria-label)
+Holds Active,Active,Active holds only
+Hold Active Status,Active,Status of a hold that is in force
+Closed Filter,Closed deals,Board filter of Won / Lost columns (aria-label)

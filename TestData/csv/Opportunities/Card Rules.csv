@@ -1,0 +1,5 @@
+﻿Card,Equals
+Total,Open + Won + Lost = opportunities listed
+Open,rows with an Open stage
+Pipeline Value,sum of Budget of the Open rows
+Avg Probability,sum of Probability of the Open rows ÷ Open

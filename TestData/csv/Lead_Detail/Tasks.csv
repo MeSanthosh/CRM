@@ -1,0 +1,11 @@
+﻿Task ID,Kind,Subject,Due In Days,Due Time,Reminder,Priority,Assigned To,Notes,Edited Subject
+TASK-01,Task,Send price list,2,10:00,15 minutes before,High,(me),Email the 2 bedroom price list and floor plans.,Send price list and floor plans
+TASK-02,Task,Prepare payment plan,3,11:30,1 hour before,Normal,(me),Prepare a 40/60 payment plan for the customer.,Prepare 40/60 payment plan
+TASK-03,Task,Confirm site visit slot,1,16:00,No reminder,Low,QA Sales User,Check the show apartment calendar.,Confirm Saturday site visit slot
+TASK-04,Task,Share reservation form,4,09:15,At due time,Normal,(me),Send the reservation form with the KYC list.,Share reservation form and KYC list
+TASK-05,Task,Check mortgage options,5,14:45,1 day before,High,(me),Ask the partner bank for a pre-approval.,Check mortgage pre-approval
+MEET-01,Meeting,Site visit at Palm Exotica,5,15:00,1 day before,Normal,(me),Show the 2 bedroom sea-view apartment.,Site visit and show apartment tour
+MEET-02,Meeting,Online project presentation,2,18:00,15 minutes before,High,(me),Video call with the customer and their partner.,Online presentation with both buyers
+MEET-03,Meeting,Payment plan meeting,4,11:00,At due time,Low,QA Sales User,Walk through the payment schedule.,Payment schedule walkthrough
+MEET-04,Meeting,Contract review,6,12:30,1 hour before,Normal,(me),Review the draft SPA with the customer.,Draft SPA review
+MEET-05,Meeting,Handover of brochure pack,3,10:30,No reminder,High,(me),Hand over the printed brochure pack.,Brochure pack handover

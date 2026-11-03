@@ -1,0 +1,4 @@
+﻿Action,Submit Button,Field,Value
+Cancel Reservation,Cancel Reservation,Cancellation reason,Buyer Withdrew
+Cancel Reservation,Cancel Reservation,Remarks,Buyer postponed the purchase to next year.
+Cancel Without Reason,Cancel Reservation,Remarks,Cancel attempted without a reason.

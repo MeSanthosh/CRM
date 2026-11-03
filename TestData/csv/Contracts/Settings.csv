@@ -1,0 +1,42 @@
+﻿Setting,Value,What it means
+Contracts Route,/spa-contracts,SPA / Sales Contracts page
+Proposals Route,/proposals,Proposals page (the deal needs an accepted proposal)
+Page Title,SPA / Sales Contracts,Title of the page
+Search Placeholder,"Search contract, reservation, customer, unit",Search box of the Contract Register
+Form Note,Create a draft contract from an approved reservation.,Line under the New Contract title
+Expected Default Currency,USD - United States Dollar,Currency the New Contract form should start with (the deal currency)
+Contract No. Format,CON-YYYYMMDDhhmmss-XXXX,"Contract number: Y M D h m s = digits, X = letter or digit"
+Draft Status,Draft,
+Issued Status,Issued,
+Signed Status,Signed,
+Superseded Status,Superseded,
+Cancelled Status,Cancelled,
+ERP Not Ready,NOT_READY,ERP column / ERP HANDOFF before the handoff
+ERP Ready,READY,After Move to Handoff
+ERP Handed Off,HANDED_OFF,After Send to ERP
+Reservation Status After Contract,Converted to Contract,Reservation status once a contract is created from it
+Unit Status After Signing,Sold,Inventory status of the unit once the contract is signed
+KYC Approved Status,Approved,Buyer KYC needed before signing
+Accepted Proposal Status,Accepted,Proposal status needed before a contract
+Value Tolerance %,0.5,Allowed difference between amounts shown rounded
+New Contract Button,New Contract,Opens the New Contract form
+Create Contract Button,Create Contract,Saves the New Contract form
+Export Button,Export,Contract Register export
+Due Date Label,Due Date,Label of each stage due date in the payment plan
+Deposit Label,STAGE 1 · RESERVATION DEPOSIT,Payment plan summary: the reservation deposit
+Balance Label,BALANCE TO SCHEDULE,Payment plan summary: SPA − deposit
+Plan Total Line,Deposit,"Start of the line ""Deposit x% + Stages y% = z%"""
+Refresh Wait Seconds,120,After a change the cards may update with a delay: wait up to this long (the delay is recorded in the report)
+Plan Wait Seconds,180,"After ""Payment Plan Saved"" the contract may show the plan with a delay: wait up to this long"
+Agreed Pack Complete,4/4 complete,"Agreed Pack once reservation, proposal, plan and agreement are done"
+Page Size,20,"Contracts per register page (""Showing 1–20 of N"")"
+Total Card,Total,Card whose formula line splits the total by status (SPC-037)
+Documents Heading,Documents,Contract Detail block for contract documents
+No Documents Text,No documents uploaded yet.,Documents block before any upload
+Document Rule Text,"PDF, JPG or PNG, up to 10 MB.",Hint under the Documents upload
+Upload Button,Upload,Documents block: upload button
+History Heading,History,Contract Detail block listing every change
+History Changed Words,changed to,History line between the old and the new value
+History Created Word,Created,History entry of the creation
+History Status Field,Contract status,History field that records status changes
+History User,CRM Administrator,User shown on the changes made by the tests (the signed-in user)

@@ -1,6 +1,6 @@
 /** Workbook areas: Executive Snapshot / KPI Validation (RA-001…012), Reporting Period Scenarios (RA-013…018). */
 import { test, expect, Page } from '../auth';
-import { kpi, kpiText, open, collectJson, numbersIn, matchesApi, parseNum } from '../helpers';
+import { kpi, kpiText, open, collectJson, numbersIn, matchesApi, parseNum, tableRows } from '../helpers';
 import { ROUTES, HUB_SNAPSHOT, REPORT_PAGES, XP, at } from '../locators';
 import { dbConfigured, dbNumber, sameValue } from '../db';
 import { DB_CHECKS } from '../db-queries';
@@ -58,15 +58,34 @@ test.describe('Scenarios · Executive Snapshot / KPI Validation', () => {
 
   test(...scenario('RA-005', 'Units Sold is a whole number ≥ 0, is in the API response, and equals Inventory Reports "Sold"'), async ({ page }) => { await checkSnapshotCard(page, 'Units Sold'); });
 
-  test(...scenario('RA-006', 'Pipeline Value equals Sales "Pipeline value" and the sum of "Value (USD)" in Open Pipeline by Stage'), async ({ page }) => {
-    const { value } = await checkSnapshotCard(page, 'Pipeline Value');
-    expectNear(await colSum(page, 'Open Pipeline by Stage', 'Value (USD)'), value, 'Sum of stage values vs hub Pipeline Value');
+  // Build 3110-10 removed the hub snapshot cards: the pipeline figures are compared between the Sales Reports
+  // tiles, its registers (RPT-07 Opportunities & Pipeline Register, SLS-04 Salesperson Pipeline) and the Opportunities page.
+  test(...scenario('RA-006', 'Sales "Pipeline value" = sum of Deal Value of the open opportunities (RPT-07) = sum of Pipeline by salesperson (SLS-04) = Opportunities page "Pipeline Value"'), async ({ page }) => {
+    await openReport(page, R.sales, 'this_month');
+    const value = await kpi(page, 'Pipeline value');
+    const openCount = await kpi(page, 'Open opportunities');
+    const rows = await tableRows(page, 'Open Opportunities');
+    const register = await colSum(page, 'Open Opportunities', 'Value (USD)');
+    const byOwner = await colSum(page, 'Salesperson Pipeline', 'Pipeline (USD)');
+    await open(page, ROUTES.opportunities);
+    const card = await kpi(page, 'Pipeline Value');
+    note('values', `Sales "Pipeline value" ${value} | RPT-07 Σ Deal Value ${register} (${rows} rows, Open opportunities ${openCount}) | SLS-04 Σ Pipeline ${byOwner} | Opportunities page "Pipeline Value" ${card}`);
+    expect.soft(rows, 'RPT-07 rows = Open opportunities').toBe(openCount);
+    expectNear(register, value, 'RPT-07 Σ Deal Value vs Pipeline value');
+    expectNear(byOwner, value, 'SLS-04 Σ Pipeline vs Pipeline value');
+    expectNear(card, value, 'Opportunities page Pipeline Value vs Sales Pipeline value');
   });
 
-  test(...scenario('RA-007', 'Weighted Pipeline equals the sum of Weighted (USD) by stage, and is ≤ Pipeline Value'), async ({ page }) => {
-    const { value } = await checkSnapshotCard(page, 'Weighted Pipeline');
-    expectNear(await colSum(page, 'Open Pipeline by Stage', 'Weighted (USD)'), value, 'Sum of weighted stage values vs hub Weighted Pipeline');
-    expect.soft(value, 'Weighted ≤ Pipeline value').toBeLessThanOrEqual(await kpi(page, 'Pipeline value'));
+  test(...scenario('RA-007', 'Sales "Weighted pipeline" = sum of Weighted Value (RPT-07) = sum of Weighted by salesperson (SLS-04), and is ≤ Pipeline value'), async ({ page }) => {
+    await openReport(page, R.sales, 'this_month');
+    const value = await kpi(page, 'Weighted pipeline');
+    const pipeline = await kpi(page, 'Pipeline value');
+    const register = await colSum(page, 'Open Opportunities', 'Weighted Value (USD)');
+    const byOwner = await colSum(page, 'Salesperson Pipeline', 'Weighted (USD)');
+    note('values', `Sales "Weighted pipeline" ${value} | RPT-07 Σ Weighted Value ${register} | SLS-04 Σ Weighted ${byOwner} | Pipeline value ${pipeline}`);
+    expectNear(register, value, 'RPT-07 Σ Weighted Value vs Weighted pipeline');
+    expectNear(byOwner, value, 'SLS-04 Σ Weighted vs Weighted pipeline');
+    expect.soft(value, 'Weighted ≤ Pipeline value').toBeLessThanOrEqual(pipeline);
   });
 
   test(...scenario('RA-008', 'SPA Value Signed (This Month) equals SPA Reports "Signed value" for This month'), async ({ page }) => { await checkSnapshotCard(page, 'SPA Value Signed (This Month)'); });
@@ -201,9 +220,10 @@ test.describe('Scenarios · Reporting Period Scenarios', () => {
   });
 
   test(...scenario('RA-018', 'With the same period selected, metrics shared between modules agree (Last month and Last 12 months)'), async ({ page }) => {
+    // build 3110-10: Lead Reports no longer show "Won Value" / "SPA Signed" cards; Sales Reports carry them
     const pairs: [string, string, string, string][] = [
-      [R.leads, 'Won Value', R.sales, 'Won value'],
-      [R.leads, 'SPA Signed', R.spa, 'SPAs signed in period'],
+      [R.sales, 'Won value', R.spa, 'Signed value'],
+      [R.sales, 'Won in period', R.spa, 'SPAs signed in period'],
       [R.inventory, 'Sold in period', R.spa, 'SPAs signed in period'],
       [R.customers, 'SPA value', R.spa, 'Signed value'],
     ];

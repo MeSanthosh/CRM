@@ -57,9 +57,65 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | Export button | `//button[contains(@class,'crm-export-button')]` | `button.crm-export-button` |
 | Leads table | `//table[contains(@class,'crm-leads-inbox-table')]` | `table.crm-leads-inbox-table` |
 | Table rows | `//table[contains(@class,'crm-leads-inbox-table')]/tbody/tr` | `table.crm-leads-inbox-table > tbody > tr` |
-| Pager text ("Page 1 of 25 · 615 leads") | `//div[contains(@class,'crm-pagination')]/span` | `div.crm-pagination > span` |
+| Pager text ("Showing 1–20 of 616 leads · Page 1 of 31") | `//div[contains(@class,'crm-pagination')]/span` | `div.crm-pagination > span` |
 | Next page | `//div[contains(@class,'crm-pagination')]//button[normalize-space()='Next']` |  |
 | Previous page | `//div[contains(@class,'crm-pagination')]//button[normalize-space()='Previous']` |  |
+| KPI card button (v2.0; click filters the list) | `//button[contains(@class,'crm-metric-card-button')][h3[normalize-space()='Assigned']]` | `button.crm-metric-card-button` |
+| KPI card value (v2.0) | `//button[contains(@class,'crm-metric-card-button')][h3[normalize-space()='Total Leads']]/div[contains(@class,'crm-kpi')]` | `button.crm-metric-card-button > div.crm-kpi` |
+| Page description ("My Leads · Leads assigned to you.") | `//main//p[contains(@class,'crm-leads-exec-subtitle')]` | `p.crm-leads-exec-subtitle` |
+| Sortable column header | `//table[contains(@class,'crm-leads-inbox-table')]//th//button[contains(@class,'crm-sortable-th-button')][starts-with(normalize-space(),'Assigned')]` | `button.crm-sortable-th-button` |
+| Create Individual / Corporate | `//main//a[@href='/leads/individual/new']` · `//main//a[@href='/leads/corporate/new']` | `a[href="/leads/individual/new"]` |
+
+### Create lead form (`/leads/individual/new`, `/leads/corporate/new`)
+
+| Element | XPath | CSS |
+|---|---|---|
+| Form (modal) | `//section[contains(@class,'crm-lead-modal')][.//form]` | `section.crm-lead-modal` |
+| Heading | `//section[contains(@class,'crm-lead-modal')]//h3[@id='lead-create-title']` |  |
+| Section titles | `//section[contains(@class,'crm-lead-modal')]//h4[contains(@class,'crm-form-section-title')]` |  |
+| Field by name (names: TestData → Form Fields) | `//section[contains(@class,'crm-lead-modal')]//*[self::input or self::select or self::textarea][@name='firstName']` | `section.crm-lead-modal [name="firstName"]` |
+| Labels marked * | `//section[contains(@class,'crm-lead-modal')]//label[contains(@class,'crm-field')]/span[contains(@class,'crm-label-required')]` |  |
+| Field by label | `//label[contains(@class,'crm-field')][span[contains(@class,'crm-label')][normalize-space()='Date of Birth']]` |  |
+| Create Lead | `//section[contains(@class,'crm-lead-modal')]//button[@type='submit'][normalize-space()='Create Lead']` | `section.crm-lead-modal button[type="submit"]` |
+| Close | `//section[contains(@class,'crm-lead-modal')]//button[normalize-space()='Close']` |  |
+| Pop-up message | `//*[contains(@class,'crm-notice-dialog')]` (title `//h3`, buttons by text) | `.crm-notice-dialog` |
+| Date picker: trigger / pop-over | `.//button[contains(@class,'crm-date-field-trigger')]` · `//*[@role='dialog'][contains(@class,'crm-date-field-popover')]` | `.crm-date-field-popover` |
+| Date picker: year, month, day, time, Set | `…//select[@aria-label='Year']`, `…//select[@aria-label='Month']`, `…//button[contains(@class,'crm-calendar-day')][not(contains(@class,'is-outside'))][normalize-space()='20']`, `…//input[@type='time']`, `…//button[normalize-space()='Set']` |  |
+
+### Lead Detail panel
+
+| Element | XPath | CSS |
+|---|---|---|
+| Panel | `//section[contains(@class,'crm-lead-detail-modal')]` | `section.crm-lead-detail-modal` |
+| Action button | `//section[contains(@class,'crm-lead-detail-modal')]//button[normalize-space()='Assign Lead']` (also Disqualify Lead, Move to Opportunity) |  |
+| Qualify lead (submit, v2.0) | `//section[contains(@class,'crm-lead-detail-modal')]//button[@type='submit'][normalize-space()='Qualify lead']` |  |
+| Identity line "LD-… · Assigned to <owner>" (v2.0) | `//section[contains(@class,'crm-lead-detail-modal')]//div[contains(@class,'crm-lead-identity-copy')]/span` |  |
+| Status pill "Status: X · Score N" (v2.0) | `//section[contains(@class,'crm-lead-detail-modal')]//span[contains(@class,'crm-lead-status-pill')]` | `span.crm-lead-status-pill` |
+| Summary tile value (v2.0) | `…//div[contains(@class,'crm-lead-summary-tile')][div[contains(@class,'crm-lead-summary-tile-label')][normalize-space()='Phone']]/div[contains(@class,'crm-lead-summary-tile-value')]` | `div.crm-lead-summary-tile` |
+| Additional Captured Profile Details (v2.0) | `//section[contains(@class,'crm-lead-detail-modal')]//button[contains(@class,'crm-lead-extra-details-toggle')]` |  |
+| Next action cards (v2.0) | `//section[contains(@class,'crm-lead-detail-modal')]//button[contains(normalize-space(),'Open Form')]` |  |
+| Score breakdown box | `//section[contains(@class,'crm-lead-detail-modal')]//button[normalize-space()='Recalculate Score']/../..` |  |
+| Tasks & Calls block | `(//section[contains(@class,'crm-lead-detail-modal')]//section[contains(@class,'crm-record-activities')][@aria-label='Tasks and calls'])[1]` | `section.crm-record-activities[aria-label="Tasks and calls"]` |
+| Log call / Add task / Add meeting | `…//div[contains(@class,'crm-record-activities-buttons')]/button[normalize-space()='Add task']` |  |
+| Activity item by subject | `…//li[contains(@class,'crm-record-activity')][.//button[contains(@class,'crm-activity-subject-button')][normalize-space()='Send price list']]` | `li.crm-record-activity` |
+
+### Log call / Task / Meeting form
+
+| Element | XPath | CSS |
+|---|---|---|
+| Form | `(//*[contains(@class,'crm-activity-dialog')])[last()]` | `.crm-activity-dialog` |
+| Date field by input name (`occurredAt`, `dueAt`, `followUpDueAt`) | `(//*[contains(@class,'crm-activity-dialog')])[last()]//input[@name='dueAt']/..` |  |
+| Field messages | `(//*[contains(@class,'crm-activity-dialog')])[last()]//*[contains(@class,'crm-field-error')]` | `.crm-field-error` |
+
+### Tasks & Calendar (`/activities`)
+
+| Element | XPath | CSS |
+|---|---|---|
+| Task filter | `//main//select[@aria-label='Task filter']` | `select[aria-label="Task filter"]` |
+| Whose tasks | `//main//select[@aria-label='Whose tasks']` | `select[aria-label="Whose tasks"]` |
+| Search | `//main//input[@placeholder='Search subject or notes']` |  |
+| Table / Export | `//main//table` · `//main//button[normalize-space()='Export']` |  |
+| Opportunities rows (`/opportunities`) | `//main//table/tbody/tr` |  |
 
 ## Executive Dashboard (`/`)
 
@@ -92,6 +148,9 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | View: You and your team | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='You and your team']` |  |
 | View: Mine | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='Mine']` |  |
 | Report tab (e.g. Sales) | `//button[contains(@class,'crm-tab-button')][normalize-space()='Sales']` | `button.crm-tab-button` |
+| KPI tile (build 3110-10), value | `//div[contains(@class,'crm-report-tile')][span[contains(@class,'crm-report-tile-label')][normalize-space()='Active customers']]/strong` | `div.crm-report-tile` → `strong.crm-report-tile-value` |
+| Sub-report pill (build 3110-10), by query | `//*[contains(@class,'crm-single-report-sibling-pills')]//a[contains(@href,'report=byResidence')]` | `a.crm-single-report-pill` |
+| Module tab bar (Sales … Exceptions are buttons, Leads is a link) | `//main//*[self::button or self::a][contains(@class,'crm-tab-button')][normalize-space()='Sales']` | `main .crm-tab-button` |
 | Any KPI value (template) | `//article[contains(@class,'crm-card')][h3[normalize-space()='<Label>']]/div[contains(@class,'crm-kpi')]` | `article.crm-card:has(> h3) > div.crm-kpi` |
 | Table by heading (template) | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='<Heading>']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |  |
 | Table rows (template) | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='<Heading>']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]/tbody/tr` |  |
@@ -169,6 +228,12 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | Table: Customers by Country of Residence | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Customers by Country of Residence']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 | Table: Customers by Type | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Customers by Type']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 | Table: New Customers in Period | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='New Customers in Period']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Table Total row (template) | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Customers by Nationality']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]/tfoot/tr` |
+| Customer ID links (New Customers in Period) | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='New Customers in Period']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]/tbody//a` |
+| Empty list message | `//main//*[normalize-space()='Nothing matches these filters.']` |
+| Custom dates error | `//main//*[starts-with(normalize-space(),'Choose both From and To dates')]` |
+| Customers page: register rows | `//main//section[contains(@class,'crm-panel')][.//*[normalize-space()='Customer Register']]//table/tbody/tr` |
+| Customers page: customer form opened from a Customer ID | `//form[contains(@class,'crm-management-modal')]` |
 
 ## Broker Reports (`/reports/brokers`)
 
@@ -213,6 +278,8 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | Table: Reservations by Project | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Reservations by Project']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 | Table: Reservations by Salesperson | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Reservations by Salesperson']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 | Table: Active Reservations | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Active Reservations']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+| Active Reservations: reservation number link | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Active Reservations']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]/tbody//a` |
+| Reservation Detail (opened from the link) | `//*[contains(@class,'crm-modal') or @role='dialog'][.//*[normalize-space()='Reservation Detail']]` |
 
 ## SPA Reports (`/reports/spa`)
 
@@ -265,6 +332,42 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | Detail list: Signed SPAs not handed off to ERP after 3 days | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Signed SPAs not handed off to ERP after 3 days']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 | Detail list: Open opportunities past expected close date | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Open opportunities past expected close date']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 | Detail list: Leads not contacted after 2 days | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Leads not contacted after 2 days']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
+
+## Inventory, Proposals, SPA / Sales Contracts and the deal chain
+
+| Element | XPath |
+|---|---|
+| Page tab (Inventory: Projects, Products, Units, …) | `//main//button[normalize-space()='Units']` |
+| Register rows (data rows only; the last table of the page) | `(//main//table)[last()]/tbody/tr[td]` |
+| Register headers | `(//main//table)[last()]/thead/tr[last()]/th` |
+| Pager text "Showing 1–20 of 135 units · Page 1 of 7" | `//main//*[contains(@class,'crm-pagination')]//*[starts-with(normalize-space(),'Showing')]` |
+| Pager Next | `//main//*[contains(@class,'crm-pagination')]//button[normalize-space()='Next']` |
+| Register search (by placeholder) | `//main//input[@type='search'][@placeholder='Search unit, project, status']` |
+| Unit Register status filter | `(//main//section[contains(@class,'crm-panel')]//select)[1]` |
+| Top-most modal form (New Project / Product / Unit / Proposal / Contract, payment plan) | `(//*[contains(@class,'crm-modal')][not(contains(@class,'crm-unit-picker-dialog'))])[last()]` |
+| Modal field by name | `(//*[contains(@class,'crm-modal')])[last()]//*[@name='proposedPrice']` |
+| Modal button | `(//*[contains(@class,'crm-modal')])[last()]//button[normalize-space()='Create Proposal']` |
+| Record detail panel (Opportunity / Reservation / Proposal / Contract Detail) | `(//section[contains(@class,'detail-modal')])[last()]` |
+| Panel button | `(//section[contains(@class,'detail-modal')])[last()]//button[normalize-space()='Approve Proposal']` |
+| Panel field by label | `(//section[contains(@class,'detail-modal')])[last()]//label[contains(@class,'crm-field')][span[contains(@class,'crm-label')][starts-with(normalize-space(),'Action remarks')]]` |
+| Unit picker ("Choose Unit") | `//*[contains(@class,'crm-unit-picker-dialog')]` |
+| Unit picker search / row | `//*[contains(@class,'crm-unit-picker-dialog')]//input[starts-with(@placeholder,'Search unit')]` · `…//tbody/tr[.//*[normalize-space()='CBR123456-D123']]` |
+| Customer → Documents & KYC block | `//*[contains(@class,'crm-modal')]//h4[normalize-space()='Documents & KYC']/ancestor::*[.//button[normalize-space()='Upload']][1]` |
+| KYC status pill | `//*[contains(@class,'crm-modal')]//span[contains(@class,'crm-kyc-status')]` |
+| KYC inputs | `select[aria-label='KYC document type']`, `input[aria-label='Document number']`, `.crm-date-field` (expiry), `input[aria-label='KYC file']` |
+| Rows of the table under a heading (Reservations → "Pending My Approval (23)") | `//main//*[self::h2 or self::h3 or self::h4][starts-with(normalize-space(),'Pending My Approval')]/following::table[1]/tbody/tr[td]` |
+| Select by aria-label (Board: Owner / Project / Closed deals; Inventory → Holds: Whose holds / Show) | `//main//select[@aria-label='Owner']` |
+| Opportunities Board column (one per stage) | `//main//section[contains(concat(' ',normalize-space(@class),' '),' crm-board-column ')]` |
+| Board column count / value (inside a column) | `.//span[contains(@class,'crm-board-count')]` · `.//span[contains(@class,'crm-board-column-value')]` |
+| Board card / its move menu (inside a column) | `.//select[starts-with(@aria-label,'Move ')]/ancestor::*[count(.//select[starts-with(@aria-label,'Move ')])=1][last()]` · `.//select[starts-with(@aria-label,'Move ')]` |
+| Board summary "Open pipeline: N deals · V USD · weighted W USD" | `//main//span[contains(@class,'crm-board-summary')]` |
+| Register column sort header (`aria-sort` = none / ascending / descending; click its button) | `(//main//table)[last()]/thead/tr[last()]/th[contains(@class,'crm-sortable-th')][.//span[normalize-space()='Value']]` |
+| Pager Previous | `//main//*[contains(@class,'crm-pagination')]//button[normalize-space()='Previous']` |
+| KPI card formula line (Contracts → Total "Draft/Issued (5) + Signed (5) + Canc. (13)") | `//main//article[contains(@class,'crm-card')][h3[normalize-space()='Total']]/p[contains(@class,'crm-card-formula')]` |
+| Floor Plans & Media panel (Product Details / unit view) | `(//*[contains(@class,'crm-modal')]//section[contains(@class,'crm-media-panel')])[last()]` — inputs `input[aria-label='Virtual tour link']`, `select[aria-label='File type']`, `input[aria-label='Caption']`, `input[aria-label='File']` |
+| Contract Detail → Documents inputs | `select` with option "Signed SPA", `input[placeholder='Description (optional)']`, `input[type=file]`, button Upload |
+| Inventory unit view / its section buttons | `(//*[contains(@class,'crm-unit-detail-modal')])[last()]` · `…//button[starts-with(normalize-space(),'Linked Modules')]` |
+| Availability Summary view buttons (⊞ Summary Table / 🏢 Stack Plan) | `(//main//button[contains(@class,'crm-dashboard-view-segment-button')][contains(normalize-space(),'Stack Plan')])[1]` |
 
 ## Ask the developers for `data-testid`
 

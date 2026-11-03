@@ -1,0 +1,3 @@
+﻿Action,All Reservations,Active,Cancelled
+Create Reservation,1,1,0
+Cancel Reservation,0,-1,1

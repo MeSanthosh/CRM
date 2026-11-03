@@ -1,0 +1,5 @@
+﻿Card,Statuses,Measure
+Total,all,count
+Needs Approval,Submitted,count
+Approved,"Approved, Accepted",count
+Proposal Value,"Draft, Submitted, Approved, Accepted",sum of Proposed

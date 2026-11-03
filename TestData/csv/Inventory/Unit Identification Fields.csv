@@ -1,0 +1,7 @@
+﻿Caption,Register Column,Compare
+Project,Project,starts with the project code
+Unit,Unit,same code
+Unit Name,Unit,same name
+Area,Area,starts with the net area
+Price,Price,same amount
+Status,Status,same status

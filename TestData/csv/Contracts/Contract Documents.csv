@@ -1,0 +1,3 @@
+﻿Case ID,Document Type,Description,File,Expected
+SPC-039,Signed SPA,Signed SPA uploaded by the CRM test suite,TestData/files/Sample_Passport_Copy.pdf,Accepted
+SPC-040,Other,Wrong file type (text file),TestData/files/Sample_Not_Allowed.txt,Refused

@@ -1,0 +1,9 @@
+﻿Step,Submit Button,Field,Value
+Site Visit,Schedule Visit & Continue,Visit Type,In-person
+Site Visit,Schedule Visit & Continue,Visit Date,{today+1} 10:30
+Site Visit,Schedule Visit & Continue,Visit Remarks,First visit to the show apartment.
+Complete Visit,Complete Site Visit,Visit to complete,#1
+Complete Visit,Complete Site Visit,Visit outcome notes,Buyer liked the sea-facing layout and asked for pricing.
+Reservation Ready,Continue to Reservation Ready,Negotiation Notes,Agreed list price; buyer prefers a sea-facing unit.
+Reservation,Create Reservation,Remarks,Deposit to be paid by bank transfer.
+Approve Reservation,Approve Reservation,Quick notes,Deposit proof checked.

@@ -6,6 +6,39 @@
 import { SAME, where } from './consistency-cases';
 import { SCENARIOS, isScenarioId } from './scenarios/catalog';
 import { LEAD_CASES } from './lead-reports/catalog';
+import { CUSTOMER_CASES } from './customer-reports/catalog';
+import { LEADS_PAGE_CASES } from './leads-page/catalog';
+import { LEAD_DETAIL_CASES } from './lead-detail/shared';
+import { SECURITY_CASES } from './security/shared';
+import { INVENTORY_CASES } from './inventory-page/shared';
+import { PROPOSAL_CASES } from './proposals-page/shared';
+import { CONTRACT_CASES } from './contracts-page/shared';
+import { LEAD_INSIGHTS_CASES } from './lead-insights/shared';
+import { OPPORTUNITY_CASES } from './opportunities-page/shared';
+import { RESERVATION_CASES } from './reservations-page/shared';
+import type { PageCase } from './leads-page/catalog';
+import path from 'path';
+import * as XLSX from 'xlsx';
+
+/** Report-module workbooks (common + page checks): ID prefix → workbook and page. */
+const MODULE_WORKBOOKS: Record<string, { file: string; module: string; route: string }> = {
+  BR: { file: 'Broker_Reports_Test_Cases.xlsx', module: 'Broker Reports', route: ROUTES.reports.brokers },
+  MR: { file: 'Marketing_Reports_Test_Cases.xlsx', module: 'Marketing Reports', route: ROUTES.reports.marketing },
+  RR: { file: 'Reservation_Reports_Test_Cases.xlsx', module: 'Reservation Reports', route: ROUTES.reports.reservations },
+  SR: { file: 'SPA_Reports_Test_Cases.xlsx', module: 'SPA Reports', route: ROUTES.reports.spa },
+  CL: { file: 'Collection_Reports_Test_Cases.xlsx', module: 'Collection Reports', route: ROUTES.reports.collections },
+  EX: { file: 'Exception_Reports_Test_Cases.xlsx', module: 'Exception Reports', route: ROUTES.reports.exceptions },
+  ER: { file: 'Executive_Reports_Test_Cases.xlsx', module: 'Executive Reports', route: ROUTES.dashboard },
+};
+const moduleCases: Record<string, Record<string, Record<string, unknown>>> = {};
+/** Test Cases rows of a module workbook by TC ID (read once). */
+function moduleCase(prefix: string, id: string) {
+  if (!moduleCases[prefix]) {
+    const wb = XLSX.readFile(path.resolve(__dirname, '../Testcase', MODULE_WORKBOOKS[prefix].file));
+    moduleCases[prefix] = Object.fromEntries(XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets['Test Cases'], { defval: '' }).map(r => [String(r['TC ID']).trim(), r]));
+  }
+  return moduleCases[prefix][id];
+}
 import { HUB_MODULES, REPORT_PAGES, LEADS_TABS, DASHBOARD_KPIS, ROUTES } from './locators';
 
 export type Severity = 'Critical' | 'High' | 'Medium' | 'Low';
@@ -142,9 +175,79 @@ const PAGE_TESTS: Record<string, { module: string; path: string }> = {
   EXC: { module: 'Exception Reports', path: ROUTES.reports.exceptions },
 };
 
+/**
+ * Page (or report) a test ID belongs to, used to name the Excel report, e.g. "Leads Page", "Lead Reports".
+ * Taken from the module: "Leads Page · Create Individual Lead" → "Leads Page", "Page · Sales Reports" → "Sales Reports".
+ */
+export function reportPageOf(id: string, title: string): string {
+  const parts = caseInfo(id, title).module.split(' · ');
+  return parts[0] === 'Page' || parts[0] === 'Scenario' ? (parts[0] === 'Page' ? parts[1] : 'Reports Scenarios') : parts[0];
+}
+
 /** Info for a test ID, with a generic fallback (e.g. DB-* tests). */
+/** Steps of a workbook case, starting with its preconditions ("Before you start: …") so a reader can repeat them. */
+function stepsOf(c: PageCase): string[] {
+  const steps = c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')).filter(Boolean);
+  return c.preconditions && c.preconditions !== '—' ? [`Before you start: ${c.preconditions}`, ...steps] : steps;
+}
+
+/** Page suites with their own workbook (Testcase/<Page>_Page_Test_Cases.xlsx): ID prefix → cases, report name, page. */
+const PAGE_SUITES: Record<string, { cases: Record<string, PageCase>; module: string; path: string }> = {
+  IVP: { cases: INVENTORY_CASES, module: 'Inventory Page', path: '/inventory' },
+  PRO: { cases: PROPOSAL_CASES, module: 'Proposals Page', path: '/proposals' },
+  SPC: { cases: CONTRACT_CASES, module: 'SPA Contracts Page', path: '/spa-contracts' },
+  LSI: { cases: LEAD_INSIGHTS_CASES, module: 'Lead Insights Page', path: '/leads/sources' },
+  OPP: { cases: OPPORTUNITY_CASES, module: 'Opportunities Page', path: '/opportunities' },
+  RSV: { cases: RESERVATION_CASES, module: 'Reservations Page', path: '/reservations' },
+};
+
 export function caseInfo(id: string, title: string): CaseInfo {
   if (C[id]) return C[id];
+  const suite = PAGE_SUITES[id.split('-')[0]];
+  if (suite) {
+    // IVP-013.2 = row 2 of the test data for case IVP-013
+    const c = suite.cases[id.replace(/\.\d+$/, '')];
+    const page = url(suite.path);
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      return { module: `${suite.module} · ${c.area}`, page, severity, category: `${c.useCase} · ${c.area}`,
+        steps: stepsOf(c), expected: c.expected, hint: c.impact || undefined };
+    }
+    return { module: `${suite.module} · Coverage`, page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('SEC-')) {
+    // SEC-042.3 = row 3 of the test data for case SEC-042
+    const c = SECURITY_CASES[id.replace(/\.\d+$/, '')];
+    const page = url(ROUTES.leads).replace(/\/leads$/, '/login');
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      return { module: `Security · ${c.area}`, page, severity, category: c.area,
+        steps: stepsOf(c), expected: c.expected, hint: c.impact || undefined };
+    }
+    return { module: 'Security · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('LDP-')) {
+    // LDP-025.3 = row 3 of the test data for case LDP-025
+    const c = LEAD_DETAIL_CASES[id.replace(/\.\d+$/, '')];
+    const page = url(ROUTES.leads);
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      return { module: `Lead Detail Page · ${c.area}`, page, severity, category: c.area,
+        steps: stepsOf(c), expected: c.expected, hint: c.impact || undefined };
+    }
+    return { module: 'Lead Detail Page · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('LP-')) {
+    // LP-005.2 = row 2 of the test data for case LP-005
+    const c = LEADS_PAGE_CASES[id.replace(/\.\d+$/, '')];
+    const page = url(ROUTES.leads);
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      return { module: `Leads Page · ${c.area}`, page, severity, category: `${c.useCase} · ${c.area}`,
+        steps: stepsOf(c), expected: c.expected, hint: c.impact || undefined };
+    }
+    return { module: 'Leads Page · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
   if (id.startsWith('LR-')) {
     const leads = url(ROUTES.reports.leads);
     const c = LEAD_CASES[id];
@@ -154,6 +257,28 @@ export function caseInfo(id: string, title: string): CaseInfo {
     }
     const kind = id.startsWith('LR-MAP') ? 'Clickable Map' : id.startsWith('LR-OBS') ? 'Observations' : id.startsWith('LR-DDV') ? 'Drill-down Verification' : 'Coverage';
     return { module: `Lead Reports · ${kind}`, page: leads, severity: kind === 'Observations' ? 'Low' : 'Medium', category: kind, steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  const mw = MODULE_WORKBOOKS[id.split('-')[0]];
+  if (mw) {
+    const page = url(mw.route);
+    const c = moduleCase(id.split('-')[0], id);
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === String(c['Priority'])) ?? 'Medium';
+      return { module: `${mw.module} · ${c['Area']}`, page, severity, category: String(c['Component']),
+        steps: String(c['Test Steps']).split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')), expected: String(c['Expected Result']) };
+    }
+    const kind = /-MAP-/.test(id) ? 'Clickable Map' : /-OBS-/.test(id) ? 'Observations' : 'Coverage';
+    return { module: `${mw.module} · ${kind}`, page, severity: kind === 'Observations' ? 'Low' : 'Medium', category: kind, steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('CR-')) {
+    const page = url(ROUTES.reports.customers);
+    const c = CUSTOMER_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      return { module: `Customer Reports · ${c.area}`, page, severity, category: c.component, steps: c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')), expected: c.expected };
+    }
+    const kind = id.startsWith('CR-MAP') ? 'Clickable Map' : id.startsWith('CR-OBS') ? 'Observations' : 'Coverage';
+    return { module: `Customer Reports · ${kind}`, page, severity: kind === 'Observations' ? 'Low' : 'Medium', category: kind, steps: [title], expected: 'See the expected result recorded by the test' };
   }
   const pageTest = PAGE_TESTS[id.split('-')[0]];
   if (pageTest && /^[A-Z]+-\d+$/.test(id)) {

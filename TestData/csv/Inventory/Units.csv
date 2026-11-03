@@ -1,0 +1,3 @@
+﻿Data ID,Unit Code,Unit Name,Block,Floor,Unit Type,Bedrooms,Net Area,Gross Area,Base Price,Currency,Remarks,Edited Remarks
+UNT-01,{project}-A{seq},Coral Bay Apartment A{seq},Block A,Floor 01,Apartment,2,118,135,410000,USD - United States Dollar,Created by the CRM test suite,Sea-facing balcony confirmed on site
+UNT-02,{project}-B{seq},Coral Bay Residence B{seq},Block B,Floor 02,Residence,3,205,240,690000,USD - United States Dollar,Created by the CRM test suite,Corner unit with two balconies

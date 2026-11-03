@@ -1,0 +1,11 @@
+﻿Action,Submit Button,Field,Value
+Issue,1. Issue Contract,Issue remarks,Issued for buyer signature.
+Replace,Replace Contract,Reason for replacing,Contract value corrected to the accepted proposal price.
+Replace,Replace Contract,Contract Value,{list-2%}
+Replace,Replace Contract,Currency,USD - United States Dollar
+Cancel,Cancel Contract,Cancellation remarks,Buyer withdrew before signing.
+Open Plan,2. Open / Save Payment Plan,,
+Plan Notes,Save Payment Plan,remarks,Standard plan agreed with the buyer.
+Sign,3. Sign Contract,,
+Handoff,Move to Handoff,,
+Send to ERP,Send to ERP,,

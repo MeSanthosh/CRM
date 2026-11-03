@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import * as XLSX from 'xlsx';
-import { XP, at, kpiLocator } from './locators';
+import { XP, at, kpiLocator, subReportOf, columnName } from './locators';
 
 /** "1,234" -> 1234, "2.18B USD" -> 2180000000, "1.23M" -> 1230000, "52.8%" -> 52.8 */
 export function parseNum(text: string): number {
@@ -67,7 +67,8 @@ export async function listCount(page: Page): Promise<number> {
   const pager = at(page, XP.leadsPager);
   const read = async () => {
     if (await pager.isVisible()) {
-      const m = (await pager.innerText()).replace(/,/g, '').match(/(\d+)\s+leads?\s*$/i);
+      // "Showing 1–20 of 616 leads · Page 1 of 31" (older builds: "Page 1 of 25 · 615 leads")
+      const m = (await pager.innerText()).replace(/,/g, '').match(/(\d+)\s+leads?\b/i);
       if (m) return Number(m[1]);
     }
     return table.locator('tbody tr').filter({ has: page.locator('a.crm-record-link') }).count();
@@ -82,17 +83,34 @@ export async function waitForKpi(page: Page, label: string) {
 }
 
 /** Number of rows in a report table identified by its panel heading. */
+/**
+ * Makes a report table visible: since build 3110-10 each module shows one sub-report at a time, so when the
+ * table is not on the page, clicks the sub-report pill that shows it (the period and filters stay as chosen).
+ */
+export async function showTable(page: Page, heading: string) {
+  const table = at(page, XP.reportTable(heading));
+  if (await table.isVisible().catch(() => false)) return;
+  const query = subReportOf(new URL(page.url()).pathname, heading);
+  if (query) {
+    await at(page, XP.subReportPill(query)).first().click();
+    await page.waitForLoadState('networkidle').catch(() => {});
+  }
+  await expect(table, `Table "${heading}"`).toBeVisible({ timeout: 15_000 });
+}
+
 export async function tableRows(page: Page, heading: string): Promise<number> {
-  await expect(at(page, XP.reportTable(heading)), `Table "${heading}"`).toBeVisible();
+  await showTable(page, heading);
   return at(page, XP.reportTableRows(heading)).count();
 }
 
 /** Values of one column in a report table (by header text). */
 export async function tableColumn(page: Page, heading: string, column: string): Promise<string[]> {
+  await showTable(page, heading);
   const table = at(page, XP.reportTable(heading));
   await expect(table.locator('thead th').first(), `Table "${heading}" header`).toBeVisible({ timeout: 15_000 });
   const headers = (await table.locator('thead th').allInnerTexts()).map(h => h.replace(/[↕▼▲]/g, '').trim());
-  const idx = headers.findIndex(h => h.toLowerCase() === column.toLowerCase());
+  const col = columnName(heading, column);
+  const idx = headers.findIndex(h => h.toLowerCase() === col.toLowerCase());
   if (idx < 0) throw new Error(`Column "${column}" not in "${heading}" (${headers.join(' | ')})`);
   return table.locator(`tbody tr > :nth-child(${idx + 1})`).allInnerTexts();
 }
@@ -167,17 +185,18 @@ export function expectNear(actual: number, expected: number, what: string, rel =
 
 // ── Exports ──────────────────────────────────────────────────────────────────
 /** Data rows of the first sheet; `total` is the "Total" row panel exports add at the bottom, if any. */
-export type Sheet = { name: string; rows: Record<string, unknown>[]; header: string[]; total?: Record<string, unknown> };
+export type Sheet = { name: string; rows: Record<string, unknown>[]; header: string[]; total?: Record<string, unknown>; path?: string; sheetName?: string };
 
 /** Clicks an export button and reads the first sheet of the downloaded workbook. */
 export async function download(page: Page, button: Locator, timeout = 60_000): Promise<Sheet> {
   const [d] = await Promise.all([page.waitForEvent('download', { timeout }), button.click()]);
-  const wb = XLSX.readFile((await d.path())!);
+  const file = (await d.path())!;
+  const wb = XLSX.readFile(file);
   const ws = wb.Sheets[wb.SheetNames[0]];
   const header = (XLSX.utils.sheet_to_json<unknown[]>(ws, { header: 1 })[0] ?? []).map(String);
   const all = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws);
   const isTotal = (r: Record<string, unknown>) => /^\s*(grand\s+)?total\b/i.test(String(r[header[0]] ?? ''));
-  return { name: d.suggestedFilename(), rows: all.filter(r => !isTotal(r)), header, total: all.find(isTotal) };
+  return { name: d.suggestedFilename(), rows: all.filter(r => !isTotal(r)), header, total: all.find(isTotal), path: file, sheetName: wb.SheetNames[0] };
 }
 
 // ── Dates ────────────────────────────────────────────────────────────────────

@@ -1,0 +1,22 @@
+﻿Setting,Value,What it means
+Copy Link Pattern,{base}/leads?selected={id},"Link copied by ""Copy link"": {base} = site address, {id} = the lead's internal id"
+Me Suffix,(me),"Text after the signed-in user in the ""Logged for"" / ""Assigned to"" lists"
+Assign User,QA Sales User,User a lead is re-assigned to in the Assign Lead tests
+Status After Qualify,Qualified,Lead status after Qualify Lead
+Status After Convert,Converted,Lead status after Move to Opportunity → Convert
+Status After Disqualify,Disqualified,Lead status after Disqualify Lead
+Tasks Route,/activities,Tasks & Calendar page
+Opportunities Route,/opportunities,Opportunities page
+Leads Export File,leads-{date}.xlsx,Name of the Leads export ({date} = yyyy-mm-dd)
+Tasks Export File,tasks-and-calls-{date}.xlsx,Name of the Tasks & Calls export
+Related To Pattern,LEAD {leadNo},Related To column of the Tasks & Calls export
+Individual Prospect Type,Individual (Person),PROSPECT TYPE shown for an Individual lead
+Empty Budget,0 USD,BUDGET shown for a lead created without a budget
+Tasks Filter Open,All open,Task filter option for open tasks on Tasks & Calendar
+Tasks Filter Completed,Completed,Task filter option for completed tasks
+Tasks Whose All,Everyone,Whose tasks option that shows every user's tasks
+Task Status Open,Open,Status column of an open task on Tasks & Calendar
+Export Open Status,OPEN,Status column of an open task in the Tasks & Calls export
+Reassign Reason,Customer prefers a consultant who speaks Swahili.,"Typed in ""Reason for reassigning"" (Reassign lead)"
+Reopen Status,Contacted,"Status chosen in ""Reopen As"" for a disqualified lead"
+Reopen Reason,Customer called back and wants to see the show apartment.,Status Change Reason typed when reopening

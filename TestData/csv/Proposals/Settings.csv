@@ -1,0 +1,23 @@
+﻿Setting,Value,What it means
+Proposals Route,/proposals,Proposals page
+Page Title,Proposal Workspace,Title of the page
+Search Placeholder,"Search proposal, opportunity, customer, unit",Search box of the Proposal Register
+Currency Note,All proposal amounts are captured in base currency (USD).,Line under the New Proposal title
+Base Currency,USD,Deal Currency shown in the form
+Validity Days,14,Valid Until proposed by the form = today + this many days
+Remarks Template,Proposal from reservation {reservation}.,Remarks the form fills in from the reservation
+Proposal No. Format,PRO-YYYYMMDDhhmmss-XXXX,"Proposal number: Y M D h m s = digits, X = letter or digit"
+Discount Percent,5,Discount used in the discount calculation test
+Customer Status After Accept,Customer,Status the buyer gets on Customers & Brokers once a proposal is accepted
+Customers Search Placeholder,Search,Start of the placeholder of the Customer Register search
+Pricing Audit Heading,Pricing Audit,Block of Proposal Detail with the price source
+List Price Source Label,List price source,Pricing Audit line with the list price
+Exchange Rate Text,1 USD = 1.0000 USD,Pricing Audit: exchange rate of a USD deal
+Approval History Heading,Approval History,Block of Proposal Detail with Submitted / Approved entries
+No Approval Text,No approval action captured.,Approval History of a new proposal
+Draft Status,Draft,
+Submitted Status,Submitted,
+Approved Status,Approved,
+Accepted Status,Accepted,
+Superseded Status,Superseded,
+Rejected Status,Rejected,"Status the app gives a rejected proposal (the test expects Draft, as the form says)"

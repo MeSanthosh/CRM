@@ -1,0 +1,8 @@
+﻿Field Label,Field Name,Field Type,Mandatory
+Opportunity,opportunityId,Dropdown,Yes
+Unit,unitId,Dropdown,Yes
+List Price (USD),listPrice,Text,No
+Proposed Price (USD),proposedPrice,Text,Yes
+Discount Amount (USD),discountAmount,Read-only,No
+Discount %,discountPercent,Read-only,No
+Remarks,remarks,Text,No

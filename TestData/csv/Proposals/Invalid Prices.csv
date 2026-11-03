@@ -1,0 +1,5 @@
+﻿Case ID,Proposed Price,Why it is wrong,Expected
+PRO-016,,Empty,Not saved; a message asks for the proposed price
+PRO-016,abc,Letters,Not saved; a message says the price must be a number
+PRO-016,-25000,Negative,Not saved; a message says the price must be more than 0
+PRO-016,0,Zero,Not saved; a message says the price must be more than 0

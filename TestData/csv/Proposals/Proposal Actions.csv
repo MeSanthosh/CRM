@@ -1,0 +1,7 @@
+﻿Action,Submit Button,Field,Value
+Submit,Submit Proposal,Action remarks,Pricing confirmed with the buyer.
+Approve,Approve Proposal,Action remarks,Discount within the approval limit.
+Accept,Accept Proposal,Action remarks,Buyer confirmed by email.
+Reject,Reject Proposal,Rejection reason,Proposed price is below the floor price; please revise.
+Replace,Replace Proposal,Reason for replacing,Buyer asked for a lower price after the site visit.
+Replace,Replace Proposal,Proposed price (USD),{list-3%}

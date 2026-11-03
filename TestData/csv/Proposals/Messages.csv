@@ -1,0 +1,8 @@
+﻿Message Key,Expected Text,Where it appears
+Opportunity Required Title,Opportunity Required,Pop-up when New Proposal is saved without an opportunity
+Opportunity Required Body,Select an opportunity.,Same pop-up
+Approve Confirm Title,Approve proposal?,Confirmation before approving
+Go Back,Go back,Button that cancels a confirmation
+After Submit,AFTER SUBMIT,State of Approve / Reject on a Draft proposal
+Already,ALREADY,State of an action already done (ALREADY SUBMITTED / ALREADY APPROVED)
+Move To Contract,Move to Contract,Offered on an accepted proposal

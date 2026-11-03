@@ -1,0 +1,1 @@
+Sample text file used by the CRM test suite to check that file types other than PDF / JPG / PNG are refused.

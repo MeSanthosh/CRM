@@ -1,0 +1,5 @@
+﻿Case ID,Contract Value,Why it is wrong,Expected
+SPC-015,,Empty,Not saved; a message asks for the contract value
+SPC-015,abc,Letters,Not saved; a message says the value must be a number
+SPC-015,-1000,Negative,Not saved; a message says the value must be more than 0
+SPC-015,0,Zero,Not saved; a message says the value must be more than 0

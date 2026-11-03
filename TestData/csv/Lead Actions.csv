@@ -1,0 +1,6 @@
+﻿Action,Field Label,Value
+Assign,Assign To User,QA Lead Assignee
+Disqualify,Disqualification Reason,Not interested
+Disqualify,Disqualification Remarks,Customer said they are no longer planning to buy this year.
+Convert,Confirm Button,Convert
+Close Form,Confirm Button,Discard

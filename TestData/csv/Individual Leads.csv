@@ -1,0 +1,11 @@
+﻿Data ID,Title,First Name,Last Name,Mobile,Email,Lead Source,Gender,Nationality / Citizenship Country,Current Residence,City,Buyer Type,Budget,Timeline,Qualification Notes
+IND-01,Mr,Rahul,Menon,+91 98### #####,{first}.{last}.{unique}@example.com,Referrals,Male,India,India,Kochi,Investor,350000,0-3 Months,Looking for a 2 bedroom apartment as a rental investment.
+IND-02,Ms,Priya,Nair,+91 97### #####,{first}.{last}.{unique}@example.com,Property Portals,Female,India,India,Bengaluru,End User,280000,3-6 Months,Wants a sea-facing home for the family.
+IND-03,Mrs,Fatima,Hassan,+254 7## ### ###,{first}.{last}.{unique}@example.org,Events & Exhibitions,Female,Kenya,Kenya,Mombasa,Holiday Home Buyer,420000,0-3 Months,Met at the Nairobi property expo; asked for villa brochures.
+IND-04,Mr,Daniel,Kamau,+254 7## ### ###,{first}.{last}.{unique}@example.net,Direct Sales,Male,Kenya,Kenya,Nairobi,Investor,600000,6-12 Months,Interested in two units for rental income.
+IND-05,Dr,Amina,Otieno,+254 7## ### ###,{first}.{last}.{unique}@example.com,Digital Marketing,Female,Kenya,Kenya,Kisumu,End User,310000,3-6 Months,Responded to the online campaign; prefers a garden view.
+IND-06,Mr,James,Whitfield,+44 7### ######,{first}.{last}.{unique}@example.co.uk,Broker Channels,Male,United Kingdom,United Kingdom,London,Retirement Buyer,750000,12+ Months,Planning to retire on the coast in two years.
+IND-07,Ms,Sophie,Laurent,+33 6 ## ## ## ##,{first}.{last}.{unique}@example.fr,Hospitality Channels,Female,France,France,Lyon,Holiday Home Buyer,520000,6-12 Months,Stayed at the resort; wants a penthouse for holidays.
+IND-08,Mr,Omar,Al Mansoori,+971 50 ### ####,{first}.{last}.{unique}@example.ae,Strategic Partners,Male,United Arab Emirates,United Arab Emirates,Dubai,Investor,900000,Immediate,Partner referral; ready to reserve this month.
+IND-09,Mrs,Anjali,Sharma,+91 99### #####,{first}.{last}.{unique}@example.in,Public Relations,Female,India,India,Mumbai,End User,330000,0-3 Months,Read the press feature; asked for a site visit.
+IND-10,Prof,Thomas,Becker,+49 151 ########,{first}.{last}.{unique}@example.de,Referrals,Male,Germany,Germany,Munich,Investor,680000,3-6 Months,Referred by an existing owner; compares two projects.

@@ -1,0 +1,19 @@
+﻿Setting,Value,What it means
+Login Route,/login,Sign-in page
+Users Route,/admin,Users & Roles
+Audit Route,/admin/audit-log,Audit Log (Record changes / Login activity)
+Preferences Route,/preferences,Organisation preferences (Security tab holds the login policy)
+Password Pattern,Coral######Bay,"Passwords the tests set: every # becomes a random digit (meets the policy: 8+ chars, letters and digits)"
+Wrong Password Pattern,Wrong######Pass,Passwords used for failed-login tests
+Unknown User Pattern,no.such.user.{unique},Login ID that does not exist
+Mask Character,•,Character the app uses to hide personal data
+Login ID Visible Characters,2,Characters of the Login ID shown before the mask in Login activity
+App Channel,CRM · WEB,App / channel column of Login activity for the web CRM
+Unknown User Label,Unknown,User column of Login activity for a login ID that does not exist
+Test Role Code,LEAD_DESK_VIEWER,Role created and maintained by the RBAC tests (no other role is changed)
+Test Role Name,Lead Desk Viewer,Name of that role
+Test Role Description,Read-only access to leads for the front desk,Description of that role
+Retire Test Users,yes,yes = at the end of a test its user is set Inactive with login disabled
+Protected Routes,/ | /leads | /customers | /admin | /reports-analytics,Pages that must ask a signed-out visitor to sign in
+Rate Limit Wait Seconds,60,"When QA answers ""Too many authentication attempts"", wait this long before trying again"
+Rate Limit Retries,8,How many times to wait and retry a sign-in that hit the rate limit

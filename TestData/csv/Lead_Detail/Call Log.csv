@@ -1,0 +1,7 @@
+﻿Call ID,Subject,Minutes Ago,Direction,Outcome,Duration (minutes),Priority,Logged For,Call Notes,Follow-up,Follow-up In Days,Follow-up Time,Edited Subject,Edited Notes
+CALL-01,Introductory call,60,Outgoing,Connected,12,Normal,(me),Introduced the project and shared the brochure.,No,,,Introductory call with brochure,"Introduced the project, shared the brochure and the price list."
+CALL-02,Payment plan discussion,90,Incoming,Call back later,20,High,(me),Customer asked for the payment plan; call back on Thursday.,Yes,2,10:00,Payment plan questions,Asked for a 40/60 plan; call back on Thursday.
+CALL-03,Second contact attempt,30,Outgoing,No answer,1,Low,(me),No answer; will try again tomorrow.,Yes,1,11:30,"Second attempt, no answer",No answer; WhatsApp sent.
+CALL-04,Site visit reminder,45,Outgoing,Busy,1,Normal,QA Sales User,Line busy; message sent on WhatsApp instead.,No,,,Site visit reminder (busy),Line busy twice; reminder sent on WhatsApp.
+CALL-05,Callback from customer,120,Incoming,Left a message,3,High,(me),Customer left a voicemail asking about parking.,No,,,Voicemail about parking,Customer asked how many parking bays come with a unit.
+CALL-06,Verify contact number,15,Outgoing,Wrong number,2,Low,(me),Number belongs to someone else; asked the customer by email.,No,,,Wrong number check,Asked the customer by email for the right number.

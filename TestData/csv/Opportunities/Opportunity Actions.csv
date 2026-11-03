@@ -1,0 +1,7 @@
+﻿Action,Submit Button,Field,Value
+Hold Unit,Hold Unit,Hold for,2 days (48h)
+Hold Unit,Hold Unit,Reason (optional),Buyer wants to show the unit to family before reserving.
+Hold Without Unit,Hold Unit,Hold for,2 days (48h)
+Mark Lost,Mark Lost,Lost Reason,Price
+Mark Lost,Mark Lost,Remarks,Buyer chose a lower-priced project.
+Lost Without Reason,Mark Lost,Remarks,Lost attempted without a reason.

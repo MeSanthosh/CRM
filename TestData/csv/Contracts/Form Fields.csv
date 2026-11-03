@@ -1,0 +1,5 @@
+﻿Field Label,Field Name,Field Type,Mandatory
+Approved Reservation,reservationId,Dropdown,Yes
+Contract Value,contractValue,Text,Yes
+Currency,currencyCode,Dropdown,Yes
+Remarks,remarks,Text,No

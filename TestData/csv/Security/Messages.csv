@@ -1,0 +1,19 @@
+﻿Message Key,Expected Text,Where it appears
+Login Empty,"Enter your username, email, or mobile number with country code.",Login with both fields empty
+Invalid Login,Invalid login ID or password,Wrong password or unknown login ID (same text for both)
+Locked,Too many wrong passwords. Try again after,Login while the account is locked
+Locked OTP Hint,or sign in with OTP using your mobile number or email.,Same message
+Lockout Hint,Too many wrong passwords lock the account for a short time; OTP still works while it is locked.,Under the login form
+Password Rule,"At least 8 characters, with at least one letter and one number.",Change Password form
+Rule Error,The new password must be at least 8 characters and contain at least one letter and one number.,New password breaks the rule
+Mismatch Error,The confirmation does not match the new password.,Confirm differs from new password
+Wrong Current Error,The current password is not correct.,Current password wrong
+Forced Change Note,Your password was set by an administrator. Choose a new password to continue.,First login after an admin set the password
+Reset Forced Note,User will be required to change password on their next login.,Admin Reset Password form
+Duplicate User,duplicate username/email,New User with a username already used
+Audit No Access,You do not have access to the audit log.,Audit Log for a user without access
+No Access Pattern,do not have access|not authori[sz]ed|access denied|forbidden|no permission,Text that means a page is refused (regular expression)
+Sign Out Others Title,Sign out other devices?,Confirmation in My Profile
+Sign Out Others Button,Sign out others,Button that confirms it
+Rate Limited,Too many authentication attempts,Sign-in refused for every account after many attempts from one network
+OTP Send First,"Tap Send code first, then enter the code you receive.",OTP login without requesting a code

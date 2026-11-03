@@ -1,0 +1,8 @@
+﻿Item,After Create,After Qualify
+Lead Captured,DONE,DONE
+Assigned,IN PROGRESS,DONE
+Qualified,UP NEXT,IN PROGRESS
+Moved to Opportunity,UP NEXT,UP NEXT
+Now,,Qualified
+Next,,Move to Opportunity
+Next Actions,Reassign Lead | Qualify Lead | Disqualify Lead,

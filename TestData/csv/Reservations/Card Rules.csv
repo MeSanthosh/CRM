@@ -1,0 +1,5 @@
+﻿Card,Statuses,Measure
+All Reservations,all,count
+Active,Approved,count
+Converted,Converted to Contract,count
+Cancelled,"Cancelled, Expired",count
