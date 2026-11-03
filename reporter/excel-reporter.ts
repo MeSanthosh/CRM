@@ -131,6 +131,22 @@ export function readableActual(failures: string, notes: { type: string; descript
   return ['What happened:', ...what, ...(seen.length ? ['', 'What the test saw on the page:', ...seen] : [])].join('\n').slice(0, 3000);
 }
 
+/**
+ * A test that failed on its first try and on the retry: what the earlier try saw too, so the reader can tell the
+ * repeated defect from a number moved by other activity on the shared QA site (failures of the test machine left out).
+ */
+function earlierAttempts(r: Row): string {
+  const earlier = r.test.results.filter(x => x !== r.result && (x.status === 'failed' || x.status === 'timedOut'));
+  const out: string[] = [];
+  earlier.forEach(x => {
+    const checks = actualResult(x).actual.split('\n').filter(l => l && !/ENOENT|playwright-artifacts|\.trace\b/.test(l));
+    if (!checks.length) return;
+    const seen = (x.annotations ?? []).filter(a => a.description && /^(before|after)$/i.test(a.type)).map(a => `   ${a.type}: ${cut(a.description!, 300)}`);
+    out.push(`Attempt ${x.retry + 1} of ${r.test.results.length} (the result above is attempt ${r.result.retry + 1}):`, ...checks.map(l => `• ${l}`), ...seen);
+  });
+  return out.length ? `\n\n${out.join('\n')}`.slice(0, 1500) : '';
+}
+
 /** Annotation types that name the data a test typed or created: listed under the steps so a failure can be repeated by hand. */
 const DATA_NOTES = /test data|created|test user|record|used|input/i;
 function reproSteps(r: Row, steps: string[]): string {
@@ -180,6 +196,7 @@ class ExcelReporter implements Reporter {
     const baseName = process.env.REPORT_NAME ?? (pageName ? `${pageName.replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '')}_Test_Report` : 'CRM_Defect_Report');
     const file = path.join(outDir, `${baseName}_${stamp}.xlsx`);
     const rel = (p: string) => path.relative(outDir, p).split(path.sep).join('/');
+    const evDir = path.join(outDir, `${baseName}_${stamp}_evidence`); // screenshots / traces of the defects
     const baseURL = (this.config.projects[0]?.use as { baseURL?: string })?.baseURL ?? process.env.BASE_URL ?? '';
 
     const wb = new ExcelJS.Workbook();
@@ -223,8 +240,18 @@ class ExcelReporter implements Reporter {
         .map(a => `${a.type}: ${a.description}`)
         .filter((v, idx, arr) => arr.indexOf(v) === idx)
         .join('\n');
-      const shot = r.result.attachments.find(a => a.contentType === 'image/png' && a.path);
-      const trace = r.result.attachments.find(a => a.name === 'trace' && a.path);
+      // copy the evidence next to the report (merged runs keep attachments in a temporary folder)
+      const keep = (a: (typeof r.result.attachments)[number] | undefined, name: string) => {
+        if (!a?.path || !fs.existsSync(a.path)) return a;
+        try {
+          fs.mkdirSync(evDir, { recursive: true });
+          const to = path.join(evDir, `DEF-${String(i + 1).padStart(3, '0')}${name}${path.extname(a.path)}`);
+          fs.copyFileSync(a.path, to);
+          return { ...a, path: to };
+        } catch { return a; }
+      };
+      const shot = keep(r.result.attachments.find(a => a.contentType === 'image/png' && a.path), '');
+      const trace = keep(r.result.attachments.find(a => a.name === 'trace' && a.path), '_trace');
       const row = ws.addRow({
         defect: `DEF-${String(i + 1).padStart(3, '0')}`,
         id: r.id,
@@ -236,7 +263,7 @@ class ExcelReporter implements Reporter {
         category: info.category,
         steps: reproSteps(r, info.steps),
         expected: info.expected,
-        actual: readableActual(actual, r.test.annotations.concat(r.result.annotations ?? [])),
+        actual: readableActual(actual, r.test.annotations.concat(r.result.annotations ?? [])) + earlierAttempts(r),
         values,
         hint: info.hint ? `What this means / why it matters:
 ${info.hint}` : '',
@@ -371,7 +398,7 @@ ${info.hint}` : '',
     sm.getCell(`A${noteRow}`).font = { name: FONT, size: 10, bold: true };
     [
       'Defects tab: one row per failed test case. Dev team updates Status, Assigned To and Dev Comments (yellow cells).',
-      'Screenshot and Evidence Links open the files in the test-results folder next to this report.',
+      'Screenshot and Evidence Links open the copies in the <report name>_evidence folder next to this report (DEF-nnn.png, DEF-nnn_trace.zip).',
       'Trace: hover the Evidence Links cell for the command that replays the failed test step by step.',
       'All Results tab: every test case in this run, with status and duration.',
     ].forEach((t, i) => {

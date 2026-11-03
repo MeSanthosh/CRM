@@ -67,7 +67,31 @@ test.describe('Leads page · Lead counts', () => {
     });
   }
 
-  for (const [id, card] of [['LP-070', 'Assigned'], ['LP-071', 'Qualified'], ['LP-072', 'Disqualified']] as const) {
+  // Since build v2.0 the ASSIGNED card counts leads with an owner: its own formula line says "Total (N) − Unassigned (M)"
+  test(...lp('LP-070'), async ({ leads }) => {
+    await leads.openRoute();
+    const value = await leads.card('Assigned');
+    const total = await leads.card('Total Leads');
+    const unassigned = await leads.tabCount('Unassigned');
+    const formula = await leads.cardFormula('Assigned');
+    const totalFormula = await leads.cardFormula('Total Leads');
+    await leads.clickCard('Assigned');
+    const byCard = await leads.listed();
+    const statuses = [...new Set((await leads.rows()).map(r => r.status))];
+    note('ASSIGNED card / its formula', `${value} / "${formula}"`);
+    note('TOTAL LEADS card / its formula', `${total} / "${totalFormula}"`);
+    note('Unassigned tab / leads listed after clicking ASSIGNED / statuses shown', `${unassigned} / ${byCard} / ${statuses.join(', ')}`);
+    const nums = (s: string) => [...s.matchAll(/\((\d+)\)/g)].map(m => Number(m[1]));
+    const [fTotal, fUnassigned] = nums(formula);
+    expect.soft(fTotal, 'ASSIGNED formula: "Total (N)" = TOTAL LEADS card').toBe(total);
+    expect.soft(fUnassigned, 'ASSIGNED formula: "Unassigned (M)" = Unassigned tab').toBe(unassigned);
+    expect.soft(value, `ASSIGNED card = its own formula Total (${total}) − Unassigned (${unassigned}) = ${total - unassigned}`).toBe(total - unassigned);
+    const parts = nums(totalFormula);
+    expect.soft(parts.reduce((a, b) => a + b, 0), `TOTAL LEADS formula "${totalFormula}" adds up to the TOTAL LEADS card (${total})`).toBe(total);
+    expect(byCard, 'Leads listed after clicking ASSIGNED = ASSIGNED card').toBe(value);
+  });
+
+  for (const [id, card] of [['LP-071', 'Qualified'], ['LP-072', 'Disqualified']] as const) {
     test(...lp(id), async ({ leads }) => {
       await leads.openRoute();
       const value = await leads.card(card);

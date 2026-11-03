@@ -71,6 +71,13 @@ export class LeadReportsPage extends ReportModulePage {
   }
 
   async openTab(name: string) {
+    if (!(await this.tab(name).count())) {
+      // build 3110-10: the tabs are sub-report pills LEAD-01 … LEAD-05 (?tab=overview|source|aging|qualification|scorecard)
+      const param = this.tabs.find(t => t.name === name)?.param || 'overview';
+      await act(this.page, () => at(this.page, XP.subReportPill(`tab=${param}`)).first().click());
+      await expect(this.page).toHaveURL(new RegExp(`tab=${param}`));
+      return;
+    }
     await act(this.page, () => this.tab(name).click());
     await expect(this.tab(name)).toHaveClass(/is-active/);
   }

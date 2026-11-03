@@ -7,6 +7,8 @@ import { test, expect, Page } from '../auth';
 import { kpi, open, act, tableRows, tableColumn, listCount } from '../helpers';
 import { ROUTES, XP, at, DASHBOARD_KPIS, LEAD_STATUSES, INACTIVE_LEAD_STATUSES } from '../locators';
 import { SAME } from '../consistency-cases';
+import { ExecutiveReportsPage } from '../pages/ExecutiveReportsPage';
+import { LeadTable } from '../pages/LeadTable';
 import { scenario, manual, note, num, sum, near, expectNear, colSum, openReport, expectClean, download } from './support';
 
 const R = ROUTES.reports;
@@ -141,32 +143,52 @@ test.describe('Scenarios · Report-Specific Data Validation', () => {
     expect.soft(over, 'Overdue ≤ Outstanding').toBeLessThanOrEqual(out);
     await kpiEqualsColumn(page, 'Outstanding', 'Outstanding by Age', 'Amount (USD)', 0.01);
     expectNear(await colSum(page, 'Outstanding by Age', 'Share %'), 100, 'Aging shares', 0, 0.5);
-    await kpiEqualsColumn(page, 'Scheduled', 'Collections by Project', 'Scheduled (USD)', 0.01);
-    await kpiEqualsColumn(page, 'Received', 'Collections by Project', 'Received (USD)', 0.01);
-    await kpiEqualsColumn(page, 'Outstanding', 'Collections by Project', 'Outstanding (USD)', 0.01);
-    await kpiEqualsColumn(page, 'Overdue', 'Collections by Project', 'Overdue (USD)', 0.01);
-    if (sch) expectNear(await kpi(page, 'Collection rate'), (rec / sch) * 100, 'Collection rate', 0, 0.1);
+    // build 3110-10 has no "Collections by Project" table; the RPT-10 instalment ledger lists the amounts instead
+    const ledger = 'Report #10 — Buyer Payment & Instalment Ledger';
+    const lsch = await colSum(page, ledger, 'Scheduled (USD)'), lrec = await colSum(page, ledger, 'Verified Received (USD)'), lout = await colSum(page, ledger, 'Outstanding (USD)');
+    note('values', `Scheduled ${sch} | Received ${rec} | Outstanding ${out} | Overdue ${over} | ledger (${await tableRows(page, ledger)} rows): Σ Scheduled ${lsch}, Σ Received ${lrec}, Σ Outstanding ${lout}`);
+    expectNear(lsch - lrec, lout, 'Ledger: Σ Scheduled − Σ Received vs Σ Outstanding', 0.005);
+    expectNear(lout, out, 'Ledger Σ Outstanding vs Outstanding', 0.01);
+    // build 3110-10: "Collection rate" = Received ÷ amount due to date; "Received of due in period" = Received ÷ "Due in period"
+    const rate = await kpi(page, 'Collection rate'), due = await kpi(page, 'Due in period'), ofDue = await kpi(page, 'Received of due in period');
+    note('rates', `Collection rate ${rate}% | Received of due in period ${ofDue}% | Due in period ${due}`);
+    expect.soft(rate, 'Collection rate between 0 and 100%').toBeLessThanOrEqual(100);
+    if (due) expectNear(ofDue, (rec / due) * 100, 'Received of due in period = Received ÷ Due in period', 0, 0.1);
   });
 
-  test(...scenario('RA-059', 'Executive Dashboard: all 10 KPIs valid, and each equals the same metric on the hub and report modules (This month)'), async ({ page }) => {
-    await open(page, ROUTES.dashboard);
-    for (const label of DASHBOARD_KPIS) {
-      const v = await kpi(page, label);
-      expect.soft(v, `${label} ≥ 0`).toBeGreaterThanOrEqual(0);
-    }
+  // Build 3110-10: executive figures are on /dashboards (Commercial / Sales Dashboard, period This month) and on
+  // Executive & Governance RPT-01; each is compared with the same figure on its report module (This month).
+  test(...scenario('RA-059', 'Executive figures (Commercial / Sales Dashboard and Governance RPT-01) equal the same metric on the report modules (This month)'), async ({ page }) => {
     const rows: string[] = [];
-    for (const c of SAME.filter(c => c.sources.some(s => s.page === ROUTES.dashboard))) {
-      const dash = c.sources.find(s => s.page === ROUTES.dashboard)!;
-      await open(page, ROUTES.dashboard);
-      const d = await kpi(page, dash.label!);
-      for (const s of c.sources.filter(s => s !== dash && s.label)) {
-        if (s.page === ROUTES.hub) await open(page, s.page);
-        else await openReport(page, s.page, 'this_month');
-        const v = await kpi(page, s.label!);
-        rows.push(`${c.id} ${c.metric}: dashboard ${d} | ${s.page} ${v}`);
-        expect.soft(near(d, v, 0.005, 0), `${c.metric}: dashboard ${d} vs ${s.page} "${s.label}" ${v}`).toBeTruthy();
-      }
-    }
+    const compare = async (from: string, label: string, value: number, path: string, other: string, readOther?: () => Promise<number>) => {
+      if (readOther) await open(page, path); else await openReport(page, path, 'this_month');
+      const v = readOther ? await readOther() : await kpi(page, other);
+      rows.push(`${from} "${label}" ${value} | ${path} "${other}" ${v}`);
+      expect.soft(near(value, v, 0.005, 0), `${from} "${label}" ${value} vs ${path} "${other}" ${v}`).toBeTruthy();
+    };
+    const funnel = (stage: string) => async () => {
+      const text = (await page.locator('main').innerText()).replace(/\s+/g, ' ');
+      return num(text.match(new RegExp(`${stage} (\\d[\\d,]*)`))?.[1] ?? 'NaN');
+    };
+    await open(page, ROUTES.dashboards);
+    const dash: Record<string, number> = {};
+    const exec = new ExecutiveReportsPage(page);
+    for (const label of ['Total Leads', 'Qualified Leads', 'Units Sold', 'Sales Value', 'Collections']) dash[label] = num(await exec.tile(label));
+    note('dashboard', JSON.stringify(dash));
+    await compare('Dashboard', 'Units Sold', dash['Units Sold'], R.spa, 'SPAs signed in period');
+    await compare('Dashboard', 'Sales Value', dash['Sales Value'], R.spa, 'Signed value');
+    await compare('Dashboard', 'Collections', dash['Collections'], R.collections, 'Received');
+    await compare('Dashboard', 'Total Leads', dash['Total Leads'], `${R.leads}?tab=overview`, 'Lead Funnel › Captured', funnel('Captured'));
+    await compare('Dashboard', 'Qualified Leads', dash['Qualified Leads'], `${R.leads}?tab=overview`, 'Lead Funnel › Qualified', funnel('Qualified'));
+    await openReport(page, `${R.governance}?report=executiveDashboard01`, 'this_month');
+    const gov: Record<string, number> = {};
+    for (const label of ['Contracted SPA sales', 'Verified collections', 'Accrued commissions', 'Marketing ROAS (x)', 'Portfolio absorption']) gov[label] = await kpi(page, label);
+    note('governance RPT-01', JSON.stringify(gov));
+    await compare('RPT-01', 'Contracted SPA sales', gov['Contracted SPA sales'], R.spa, 'Signed value');
+    await compare('RPT-01', 'Verified collections', gov['Verified collections'], R.collections, 'Received');
+    await compare('RPT-01', 'Accrued commissions', gov['Accrued commissions'], R.brokers, 'Accrued commission');
+    await compare('RPT-01', 'Marketing ROAS (x)', gov['Marketing ROAS (x)'], R.marketing, 'Marketing ROAS (x)');
+    await compare('RPT-01', 'Portfolio absorption', gov['Portfolio absorption'], R.inventory, 'Sold %');
     note('values', rows.join('\n'));
   });
 
@@ -228,11 +250,14 @@ test.describe('Scenarios · Record-Level Validation', () => {
 
   test(...manual('RA-063', 'needs a record to be edited in QA and the report re-checked; the suite only reads data'));
 
-  test(...scenario('RA-064', 'Inactive leads (Converted, Lost, Disqualified, Duplicate) are excluded: hub Active Leads = Lead Reports Open Leads Now = sum of the other statuses'), async ({ page }) => {
-    await open(page, ROUTES.hub);
-    const active = await kpi(page, 'Active Leads');
-    await open(page, R.leads);
-    const openNow = await kpi(page, 'Open Leads Now');
+  // Build 3110-10 removed hub "Active Leads" and Lead Reports "Open Leads Now"; the active-lead figure is now on
+  // My Smart Workspace (pinned Leads card "N active leads") and on Lead Reports LEAD-03 (Open Leads by Status, all time).
+  test(...scenario('RA-064', 'Inactive leads (Converted, Lost, Disqualified, Duplicate) are excluded: My Smart Workspace "active leads" = Lead Reports open leads by status = sum of the other statuses on the Leads page'), async ({ page }) => {
+    await open(page, ROUTES.dashboard);
+    const ws = (await page.locator('main').innerText()).replace(/\s+/g, ' ').match(/(\d[\d,]*)\s*active leads/i);
+    const active = num(ws?.[1] ?? 'NaN');
+    await openReport(page, `${R.leads}?tab=aging`, 'last_12_months');
+    const openNow = sum((await new LeadTable(page, 'Open Leads by Status').column('Open')).map(num));
     await open(page, ROUTES.leads);
     const statusSel = at(page, XP.leadsStatusFilter);
     const counts: Record<string, number> = {};
@@ -241,9 +266,9 @@ test.describe('Scenarios · Record-Level Validation', () => {
       counts[s] = await listCount(page);
     }
     const expected = sum(Object.entries(counts).filter(([k]) => !INACTIVE_LEAD_STATUSES.includes(k)).map(([, v]) => v));
-    note('values', `Active Leads ${active} | Open Leads Now ${openNow} | active statuses ${expected} | ${JSON.stringify(counts)}`);
-    expect.soft(active, 'Hub Active Leads').toBe(expected);
-    expect.soft(openNow, 'Lead Reports Open Leads Now').toBe(expected);
+    note('values', `My Smart Workspace active leads ${active} | Lead Reports open leads by status ${openNow} | Leads page active statuses ${expected} | ${JSON.stringify(counts)}`);
+    expect.soft(active, 'My Smart Workspace "active leads"').toBe(expected);
+    expect.soft(openNow, 'Lead Reports open leads (Open Leads by Status)').toBe(expected);
   });
 
   test(...scenario('RA-065', 'No record is counted twice: lead numbers in the export, opportunity references and customer references are unique'), async ({ page }) => {

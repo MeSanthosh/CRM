@@ -35,6 +35,29 @@ S['Settings'] = (['Setting', 'Value', 'What it means'], [
     ['Refresh Wait Seconds', '120', 'After a change the cards may update with a delay: wait up to this long (the delay is recorded in the report)'],
     ['Plan Wait Seconds', '180', 'After "Payment Plan Saved" the contract may show the plan with a delay: wait up to this long'],
     ['Agreed Pack Complete', '4/4 complete', 'Agreed Pack once reservation, proposal, plan and agreement are done'],
+    ['Page Size', '20', 'Contracts per register page ("Showing 1–20 of N")'],
+    ['Total Card', 'Total', 'Card whose formula line splits the total by status (SPC-037)'],
+    ['Documents Heading', 'Documents', 'Contract Detail block for contract documents'],
+    ['No Documents Text', 'No documents uploaded yet.', 'Documents block before any upload'],
+    ['Document Rule Text', 'PDF, JPG or PNG, up to 10 MB.', 'Hint under the Documents upload'],
+    ['Upload Button', 'Upload', 'Documents block: upload button'],
+    ['History Heading', 'History', 'Contract Detail block listing every change'],
+    ['History Changed Words', 'changed to', 'History line between the old and the new value'],
+    ['History Created Word', 'Created', 'History entry of the creation'],
+    ['History Status Field', 'Contract status', 'History field that records status changes'],
+    ['History User', 'CRM Administrator', 'User shown on the changes made by the tests (the signed-in user)'],
+])
+S['Sort Columns'] = (['Column', 'Kind'], [
+    ['Contract', 'text'], ['Customer', 'text'], ['Unit', 'text'], ['Status', 'text'], ['Value', 'number'], ['ERP', 'text'], ['Created Date', 'date'],
+])
+S['Total Breakdown'] = (['Part', 'Statuses', 'Card'], [
+    ['Draft/Issued', 'Draft, Issued', 'Draft / Issued'],
+    ['Signed', 'Signed', 'Signed'],
+    ['Canc.', 'Cancelled, Superseded', ''],
+])
+S['Contract Documents'] = (['Case ID', 'Document Type', 'Description', 'File', 'Expected'], [
+    ['SPC-039', 'Signed SPA', 'Signed SPA uploaded by the CRM test suite', 'TestData/files/Sample_Passport_Copy.pdf', 'Accepted'],
+    ['SPC-040', 'Other', 'Wrong file type (text file)', 'TestData/files/Sample_Not_Allowed.txt', 'Refused'],
 ])
 S['Deal Settings'] = (['Setting', 'Value', 'What it means'], DEAL_SETTINGS)
 S['Card Rules'] = (['Card', 'Statuses', 'Measure'], [
@@ -124,6 +147,9 @@ README = [
     'Payment Plan: due date of each stage = today + Due In Days; "Wrong Percentage" is used once to check the 100% rule.',
     'Invalid Values: each row runs as its own sub-case SPC-015.n.',
     '{list-2%} = the accepted proposal price less 2% (value of the replacing contract).',
+    'Sort Columns: Kind says how the column is compared when checking the sort order (text, number = amounts, date).',
+    'Total Breakdown: parts of the Total card formula "Draft/Issued (a) + Signed (b) + Canc. (c)", the statuses each part counts and the card it must equal.',
+    'Contract Documents: files uploaded to the test contract (Accepted) or that must be refused (Refused). Uploads go to the test contract only.',
 ]
 write_testdata('Contracts_Test_Data.xlsx', 'Contracts', 'SPA / Sales Contracts — Test Data', README, S)
 
@@ -195,6 +221,23 @@ C('SPC-033', UC4, A, 'Replace a draft contract', 'A second deal; a Draft contrac
 C('SPC-034', UC4, A, 'Cancel a draft contract', 'The Draft contract from SPC-033', st(OPEN, 'Read the cards', 'Open the contract → Cancel Contract (remarks)'), f'{TD} → Contract Actions (Cancel), Count Changes (Cancel Draft)',
   'The contract shows status Cancelled; cards change as on Count Changes.')
 
+UC5 = 'CUC-05 Register tools & contract records'
+A = 'Register & Records'
+C('SPC-035', UC5, A, 'Sort the register by each column', ADMIN, st(OPEN, 'Click each column header (Contract, Customer, Unit, Status, Value, ERP, Created Date) for ascending, then descending', 'Read the rows of the first page'), f'{TD} → Sort Columns',
+  'The header shows the direction (aria-sort / arrow); the rows are in that order by the column (amounts by value, dates by date).', 'Medium')
+C('SPC-036', UC5, A, 'Move between register pages', ADMIN, st(OPEN, 'Read "Showing 1–20 of N · Page 1 of P"', 'Click Next until the last page', 'Click Previous'), f'{TD} → Settings (Page Size)',
+  'Previous is disabled on page 1 and Next on the last page; each page shows the next contracts with no repeats; the pages together hold N contracts; Previous returns to the first page.', 'Medium')
+C('SPC-037', UC5, A, 'Total card formula splits the total by status', ADMIN, st(OPEN, 'Read the line under Total "Draft/Issued (a) + Signed (b) + Canc. (c)"', 'Count the register rows per status'), f'{TD} → Total Breakdown, Settings (Total Card)',
+  'a + b + c = Total; a = Draft / Issued card, b = Signed card; each part equals the register rows with its statuses (Canc. = Cancelled and Superseded, as the tooltip says).', 'Medium', 'Consistency')
+C('SPC-038', UC5, A, 'Copy link opens the same contract', 'A contract created by the test', st(OPEN, 'Open the contract → Copy link', 'Open the copied link'), '—',
+  'The link opens Contract Detail of the same contract number.', 'Medium')
+C('SPC-039', UC5, A, 'Upload a contract document', 'A contract created by the test', st(OPEN, 'Open the contract → Documents', 'Choose the type, type the description, choose the file', 'Upload'), f'{TD} → Contract Documents (SPC-039), Settings (Document Rule Text)',
+  'The document is listed under Documents with its file name and type; "No documents uploaded yet." is gone.')
+C('SPC-040', UC5, A, 'A file of a type not allowed is refused', 'A contract created by the test', st(OPEN, 'Open the contract → Documents', 'Choose the text file of the data', 'Upload'), f'{TD} → Contract Documents (SPC-040), Settings (Document Rule Text)',
+  'A message says only PDF, JPG or PNG up to 10 MB are accepted; the file is not listed.', 'Medium', 'Negative')
+C('SPC-041', UC5, A, 'History records every change of the contract', 'The contract taken through issue and signing by the test', st(OPEN, 'Open the contract → History', 'Read the entries'), f'{TD} → Settings (History …)',
+  'One entry for the creation and one per change with user and time; the status changes Draft → Issued → Signed are listed with "changed to"; the latest status equals the register.', 'Medium')
+
 FINDINGS = [
     ['F-01', 'Defect', 'SPC-015', 'Contract saved with letters as the value', 'Create Contract with Contract Value "abc" saved a Draft contract valued 324.32 USD.', 'Only a positive number is accepted.', 'High'],
     ['F-02', 'Defect', 'SPC-014', 'Contract value not pre-filled and currency defaults to KES', 'Choosing the reservation leaves Contract Value empty and Currency KES, although the accepted proposal is 0.45M USD.', 'Value = accepted proposal price; currency = deal currency.', 'High'],
@@ -203,11 +246,11 @@ FINDINGS = [
 ]
 OVERVIEW = [
     ('Scope', 'SPA / Sales Contracts page (/spa-contracts): KPI cards, Contract Register, Export, New Contract, Contract Detail (Issue, Payment Plan, Sign, ERP Handoff, Replace, Cancel, Agreed Pack).'),
-    ('Use cases', 'CUC-01 register & counts · CUC-02 create a contract · CUC-03 issue, payment plan and signing · CUC-04 ERP handoff, replace and cancel'),
+    ('Use cases', 'CUC-01 register & counts · CUC-02 create a contract · CUC-03 issue, payment plan and signing · CUC-04 ERP handoff, replace and cancel · CUC-05 register tools & contract records (sort, pages, Total formula, Copy link, Documents, History)'),
     ('Test data', f'{TD} (or TestData/csv/Contracts/*.csv with TEST_DATA_FORMAT=csv). No values are hard-coded in the tests.'),
     ('Automation', 'tests/contracts-page/*.spec.ts — run with: npm run test:contracts-page'),
     ('Report', 'reports/SPA_Contracts_Page_Test_Report_<date>_<time>.xlsx'),
-    ('Data created', 'Per run: 2 buyers, 2 units in the test project, 2 reservations, 2 accepted proposals, the contracts of the tests, one KYC document (sample PDF) verified on a test buyer. ERP handoff of the test contract on QA. Real units are never reserved.'),
+    ('Data created', 'Per run: 2 buyers, 2 units in the test project, 2 reservations, 2 accepted proposals, the contracts of the tests, one KYC document (sample PDF) verified on a test buyer, one Signed SPA document (sample PDF) on the test contract. ERP handoff of the test contract on QA. Real units are never reserved.'),
     ('Security', 'Out of scope for this module (covered by the Security suite).'),
 ]
 AREA_IMPACT = {
@@ -215,6 +258,7 @@ AREA_IMPACT = {
     'Create Contract': 'Contracts can be created with a wrong value, currency or reservation, so the legal agreement and the ERP receive wrong figures.',
     'Issue, Plan & Sign': 'The contract can move forward without the required steps (issue, payment plan, KYC), or the schedule amounts are wrong, so the buyer is billed incorrectly.',
     'ERP, Replace & Cancel': 'Signed contracts do not reach ERP correctly, or contracts can be replaced / cancelled when they should not, so finance and sales records diverge.',
+    'Register & Records': 'Contracts cannot be found, sorted or shared reliably, or their documents and change history are missing, so legal and sales cannot rely on the contract record.',
 }
 IMPACT = {
     'SPC-012': 'Reservations that already have a contract are offered again, so a second contract could be created for the same unit.',

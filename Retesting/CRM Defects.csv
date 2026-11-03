@@ -1,0 +1,522 @@
+﻿"ID","Defect Type","Title","Description","Dev comments","Severity","Status","Attachments","Created","Created By","Assigned to ","Raised Version","Fixed Version","Retest Result","Retest Comments","Retest Date","Retest Build"
+"40","Frontend","Task_Task icon responding when user on the same task page","Task_Task icon responding when user on the same task page
+
+expected: Should refresh the page when user click on the icon/ System should focus the icon when user on the task page ","Updated ActivityHeaderActions.tsx with useLocation() active state (is-active, aria-current=""page"") and query revalidation when clicked on the current page.","low","Closed","1","10/1/2026 10:29 PM","Santhoshkumar S","Babu Ramasamy","v1.0 0110-40","","Passed","Tasks icon is highlighted on the Tasks page (is-active, aria-current=""page""); clicking it again on the same page reloads the list (3 data calls). Calendar icon behaves the same.","31 Oct 2026","v2.0 3110-10"
+"82","Backend","Drill-down / data: 71 leads with status ""Contacted"" have no First Contact date: the Contacted list and export show ""—"" in First C","1. Drill-down / data: 71 leads with status ""Contacted"" have no First Contact date: the Contacted list and export show ""—"" in First C
+
+Actual: Contacted leads without a First Contact date
+Expected: Record the status-change date as the first contact (or show it), so the list explains why each lead counts as contacted.","Derived first_contacted_at with fallbacks (last_interaction_at, qualified_at, converted_at, status transition timestamps) in lead-reports.service.ts and completeness metrics at lines 535–547.","Medium","Closed","0","10/14/2026 6:41 PM","Santhoshkumar S","Babu Ramasamy","v1.0 1310-47","","Passed","Automated LR-OBS-13 passed (Retest_Reports_2026-10-31_2134.xlsx).","31 Oct 2026","v2.0 3110-10"
+"83","Frontend","Dashboard UI not properly aligned for the monitor screen/big screen","","","High","Fixed","1","10/14/2026 6:50 PM","Santhoshkumar S","Babu Ramasamy","v1.0 1310-47","","Needs review","Checked at 1920x1080 and 2560x1440 on My Smart Workspace: the page fills the width, no sideways scrolling. But the cards stretch tall with their content far apart (large empty areas). Please confirm whether this is the expected design.","31 Oct 2026","v2.0 3110-10"
+"84","Backend","Verify Open Opportunities count is displayed correctly.","1. Verify Open Opportunities count is displayed correctly.
+2. values: Hub ""42"" | /reports/sales ""Open opportunities"" (This month) 38
+
+Actual: Hub Open Opportunities vs /reports/sales Open opportunities: 42 vs 38
+Expected
+Open Opportunities is a whole number ≥ 0, is in the API response, and equals Sales Reports ""Open opportunities"" (This month)","Synchronized all 78 Won opportunities to status = 'WON'.
+Verified database counts:
+OPEN: 43 (active pipeline)
+WON: 78
+LOST: 4
+Total: 125
+
+Export on the Opportunities screen now:
+
+Column Status will show OPEN for exactly 43 rows, WON for 78 rows, and LOST for 4 rows.","High","Closed","1","10/14/2026 6:54 PM","Santhoshkumar S","Babu Ramasamy","v1.0 1310-47","","Passed","Manual comparison (the hub card no longer exists in 3110-10): My Smart Workspace ""56 open deals"" = Sales Reports ""Open opportunities"" 56 = Opportunities page Open 56.","31 Oct 2026","v2.0 3110-10"
+"85","Frontend","Verify Pipeline Value is calculated and displayed correctly.","1. Verify Pipeline Value is calculated and displayed correctly.
+2. values: Hub ""177.59M USD"" | /reports/sales ""Pipeline value"" (This month) 172830000	
+
+Expected :Pipeline Value equals Sales ""Pipeline value"" and the sum of ""Value (USD)"" in Open Pipeline by Stage	
+
+Actual:  
+
+""Hub Pipeline Value vs /reports/sales Pipeline value: 177590000 vs 172830000
+Sum of stage values vs hub Pipeline Value: 172830000 vs 177590000""","Open the exported Excel file and filter column Status (Column E) = OPEN (yielding 43 rows).
+Because 34 deals are in USD, 7 deals in KES (rate: 1 USD ≈ 129.23 KES), and 2 in AED:
+For USD-only deals: =SUMIFS(G:G, E:E, ""OPEN"", H:H, ""USD"") gives $2,154,348,700 USD.
+Adding the converted KES and AED deals gives the total $2,177,105,600.09 USD (2.18B USD).
+
+=AVERAGEIF(E:E, ""OPEN"", F:F)","High","Reopened","1","10/14/2026 7:01 PM","Santhoshkumar S","Babu Ramasamy","47","","Failed","RA-006 (Retest_Reports_Redesign_2026-10-31_2300.xlsx), This month: inside Sales Reports the figures agree - ""Pipeline value"" 39.29M = RPT-07 sum of Deal Value 39,290,400 (57 rows = Open opportunities 57) = SLS-04 sum of Pipeline 39,285,600. But the Opportunities page card ""Pipeline Value"" shows 40.09M (difference 0.8M): the report uses the latest proposal price, the page uses the budget. Expected: the same pipeline value on both. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"86","","Verify Weighted Pipeline is calculated correctly based on opportunity probability.","1. Verify Weighted Pipeline is calculated correctly based on opportunity probability.
+
+Actual:""Hub Weighted Pipeline vs /reports/sales Weighted pipeline: 152430000 vs 148390000
+Sum of weighted stage values vs hub Weighted Pipeline: 148390000 vs 152430000""
+
+
+values: Hub ""152.43M USD"" | /reports/sales ""Weighted pipeline"" (This month) 148390000
+
+
+Expected: Weighted Pipeline equals the sum of Weighted (USD) by stage, and is ≤ Pipeline Value
+","Join the latest active proposal (COALESCE(latest_proposal.proposed_price, o.budget_amount)) and use the same open-stage filter (stage.level_2_code NOT IN ('WON', 'CLOSED_WON', 'LOST', 'CLOSED_LOST')) as dashboard.service.ts.
+Round per-deal weighted values consistently so stage and salesperson rows sum cleanly to the Weighted pipeline tile.
+Add the byStage (Pipeline by Stage) breakdown table and a Total footer row on byOwner (Salesperson Pipeline).","High","Closed","1","10/15/2026 6:10 PM","Santhoshkumar S","Babu Ramasamy","47","","Passed","RA-007 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): Sales ""Weighted pipeline"" 24.13M = RPT-07 sum of Weighted Value 24,130,100 = SLS-04 sum of Weighted 24,134,500, and is below Pipeline value 39.29M. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"87","Frontend","Verify the default reporting period is This Month.","1. Verify the default reporting period is This Month.
+
+Actual: ""Lead Reports default period: expected """"this_month"""", actual """"last_12_months""""
+Sales Reports default period: expected """"this_month"""", actual """"last_12_months""""
+Inventory Reports default period: expected """"this_month"""", actual """"last_12_months""""
+Customer Reports default period: expected """"this_month"""", actual """"last_12_months""""
+Broker Reports default period: expected """"this_month"""", actual """"last_12_months""""
+Marketing Reports default period: expected """"this_month"""", actual """"last_12_months""""
+Reservation Reports default period: expected """"this_month"""", actual """"last_12_months""""
+SPA Reports default period: expected """"this_month"""", actual """"last_12_months""""
+Collection Reports default period: expected """"this_month"""", actual """"last_12_months""""
+Exception Reports default period: expected """"this_month"""", actual """"last_12_months""""""
+
+Expected:Every report module opens with the period set to ""This month""
+","Updated DEFAULT_FILTERS in LeadReportsPage.tsx, BusinessReportsPage.tsx, and reports.schemas.ts (leadReportFiltersSchema & businessReportFiltersSchema) to default period to ""this_month"".","low","Closed","0","10/15/2026 6:12 PM","Santhoshkumar S","Babu Ramasamy","47","","Passed","Automated RA-013 passed (Retest_Reports_2026-10-31_2134.xlsx): report modules open on ""This month"".","31 Oct 2026","v2.0 3110-10"
+"88","Frontend","Verify changing the reporting period updates all applicable KPIs and reports consistently.","last_month: /reports/customers ""SPA value"" 149910000 vs /reports/spa ""Signed value"" 3980000
+
+""values: last_month: /reports/leads Won Value=3980000 | /reports/sales Won value=3980000
+last_month: /reports/leads SPA Signed=3 | /reports/spa SPAs signed in period=3
+last_month: /reports/inventory Sold in period=3 | /reports/spa SPAs signed in period=3
+last_month: /reports/customers SPA value=149910000 | /reports/spa Signed value=3980000
+last_12_months: /reports/leads Won Value=149910000 | /reports/sales Won value=149910000
+last_12_months: /reports/leads SPA Signed=78 | /reports/spa SPAs signed in period=78
+last_12_months: /reports/inventory Sold in period=78 | /reports/spa SPAs signed in period=78
+last_12_months: /reports/customers SPA value=149910000 | /reports/spa Signed value=149910000""
+
+With the same period selected, metrics shared between modules agree (Last month and Last 12 months)
+","Defect #88 (TC-07-06 — Customers with SPA / SPA value ignoring selected Period):
+Added AND ${inWindow(""c.signed_at"")} to the spa lateral join in customersReport (business-reports.service.ts).","High","Closed","0","10/15/2026 6:15 PM","Santhoshkumar S","Babu Ramasamy","47","","Passed","RA-018 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): Last month and Last 12 months - Customer Reports ""SPA value"" = SPA Reports ""Signed value"" (3.82M for Last 12 months, 0 for Last month); Sales Won value / Won in period and Inventory Sold in period also equal SPA Reports. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"89","Frontend","Verify Collection Reports show correct scheduled, received, outstanding, overdue and aging amounts.","1. Verify Collection Reports show correct scheduled, received, outstanding, overdue and aging amounts.
+
+Collections: Scheduled − Received = Outstanding; Overdue ≤ Outstanding; aging and project tables add up; shares = 100%; rates correct
+","Defect #89 (TC-07-10 — Collections Scheduled - Received vs Outstanding 1-cent rounding diff & missing Collections by Project table):
+Updated collectionsReport in business-reports.service.ts so outstandingMoney = money(scheduledMoney - receivedMoney), reconciled aging bucket totals to outstandingMoney, and added the byProject (Collections by Project) breakdown table.","High","Closed","1","10/15/2026 6:22 PM","Santhoshkumar S","Babu Ramasamy","47","","Passed","RA-058 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): Scheduled 5.92M - Received 184,600 = Outstanding 5.74M; Overdue 291,609.6 <= Outstanding; Outstanding by Age adds up to Outstanding and shares to 100%; RPT-10 ledger sums agree; ""Received of due in period"" 17.3% = Received / Due in period. Note: the ""Collections by Project"" table no longer exists in the 3110-10 design. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"90","Frontend","Verify Executive Reports display correct executive-level information.","1. Verify Executive Reports display correct executive-level information.
+
+Actual:""Open opportunities: dashboard 42 vs /reports/sales """"Open opportunities"""" 38
+Won opportunities this month: dashboard 4 vs /reports/sales """"Won in period"""" 3""
+""values: X-01 Active leads: dashboard 363 | /reports-analytics 363
+X-01 Active leads: dashboard 363 | /reports/leads 363
+X-02 Open opportunities: dashboard 42 | /reports-analytics 42
+X-02 Open opportunities: dashboard 42 | /reports/sales 38
+X-05 Units available: dashboard 30 | /reports-analytics 30
+X-05 Units available: dashboard 30 | /reports/inventory 30
+X-06 Units reserved: dashboard 30 | /reports-analytics 30
+X-06 Units reserved: dashboard 30 | /reports/inventory 30
+X-08 SPA value signed this month: dashboard 2660000 | /reports-analytics 2660000
+X-08 SPA value signed this month: dashboard 2660000 | /reports/spa 2660000
+X-09 SPAs signed this month: dashboard 3 | /reports/spa 3
+X-09 SPAs signed this month: dashboard 3 | /reports/leads 3
+X-10 Won opportunities this month: dashboard 4 | /reports/sales 3
+X-11 Collections received: dashboard 930000 | /reports/collections 930000
+X-12 Outstanding amount: dashboard 154680000 | /reports/collections 154680000""
+
+
+expected:Executive Dashboard: all 10 KPIs valid, and each equals the same metric on the hub and report modules (This month)
+","Updated salesReport in business-reports.service.ts to:
+Join the latest active proposal (COALESCE(latest_proposal.proposed_price, o.budget_amount)) and use the same open-stage filter (stage.level_2_code NOT IN ('WON', 'CLOSED_WON', 'LOST', 'CLOSED_LOST')) as dashboard.service.ts.
+Round per-deal weighted values consistently so stage and salesperson rows sum cleanly to the Weighted pipeline tile.
+Add the byStage (Pipeline by Stage) breakdown table and a Total footer row on byOwner (Salesperson Pipeline).
+Updated BusinessReportsPage.tsx to render the report's KPI summary tiles (report.tiles) above the active report table.","High","Reopened","0","10/15/2026 6:27 PM","Santhoshkumar S","Babu Ramasamy","47","","Failed","RA-059 (Retest_Reports_Redesign_2026-10-31_2300.xlsx), This month: Commercial / Sales Dashboard Units Sold 5, Sales Value 3.82M, Collections 184.6K, Total Leads 227, Qualified Leads 99 and Governance RPT-01 Contracted SPA sales, Verified collections, Accrued commissions, Portfolio absorption all equal the report modules. Not equal: RPT-01 ""Marketing ROAS (x)"" 8.49 vs Marketing Reports ""Marketing ROAS (x)"" 6.55. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"91","Frontend","Verify deleted/inactive records are handled correctly according to business rules.","1. Verify deleted/inactive records are handled correctly according to business rules.
+
+""Hub Active Leads: expected 368, actual 363
+Lead Reports Open Leads Now: expected 368, actual 363""
+values: Active Leads 363 | Open Leads Now 363 | active statuses 368 | {""New"":2,""Assigned"":167,""Contacted"":71,""Qualified"":128,""Nurturing"":0,""Converted"":122,""Opportunity Created"":0,""Lost"":127,""Disqualified"":1,""Duplicate"":0}
+
+Expected: Inactive leads (Converted, Lost, Disqualified, Duplicate) are excluded: hub Active Leads = Lead Reports Open Leads Now = sum of the other statuses
+
+
+
+","","High","Closed","0","10/15/2026 6:33 PM","Santhoshkumar S","","47","","Passed","RA-064 (Retest_Reports_Redesign_Trial_2026-10-31_2257.xlsx): My Smart Workspace ""137 active leads"" = Lead Reports Open Leads by Status 137 = Leads page statuses without Converted / Lost / Disqualified / Duplicate 137. (The repeat in Retest_Reports_Redesign_2026-10-31_2300.xlsx hit the Leads page crash.) (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"96","Backend","Cummunication -system should not allow user to save the template without any change ","Cummunication -system should not allow user to save the template without any change 
+
+Actual: Creating multiple version without any chnages 
+
+Expected : Should not allow user to publish the version ","Guarded publishCommunicationTemplate against unchanged subject/body (409 TEMPLATE_UNCHANGED), and disabled Save draft / Publish version in CommunicationTemplatesAdminPage.tsx when no changes exist.","low","Closed","1","10/18/2026 5:10 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","Template LEAD-ACK-001 opened with no changes: ""Save draft"" and ""Publish version"" are disabled.","31 Oct 2026","v2.0 3110-10"
+"97","Frontend","Communication_Corporate and Individual should be a toggle - unable to understand the type message which displayed ","Communication_Corporate and Individual should be a toggle - unable to understand the type message which displayed ","Added a Greeting type: [Individual | Corporate] toggle in CommunicationTemplatesAdminPage.tsx that inserts readable greeting text in Simple mode (Dear {{Customer Name}}, or Dear {{Authorised Representative Name}},) and updates the Live Preview heading (Individual recipient / Corporate recipient).","low","Closed","1","10/18/2026 5:14 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","Greeting type toggle Individual / Corporate is shown in the template editor.","31 Oct 2026","v2.0 3110-10"
+"98","Backend","Communication_whats app message got delivered with the additional subject line ","Actual: Communication_whats app message got delivered with the additional subject line 
+
+Expected:Should not send subject line in the whats app, Email with subject line is fine ","Removed the *${item.subject.trim()}*\n\n prefix in WhatsappShareButton.tsx so WhatsApp receives only the message body while Email retains the subject line.","Medium","Fixed","1","10/18/2026 5:17 PM","Santhoshkumar S","Babu Ramasamy","48a","","Not retested","Not retested: needs a manual check because it sends a WhatsApp message.","31 Oct 2026","v2.0 3110-10"
+"100","Frontend","cummnication_Same sentance getting inserted multiple time when user click on the insert button","","Updated insertGreeting in CommunicationTemplatesAdminPage.tsx to detect and replace any existing top greeting line in place instead of prepending duplicates.","Medium","Reopened","1","10/18/2026 5:21 PM","Santhoshkumar S","Babu Ramasamy","48a","","Failed","Template LEAD-ACK-001 (not saved): clicking ""Insert Individual greeting"" adds the new greeting line but leaves a broken part of the old one: ""<p>{{#if isCorporate}}Dear {{Authorised Representative Name}},{{else}}Dear {{Customer Name}},{{/if}}</p> {{Authorised Representative Name}}{{else}}{{Customer Name}}{{/if}},</p>"". Expected: the existing greeting is replaced and nothing is left over.","31 Oct 2026","v2.0 3110-10"
+"101","Backend","communication_System showing the backend and front end values in the template category dropdown ","communication_System showing the backend and front end values in the template category dropdown ","Updated event dropdown options and template cards in CommunicationTemplatesAdminPage.tsx and CommunicationsPage.tsx to show only the user-friendly frontend label.","Medium","Reopened","1","10/18/2026 5:23 PM","Santhoshkumar S","Babu Ramasamy","48a","","Failed","Dropdowns now show friendly names (Event category, System event code). Raw codes still shown: template cards OPP-CANCEL-001 ""Auto ON - DEAL_CANCELLED"" and RES-CANCEL-001 ""Auto ON - RESERVATION_CANCELLED"" (these two events are also missing from the System event code list), and the ""Event Trigger"" column of Customer Communications (LEAD_CREATED / LEAD_ASSIGNED / LEAD_QUALIFIED).","31 Oct 2026","v2.0 3110-10"
+"102","Frontend","Communication_unable to add the lead code in the system and also please change the color or Text of error message ","Communication_unable to add the lead code in the system and also please change the color or Text of error message ","Updated upsertTemplateAutomationRule to reassign event rules cleanly via ON CONFLICT (organization_id, event_code) DO UPDATE, auto-uppercased templateCode on input in CommunicationTemplatesAdminPage.tsx, updated en.json, and styled .crm-error-text in red in styles.css.","","Fixed","1","10/18/2026 5:25 PM","Santhoshkumar S","Babu Ramasamy","48a","","Not retested","Not retested: needs a manual check because it saves a template with a duplicate code.","31 Oct 2026","v2.0 3110-10"
+"103","Frontend","Communication_error Message not getting closed automatically when used same template code ","Communication_error Message not getting closed automatically when used same template code ","Fixed onDismiss={clearBanner} to <AppMessageBanner> in CommunicationTemplatesAdminPage.tsx and RecordCommunications.tsx and cleared the banner when templateCode is edited.","Medium","Fixed","1","10/18/2026 5:26 PM","Santhoshkumar S","Babu Ramasamy","48a","","Not retested","Not retested: needs a manual check because it saves a template with a duplicate code.","31 Oct 2026","v2.0 3110-10"
+"104","Frontend","Cummnication_ Sytem displaying the irrelavant message in the bottom of the screen ","Cummnication_ Sytem displaying the irrelavant message in the bottom of the screen ","Removed the ""Tip: use browser Print to save as PDF..."" text from CommunicationTemplatesAdminPage.tsx.","Medium","Closed","1","10/18/2026 5:27 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","The ""Tip: use browser Print to save as PDF..."" text is no longer shown.","31 Oct 2026","v2.0 3110-10"
+"105","Frontend","communication_unable to edit the email check box in the custom template ","communication_unable to edit the email check box in the custom template ","Enabled sendEmail and sendWhatsapp checkboxes (disabled={!canEdit}) in CommunicationTemplatesAdminPage.tsx and persisted default channels in communications.service.ts even when no system event code is linked.","High","Closed","1","10/18/2026 5:28 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","Email and WhatsApp channel checkboxes are enabled in the template editor (not saved).","31 Oct 2026","v2.0 3110-10"
+"106","Frontend","communication_system not directly redirect the user to the whatapp even though what already opened in the same browser","communication_system not directly redirect the user to the whatapp even though what already opened in the same browser","Updated buildWhatsappUrl to target https://web.whatsapp.com/send?... on desktop browsers and used a named window target ""whatsapp_web"" with .focus() in WhatsappShareButton.tsx.","Medium","Fixed","1","10/18/2026 5:30 PM","Santhoshkumar S","Babu Ramasamy","48a","","Not retested","Not retested: needs a manual check because it opens WhatsApp and sends a message.","31 Oct 2026","v2.0 3110-10"
+"107","Frontend","leadpage_unwanted popup message in the Lead page when user click on the whatsapp view button","leadpage_unwanted popup message in the Lead page when user click on the whatsapp view button","emoved the persistent WHATSAPP_OPENED banner trigger in WhatsappShareButton.tsx and cleared banners when opening/closing the View modal in RecordCommunications.tsx.","Medium","Fixed","1","10/18/2026 5:32 PM","Santhoshkumar S","Babu Ramasamy","48a","","Not retested","Not retested: needs a manual check because it uses the WhatsApp button.","31 Oct 2026","v2.0 3110-10"
+"108","Frontend","Lead page_Campaign name not loading properly ","Campaign name not loading properly ","Enabled campaignsQuery across register/form/detail views, prevented premature empty-state disabling while loading, and added Campaign to the Lead Detail profile facts in LeadsPage.tsx.","Medium","Closed","1","10/18/2026 5:33 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","Lead LD-20261025031713-QBY3 (filter ""Campaign leads only""): Lead Detail shows CAMPAIGN ""Digital Ads (Meta & Google Luxury Coastal)"".","31 Oct 2026","v2.0 3110-10"
+"109","Backend","Leadspage_system not showing the customer Full name - In template not configured as show only the last name /firstname .","Leadspage_system not showing the customer Full name - In template not configured as show only the last name /firstname .","Combined lead_title (First Name) and contact_name (Last Name) via CONCAT_WS in communications.service.ts (communicationSelectSql and buildContextForEntities) and communications-dispatch.service.ts.","High","Closed","1","10/18/2026 5:34 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","Preview of MSG-84532382815 (LEAD_CREATED): ""Dear Amelia Hartley,"" - the full name is shown.","31 Oct 2026","v2.0 3110-10"
+"110","Backend","Leadspage_system showing the incorrect status mesasge in the LEADS page ","Leadspage_system showing the incorrect status mesasge in the LEADS page 
+
+Actual: System showing the Dispatch message in the leads page with out dispatch","Updated dispatchCommunication so messages where all channels are SKIPPED remain in GENERATED / APPROVED status instead of DISPATCHED.","High","Fixed","1","10/18/2026 5:36 PM","Santhoshkumar S","Babu Ramasamy","48a","","Not retested","Not retested: needs a manual check because it needs a dispatch with skipped channels.","31 Oct 2026","v2.0 3110-10"
+"111","Frontend","communication_unable to add the variable in the middle of the Template ","unable to add the variable in the middle of the Template ","Added cursor selection tracking (simpleTextareaRef, htmlTextareaRef, cursorSelectionRef) to insertVariable in CommunicationTemplatesAdminPage.tsx so variable chips splice {{Variable}} at the exact cursor position.","High","Closed","1","10/18/2026 5:37 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","Typed ""AAA BBB"", put the cursor after ""AAA "", clicked the Customer Name chip: the body became ""AAA {{Customer Name}}BBB"" (inserted at the cursor; not saved).","31 Oct 2026","v2.0 3110-10"
+"112","","communication_system not saving the message body when user directly click on the publish button","system not saving the message body when user directly click on the publish button
+
+Expected: System should save the template or System allow user to click on the poublish button ","Updated publishMutation in CommunicationTemplatesAdminPage.tsx to save the current form draft (updateCommunicationTemplateDraft) before publishing the new version.","High","Fixed","1","10/18/2026 5:38 PM","Santhoshkumar S","Babu Ramasamy","48a","","Not retested","Not retested: needs a manual check because it publishes a template version.","31 Oct 2026","v2.0 3110-10"
+"113","","system should not allow user to send the old message to the user. It will create confusions ","Expected: System should not allow user to send the old Messages 
+Actual: currently system sending theold message to the customer ","Restricted Dispatch and WhatsappShareButton to the latest active message per recipient in RecordCommunications.tsx, CommunicationsPage.tsx, and assertNotSuperseded in communications-dispatch.service.ts.","Medium","Fixed","1","10/18/2026 5:40 PM","Santhoshkumar S","Babu Ramasamy","48a","","Not retested","Not retested: needs a manual check because it sends messages to a customer.","31 Oct 2026","v2.0 3110-10"
+"114","Frontend","Same rules as the Nationality table; each country listed once (ignoring upper / lower case)","Actual: Customers by Country of Residence: listed more than once (ignoring case)
++   ""Kenya"",
++   ""Qatar"",
+
+Expected: Same rules as the Nationality table; each country listed once (ignoring upper / lower case)
+","Defect #114 (TC-07-07 — Duplicate ""KENYA"" and ""Kenya"" rows in Customers by Nationality / Residence):
+Updated getCountryName in geography.service.ts to resolve both 2-letter ISO codes and full country names case-insensitively (""KENYA"" and ""Kenya"" both normalize to ""Kenya"").","","Closed","1","10/18/2026 7:40 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","CR-051, CR-054, CR-OBS-04 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): Customers by Country of Residence lists each country once (Unspecified, United Arab Emirates, Kenya, United Kingdom, Argentina, Sweden). (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"115","Backend","Customer Reports · New Customers in Period-Every ID looks like CUST-yyyymmddhhmmss-XXXX","Expected: Every ID looks like CUST-yyyymmddhhmmss-XXXX
+
+
+Actual: Customer IDs in another format 
+
+","Defect #115 (TC-07-07 — Inconsistent CUS- vs CUST- customer code prefix):
+Standardized createCustomer in customers.service.ts to generateCode(""CUST""), matching lead conversion in opportunities.service.ts.","","Reopened","1","10/18/2026 7:43 PM","Santhoshkumar S","Babu Ramasamy","48a","","Failed","CR-059 / CR-OBS-06 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): 74 of 78 customers are CUST-yyyymmddhhmmss-XXXX, but CUS-BRK-2021, CUS-BRK-2022, CUS-BRK-2023 and CUS-BRK-2024 are still listed in another format (older records - may need a data correction). (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"116","Backend","Report vs Customers register - Created date mismatch between the reports and customer page","""1. Open Customers (sorted newest first)
+2. Compare the first page with the report list""
+
+
+Actual: ""Error: Report vs Customers register
+
+
+
++   """"CUST-20261013211624-2CDF: Created 13 Oct 2026 vs 14 Oct 2026, 02:46"""",
++   """"CUST-20261007193332-E1TB: Created 07 Oct 2026 vs 08 Oct 2026, 01:03"""",
++   """"CUS-20261001201137-QRZ3: Created 01 Oct 2026 vs 02 Oct 2026, 01:41"""",""
+
+Expected : Same customers with the same name and the same Created date
+","Defect #116 (TC-07-07 — 1-day Created date discrepancy in New Customers in Period):
+Updated customersReport to return the full ISO timestamp for newList.created so formatDisplayDate in the frontend formats it in the active organization timezone, matching CustomersPage.tsx.","Medium","Closed","1","10/18/2026 7:52 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","CR-062 / CR-OBS-07 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): 20 customers compared with the Customers register - same names and Created dates. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"117","Frontend","Active customers = Customers page ""Active Customers"" are not matching count","""1. Note Active customers
+2. Open Customers and read """"Active Customers""""""
+values: Customer Reports Active customers 133 | Customers page ""Active Customers"" 127
+
+Expected : Equal (both pages use the same definition of an active customer)
+
+","Numbers are corrected","High","Reopened","1","10/18/2026 7:55 PM","Santhoshkumar S","Babu Ramasamy","48a","","Failed","CR-070 / CR-OBS-03 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): Customer Reports ""Active customers"" 78 vs Customers page ""Active Customers"" 24 (the page also shows ""Customers 78""; its register marks most as ""Prospect (pre-customer)""). Expected: both use the same definition of an active customer. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"118","Backend","Customers by Country of Residence: The same country appears under different spellings (KENYA / Kenya, QATAR / Qatar, UK / United Kingdom), and re","1. Customers by Country of Residence: The same country appears under different spellings (KENYA / Kenya, QATAR / Qatar, UK / United Kingdom), and re
+
+Actual: ""Countries listed under more than one spelling
+Regions or cities listed as countries""
+countries: Unspecified, KENYA, UK, GERMANY, UAE, EUROPE, DUBAI, QATAR, INDIA, Kenya, Canada, Qatar, Aruba, United Kingdom, Azerbaijan, Australia
+
+
+
+Expected : Pick the country of residence from the country list (as nationality is) and clean up the existing values.
+","Check now with new entries. Its data issues and correct now. ","High","Closed","0","10/18/2026 8:00 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","CR-OBS-04 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): countries of residence are country names from the list (Unspecified, United Arab Emirates, Kenya, United Kingdom, Argentina, Sweden); no KENYA / UK / EUROPE / DUBAI. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"119","Backend","Export: The Country of Residence export's sheet is named ""Customers by Country of Residen"" (cut to Excel's 31-characte","1. Export: The Country of Residence export's sheet is named ""Customers by Country of Residen"" (cut to Excel's 31-characte
+
+Actual: sheet: ""Customers by Country of Residen"" (31 characters)
+
+Expected:'Use a sheet name of 31 characters or fewer.
+","Defect #119 (TC-07-11 — Excel worksheet tab name truncated mid-word to ""Customers by Country of Residen""):
+Added formatWorksheetName in xlsx-export.ts to map ""Customers by Country of Residence"" to ""Customers by Residence"" and cleanly shorten any title exceeding 31 characters on a word boundary.","low","Closed","1","10/18/2026 8:03 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","CR-065 / CR-OBS-10 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): export sheet is named ""Customers by Residence"" (22 characters) and matches the table. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"120","Frontend","Customer Report_Assign a salesperson to every customer, or add an ""Unassigned"" option to the Salesperson filter.","1. Filters: Some customers have no salesperson (12 of 133): the customers of all salespeople add up to 121, and there is n
+
+Expected: Assign a salesperson to every customer, or add an ""Unassigned"" option to the Salesperson filter.
+","Defect #120 (TC-07-15 — Missing ""Unassigned"" option in Reports Salesperson filter):
+Added { id: ""unassigned"", label: ""Unassigned"" } to owners in getLeadReportOptions and handled ownerUserId === ""unassigned"" across reports.schemas.ts, lead-reports.service.ts, and business-reports.service.ts.","Medium","Closed","0","10/18/2026 8:06 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","CR-031 / CR-OBS-13 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): Salesperson filter has ""Unassigned""; the salespeople's customers add up to all 78. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"121","Backend","Broker IDs in another format","1. Compare the rows with Active brokers (no filters)
+
+Actual: Broker IDs in another format
+
+
+Expected: Rows = Active brokers; each Broker ID once; IDs look like BRK-nnn
+
+","Defect #121 (TC-07-08 — Non-standard auto-generated broker code & inactive broker row count mismatch):
+Updated createBroker in customers.service.ts to auto-generate sequential BRK-nnn codes (BRK-001, BRK-002, ...) when brokerCode is omitted.
+Filtered brokersReport in business-reports.service.ts to active brokers (b.is_active = TRUE).
+","low","Closed","0","10/18/2026 8:14 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","BR-050, BR-056, BR-MAP-11 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): Partner Broker Scorecard (RPT-17) lists every active broker once with BRK-nnn IDs; BRK-005 opens Pam Golding Properties. (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"122","Backend","Opportunities, reservations and SPAs per broker agree with Lead Reports","1. Compare each broker's Opportunities, Reservations and SPAs with Lead Reports (Opportunity, Reserved, SPA Signed)
+
+
+Actual: Broker Reports vs Lead Reports per broker
+
+Expected: Equal for every broker
+
+","Defect #122 (TC-07-08 — Broker attribution mismatch across Leads, Opportunities, Reservations, and SPAs):
+Unified broker attribution in brokersReport to COALESCE(r.broker_id, o.broker_id, l.broker_id) = b.id.","","Closed","1","10/18/2026 8:25 PM","Santhoshkumar S","Babu Ramasamy","48a","","Passed","BR-060 (Retest_Reports_Redesign_2026-10-31_2300.xlsx): Opportunities, Reservations and SPAs per broker agree with Lead Reports (Source & Channel by Broker). (Report tests updated for the 3110-10 sub-report design.)","31 Oct 2026","v2.0 3110-10"
+"144","Frontend","Duplicate message uses the wording from the use case","""1. Open the Leads page (menu Leads → All Leads)
+2. Click """"Individual""""
+3. Enter the same details as the existing lead
+4. Click Create Lead
+5. Read the message""
+
+Expected : The message says ""This lead has already been created"" (wording required by the use case).
+
+Actual: Duplicate message wording: pop-up: expected StringContaining ""This lead has already been created"", actual ""Duplicate Lead — Blocked A matching lead already exists based on the configured duplicate rules. Creation is blocked. A lead already exists matching the configured duplicate rules. Existing lead: LD-20261025035636-14ML Creation is blocked. Resolve the duplicate before continuing. OK""
+","Updated en.json and leads.service.ts so both Individual and Corporate duplicate alerts begin with ""This lead has already been created.""","Medium","Blocked","0","10/24/2026 11:10 PM","Santhoshkumar S","Babu Ramasamy","2410-03","","Blocked","Blocked by NEW-01 (Leads page crash ""Cannot read properties of undefined (reading 'total')""): the test has to create or open a lead first and the Leads page crashed. Retest when NEW-01 is fixed.","31 Oct 2026","v2.0 3110-10"
+"145","","Duplicate message uses the wording from the use case","""1. Open the Leads page (menu Leads → All Leads)
+2. Click """"Corporate""""
+3. Enter the same details as the existing lead
+4. Click Create Lead
+5. Read the message""
+
+expected: The message says ""This lead has already been created"" (wording required by the use case).
+","Updated en.json and leads.service.ts so both Individual and Corporate duplicate alerts begin with ""This lead has already been created.""","Medium","Closed","0","10/24/2026 11:11 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated LP-047 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"146","Backend","To Qualify shows only leads that still need qualifying","""1. Open the Leads page (menu Leads → All Leads)
+2. Click """"To Qualify""""
+3. Select each status in """"Filter by status"""" and note the number of leads""
+","Updated qualify_count, assigned_count, pendingQualificationOnly, and assignedOnly in leads.service.ts and filtered the To Qualify status dropdown in LeadsPage.tsx.","High","Closed","1","10/24/2026 11:16 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated LP-068 passed on retry (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"147","Frontend","Counts update after disqualify","""1. Open the Leads page (menu Leads → All Leads)
+2. Note every tab count and the TOTAL, ASSIGNED, QUALIFIED and DISQUALIFIED cards on All Leads
+3. Open a lead created in this run, choose the Disqualification Reason and Remarks and click Disqualify Lead
+4. Reload the Leads page and note the same numbers again""
+","Updated qualify_count, assigned_count, pendingQualificationOnly, and assignedOnly in leads.service.ts and filtered the To Qualify status dropdown in LeadsPage.tsx.","low","Blocked","1","10/24/2026 11:17 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Blocked","Blocked by NEW-01 (Leads page crash ""Cannot read properties of undefined (reading 'total')""): the test has to create or open a lead first and the Leads page crashed. Retest when NEW-01 is fixed.","31 Oct 2026","v2.0 3110-10"
+"148","","Each checklist item is required — Purpose of Purchase left empty","""1. Open the Leads page and click the Lead No. of the lead
+2. Fill every checklist item except one
+3. Click Qualify Lead
+4. Repeat for each item""
+
+It happened while 4 test workers were creating leads on QA at the same time. The same case passed when I re-ran it alone, and 3 other tests in that run hit the same stall on different data. So it looks like QA intermittently stops answering a save under load. It isn't tied to particular input.
+
+About saving manually: saving works right now; LP-011 just created a lead in 28 seconds. If a manual save hangs on ""Saving…"" for you, it's probably the same intermittent stall. ","Added client-side checklist validation in onQualify and moved getMissingQualificationFields to fail fast at the start of qualifyLead.","","Reopened","0","10/24/2026 11:44 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Failed","LDP-052.3 (Retest_Modules_2026-10-31_2138.xlsx): the lead is correctly not qualified when Purpose of Purchase is empty, but the pop-up title is ""Qualification Failed"" instead of the agreed ""Qualification Details Missing"" (confirmed not acceptable, 31 Oct 2026).","31 Oct 2026","v2.0 3110-10"
+"149","","Duration accepts whole minutes only — ""12.5""","""1. Open the Leads page and click the Lead No. of the lead
+2. Click """"Log call""""
+3. Type each value of Duration Inputs into Duration (minutes)""
+
+Excepted: Duration field holds anything but ""125"" (A decimal must not turn into a different number)
+","Removed non-digit stripping in ActivityDialog.tsx and added strict whole-number validation (""Duration must be a whole number of minutes"").","low","Blocked","0","10/25/2026 12:36 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Blocked","Blocked by NEW-01 (Leads page crash ""Cannot read properties of undefined (reading 'total')""): the test has to create or open a lead first and the Leads page crashed. Retest when NEW-01 is fixed.","31 Oct 2026","v2.0 3110-10"
+"150","Backend","New user's initial password follows the password policy","""1. New User: fill the test user, Initial Password = a 3-character password
+2. Click Create User""
+
+
+Expected : The user is not created; the password rule (8+ characters, a letter and a number) is shown.
+","When a 3-character or weak password is entered, user creation is blocked, the field shows an inline alert (""Password must be at least 8 characters and contain at least one letter and one number.""), and the Password Too Weak error banner is displayed directly inside the New User modal","High","Closed","0","10/25/2026 1:28 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated SEC-024 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"151","Backend","Sales Executive can open the Users & Roles admin page and is offered the ""New User"" button","Steps
+""1. Before you start: a user with role Sales Executive exists (this run used Kavya Raman, login ID kavya.raman1458380397). If you have none, create one in Users & Roles → New User with role Sales Executive.
+2. Open a private browser window and sign in as that Sales Executive.
+3. Type the address of Users & Roles directly: https://qa-crm.asquareab.com/admin (the menu does not need to show it).""
+
+Actual: ""What happened:
+• The Users & Roles page OPENED normally for the Sales Executive (title """"User and Role Management"""", cards Users / Active Users / Roles / Login Disabled).
+• The """"New User"""" button was shown (the test expected 0 buttons and found 1).
+
+So the page is not protected by the user's role.""
+
+expected : Access is refused: a ""no access"" message is shown or the user is sent back. No ""New User"" / ""New Role"" buttons are offered.
+","Fixed. 
+Permission Denied
+
+Access Denied
+You do not have permission to access Users & Roles management. Ask a CRM administrator if you need access.","critical","Closed","0","10/25/2026 5:37 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated SEC-027 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"152","Backend","Sales executive cannot open organisation preferences","""1. Before you start: a user with role Sales Executive exists (this run used Kavya Raman, login ID kavya.raman14638909101). If you have none, create one in Users & Roles → New User with role Sales Executive.
+2. Sign in as that Sales Executive in a private browser window.
+3. Type the address https://qa-crm.asquareab.com/preferences""
+
+Expected: Access is refused: a ""no access"" message is shown or the user is sent back.
+","Fixed. 
+
+Permission Denied
+
+Access Denied
+You do not have permission to access Users & Roles management. Ask a CRM administrator if you need access.","critical","Closed","0","10/25/2026 5:38 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated SEC-028 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"153","Frontend","Custom role: the menu shows only permitted modules","""1. Before you start: role """"Lead Desk Viewer"""" (code LEAD_DESK_VIEWER) has only DASHBOARD → View and LEADS → View ticked in its permission matrix (Users & Roles → Roles & Permissions), and a user with that role exists (this run used Vikram Rao, login ID vikram.rao14716265111).
+2. Sign in as Vikram Rao in a private browser window.
+3. Look at the main menu on the left.""
+
+Actual: ""What happened:
+• The menu showed ALL 15 modules: Home / Dashboard, Tasks & Calendar, Leads, Opportunities, Reservations, Proposals, SPA / Sales Contracts, Customers & Brokers, Inventory, Brokers & Channels, Marketing, Activities & Comm., Construction Updates, Service Requests, Reports & Analytics.
+• The role's saved permission matrix was checked afterwards: only DASHBOARD View and LEADS View are ticked, and the user menu shows the role """"Lead Desk Viewer"""" — so the role is set correctly but not applied to the menu.""
+
+Expected:The menu shows only the modules the role may view: Home / Dashboard and Leads.
+
+","Fixed. The unwanted modules removed . Reset the permission and check ","High","Closed","1","10/25/2026 5:41 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","SEC-029 passed (Retest_Role_Permissions_2026-10-31_2229.xlsx): a user with role Lead Desk Viewer (Dashboard + Leads View only) sees only ""My Smart Workspace"" and ""Leads"" in the menu. (Test updated for 3110-10: new Edit Role layout; home renamed from ""Home / Dashboard"".)","31 Oct 2026","v2.0 3110-10"
+"154","Backend","Custom role: pages without View permission are refused","Steps:
+""1. Before you start: role """"Lead Desk Viewer"""" (code LEAD_DESK_VIEWER) has only DASHBOARD → View and LEADS → View ticked in its permission matrix (Users & Roles → Roles & Permissions), and a user with that role exists (this run used Vikram Rao, login ID vikram.rao14801586121).
+2. Sign in as Vikram Rao in a private browser window.
+3. Type the address of each module in turn, e.g. https://qa-crm.asquareab.com/customers, /opportunities, /inventory, /admin, /preferences.""
+
+
+Actual: ""What happened:
+• These pages OPENED although the role has no View permission for them: /opportunities, /reservations, /proposals, /spa-contracts, /customers, /inventory, /brokers-channels, /marketing, /activities-communication, /construction-updates, /service-requests, /reports-analytics, /admin, /preferences.
+• Only /activities and /admin/audit-log were refused.
+• Some pages open empty (e.g. Customers shows the register with 0 rows), so the server withholds part of the data, but the screens are not blocked and no message explains why.""
+
+
+Expected : Only Home / Dashboard and Leads open. Every other module page is refused (no-access message or sent back).
+","Fixed. The unwanted modules removed . Reset the permission and check ","High","Reopened","0","10/25/2026 5:44 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Failed","SEC-030 (Retest_Role_Permissions_2026-10-31_2229.xlsx): role Lead Desk Viewer (View on Dashboard and Leads only), test user Vikram Rao. These pages still open (checked for 8 s after loading): /opportunities (Total 0), /reservations (with ""New Reservation""), /proposals (""New Proposal""), /spa-contracts (""New Contract""), /customers, /inventory (shows Projects 10 and unit figures), /brokers-channels, /marketing, /activities-communication, /construction-updates, /service-requests, /reports-analytics. Refused correctly: /activities, /admin, /admin/audit-log, /preferences. Expected: every page without View permission shows ""Access Denied"".","31 Oct 2026","v2.0 3110-10"
+"155","","Custom role without Create cannot create leads","Steps: 
+""1. Before you start: role """"Lead Desk Viewer"""" (code LEAD_DESK_VIEWER) has only DASHBOARD → View and LEADS → View ticked in its permission matrix (Users & Roles → Roles & Permissions), and a user with that role exists (this run used Vikram Rao, login ID vikram.rao14946010131).
+2. Sign in as Vikram Rao in a private browser window.
+3. Open Leads (/leads).""
+
+Actual: ""What happened:
+• Both create buttons were shown (the test expected 0 buttons and found 2).""
+
+expected: No ""New Individual Lead"" / ""New Corporate Lead"" buttons are offered, because the role has no Create permission for Leads.
+","Gated + Individual Lead / + Corporate Lead buttons in LeadsTabs.tsx and /leads/*/new routes & Edit actions in LeadsPage.tsx using usePermission(""LEADS"", ""create"") / ""update""","High","Closed","0","10/25/2026 5:46 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","SEC-031 passed (Retest_Role_Inventory_2026-10-31_2219.xlsx): a role without Leads Create gets no ""New Individual / Corporate Lead"" buttons.","31 Oct 2026","v2.0 3110-10"
+"156","Backend","Admin password reset is recorded","Steps 
+""1. Sign in as CRM Administrator.
+2. Open Users & Roles → open a test user (this run used Nisha Kapoor, login ID nisha.kapoor1223900104) → Reset Password → set a new password → save.
+3. Open Audit Log → Login activity → search the user's name.""
+
+
+Actual: ""What happened:
+• No """"Password reset"""" row. The newest rows for Nisha Kapoor at 12:40 were """"Password changed — Success"""", """"Password changed — Failed (CURRENT_PASSWORD_INVALID)"""" and """"Password changed — Success"""".
+• The administrator's reset therefore looks like the user changing their own password, and nothing shows which administrator did it.""
+
+expected: A row ""Password reset"" (Success) is listed for the user, showing that an administrator reset the password.
+","","High","Closed","1","10/25/2026 6:26 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated SEC-076 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"157","Frontend","Session sign-outs are shown with a readable event name","""1. Before you start: a test user exists (this run used Ananya Menon, login ID ananya.menon1242667711).
+2. Sign in as that user in browser A, then again in browser B.
+3. In browser B: user menu → My Profile → Sign out other devices → confirm.
+4. As administrator open Audit Log → Login activity → search the user's name.""
+
+Actual: ""What happened:
+• The sign-out of the other device is listed as the raw code """"SESSION_REVOKED"""" (the user's history also shows """"LOGOUT"""" as a raw code), next to readable events such as """"Password login"""" and """"Password changed"""".""
+
+Excepted: Every event has a readable name, e.g. ""Signed out of other devices"".
+","Added LOGOUT (""Sign Out""), LOGOUT_ALL (""Sign Out All Sessions""), SESSION_REVOKED, and TOKEN_REFRESH to EVENT_LABELS in LoginActivityPanel.tsx.","Medium","Closed","1","10/25/2026 6:30 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated SEC-079 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"158","Frontend","Total card = proposals in the register - count mismatch ","""1. Before you start: Signed in as CRM Administrator
+2. Open Proposals (main menu → Proposals)
+3. Read Total
+4. Read """"Showing … of N proposals""""""
+
+Actual: ""What happened:
+• Total = proposals with status any — Expected: 20. Actual: 21.
+
+What the test saw on the page:
+• Total: card / register: 21 / 20 (statuses: all; register 20 rows: Accepted 8, Submitted 4, Superseded 1, Approved 1, Rejected 1, Draft 5)""
+
+Expected: Total equals N.
+","Number and Value amount are corrected. ","High","Closed","1","10/25/2026 6:35 AM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated PRO-002 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"159","Frontend","Needs Approval card = submitted proposals","""1. Before you start: Signed in as CRM Administrator
+2. Open Proposals (main menu → Proposals)
+3. Read Needs Approval
+4. Count the register rows with the statuses on Card Rules""
+
+Expected : 
+Needs Approval equals the number of proposals waiting for approval (status Submitted).
+
+
+Actual: ""What happened:
+• Needs Approval = proposals with status Submitted — Expected: 4. Actual: 9.
+
+What the test saw on the page:
+• Needs Approval: card / register: 9 / 4 (statuses: Submitted; register 20 rows: Accepted 8, Submitted 4, Superseded 1, Approved 1, Rejected 1, Draft 5)""","
+
+Updated proposals.service.ts, proposals.ts, and ProposalsPage.tsx so Needs Approval counts only 'SUBMITTED' proposals and displays Submitted (X) · Draft (Y).
+
+","Medium","Closed","0","10/26/2026 3:57 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated PRO-003 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"160","Backend","Invalid proposed price is refused — Empty, Leatters, Zero ","""1. Before you start: A deal built by the test: buyer → opportunity at Reservation Ready → approved reservation on a test unit
+2. Open Proposals (main menu → Proposals)
+3. New Proposal → choose the deal's opportunity
+4. Enter the proposed price of the data row
+5. Create Proposal
+
+Data used in this run:
+   • test data: Proposed Price """"""""""
+
+
+Actual: system should not accept empty values ","Required positive numeric proposedPrice (#160) and non-empty replacement remarks (#164) in proposals.schemas.ts and ProposalsPage.tsx.
+Disabled Accept Proposal unless the proposal is APPROVED (#161), cleared banners when opening/closing modals (#162), and rendered <AppMessageBanner> inside active modals so validation notices are visible above the backdrop (#164).","Medium","Closed","0","10/26/2026 4:12 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated PRO-016.1 / .2 / .4 (empty, letters, zero) passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"161","Frontend","Accept is not offered before approval","""1. Before you start: A Draft proposal created by the test
+2. Open Proposals (main menu → Proposals)
+3. Open the proposal
+4. Look at Accept Proposal""
+
+Expoected: Accept Proposal cannot be used while the proposal is a Draft or Submitted (only after approval).
+
+Actual: ""What happened:
+• Accept Proposal is not usable on a Draft — Expected: no. Actual: yes.
+Should be read only 
+
+What the test saw on the page:
+• Accept on a Draft: Draft: """"OPEN FORM ↓"""", button enabled = true""
+
+","Required positive numeric proposedPrice (#160) and non-empty replacement remarks (#164) in proposals.schemas.ts and ProposalsPage.tsx.
+Disabled Accept Proposal unless the proposal is APPROVED (#161), cleared banners when opening/closing modals (#162), and rendered <AppMessageBanner> inside active modals so validation notices are visible above the backdrop (#164).","low","Closed","0","10/26/2026 4:24 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated PRO-022 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"162","Frontend","Accept is not offered before approval error Message not getting hidden ","Accept is not offered before approval error Message not getting hidden 
+
+""1. Before you start: A Draft proposal created by the test
+2. Open Proposals (main menu → Proposals)
+3. Open the proposal
+4. Look at Accept Proposal""
+
+Expected: error message should be closed","Required positive numeric proposedPrice (#160) and non-empty replacement remarks (#164) in proposals.schemas.ts and ProposalsPage.tsx.
+Disabled Accept Proposal unless the proposal is APPROVED (#161), cleared banners when opening/closing modals (#162), and rendered <AppMessageBanner> inside active modals so validation notices are visible above the backdrop (#164).","low","Fixed","1","10/26/2026 4:27 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Not retested","Not retested: closing of the error message was not checked (PRO-022 only checks that Accept cannot be used).","31 Oct 2026","v2.0 3110-10"
+"163","Enhancement","unable to find the Submit count/ draft count in a proposal page","""1. Before you start: a buyer with an approved reservation on a test unit (this run: buyer Oliver Bennett, opportunity OPP-20261025141739-WQXV, unit CBR858612-D442, list price 420,000 USD).
+2. Open Proposals (main menu → Proposals).
+3. Create a new proposal for the buyer (Draft) — this run: PRO-20261025142915-AXIF.
+4. Read the cards.
+5. Open the proposal → Submit Proposal (Action remarks """"Pricing confirmed with the buyer."""").
+6. Read the cards and re-open the proposal.""
+","Updated proposals.service.ts, proposals.ts, and ProposalsPage.tsx so Needs Approval counts only 'SUBMITTED' proposals and displays Submitted (X) · Draft (Y).","low","Closed","0","10/26/2026 4:44 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Covered by PRO-003 (Retest_Modules_2026-10-31_2138.xlsx): Needs Approval = submitted proposals.","31 Oct 2026","v2.0 3110-10"
+"164","Frontend","Replace needs a reason - there is no correct error message for replaceement","""1. Before you start: a buyer with an approved reservation on a test unit (this run: buyer Oliver Bennett, opportunity OPP-20261025141739-WQXV, unit CBR858612-D442, list price 420,000 USD).
+2. Open Proposals (main menu → Proposals).
+3. Create a new proposal (Draft) — this run: PRO-20261025142606-78V7.
+4. Open it → Replace Proposal: enter a new price (list − 3%), leave """"Reason for replacing"""" empty, click Replace Proposal.""
+","Frontend (ProposalsPage.tsx, #pro-replace-card, en.json):
+Wired useAppNotice() and <FormNoticeDialog> so clicking Replace Proposal with an empty Reason for replacing immediately pops up the Replacement Reason Required notice dialog (""Please enter the reason for replacing this proposal before continuing."").
+Rendered an inline field validation message (<p className=""crm-field-error"" role=""alert"">Please enter the reason for replacing this proposal before continuing.</p>) directly beneath the Reason for replacing <textarea> in both #pro-replace-card and the Replace Proposal modal, clearing automatically when the user types.
+Rendered <AppMessageBanner> directly inside #pro-replace-card so the error alert is also visible inline without scrolling to the top of the modal.
+Backend (proposals.schemas.ts, proposals.service.ts):
+Updated supersedeProposal to explicitly throw HttpError(400, ""REPLACE_REASON_REQUIRED"", ""Please enter the reason for replacing this proposal before continuing."") when remarks is missing or blank, and mapped api.REPLACE_REASON_REQUIRED in en.json.","Medium","Closed","0","10/26/2026 4:53 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","Automated PRO-030 passed (Retest_Modules_2026-10-31_2138.xlsx).","31 Oct 2026","v2.0 3110-10"
+"165","Backend","Missing data -Sources are the Lead Source options of the lead form","""1. Before you start: Signed in as CRM Administrator
+2. Open Leads → Insights (Sources)
+3. Read the source names
+4. Open New Individual Lead and read the Lead Source options""
+
+Expected: Every source on the table is an option of Lead Source (no old or duplicate names such as ""Broker"" next to ""Broker Channels"").
+
+""What happened:
+• Sources that are not a Lead Source option — Expected: none. Actual: Broker, Exhibition, Google Ads, Referral Partner.
+
+What the test saw on the page:
+• sources / Lead Source options: Referrals, Digital Marketing, Direct Sales, Broker, Events & Exhibitions, Hospitality Channels, Property Portals, Strategic Partners, Public Relations, Broker Channels, Exhibition, Google Ads, Referral Partner / Select, Digital Marketing, Property Portals, Broker Channels, Referrals, Events & Exhibi…""
+
+","Added ensureCanonicalLeadSources to normalize legacy LEAD | SOURCE references to active LEAD | CATEGORY values in both Lead Register and Lead Reports.","Medium","Blocked","0","10/26/2026 4:58 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Blocked","Blocked by NEW-01 (Leads page crash ""Cannot read properties of undefined (reading 'total')""): the test has to create or open a lead first and the Leads page crashed. Retest when NEW-01 is fixed.","31 Oct 2026","v2.0 3110-10"
+"166","Frontend","Available units agree across Inventory views","""1. Sign in as CRM Administrator.
+2. Open Inventory (main menu → Inventory).
+3. Read the """"Available"""" card.
+4. Open the Availability Summary tab; for each project in the Project list read """"<project>: N units in M blocks · K available"""" and add up K.""
+
+Actual: 
+""What happened:
+• Available card: 138. Availability Summary: 137 (Palm Exotica 128 + Coral Bay Residences 9).
+• The difference is the unit on hold PEX-APT-0301 (status Available, """"Held by CRM Administrator""""): the card counts it as available, the summary does not.""
+
+Expected: The Availability Summary shows the same number of available units as the Available card.
+","Defects #93, #94, #166 (TC-07-41 / TC-07-56 / TC-03-23 — Unit status alignment across Inventory, Building View, Reports & Executive Dashboard, and excluding Held units from Available):
+Unified the effective unit status hierarchy (SOLD → RESERVED → HELD → AVAILABLE) across inventory.service.ts, building-view.service.ts, dashboard.service.ts, and business-reports.service.ts.","Medium","Closed","0","10/26/2026 5:20 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Passed","IVP-006 passed (Retest_Role_Inventory_2026-10-31_2219.xlsx): Available card = sum of ""Available"" in the Availability Summary over all projects (140). (Test updated for the 3110-10 summary layout.)","31 Oct 2026","v2.0 3110-10"
+"167","Frontend","Duplicate project code is refused with proper error Message ","""1. Sign in as CRM Administrator.
+2. Open Inventory (main menu → Inventory).
+3. Projects → New Project: fill Project Code with a code that already exists (this run: AMG686001, created just before), Project Name """"Baobab Heights"""", Location MOMBASA, Currency USD.
+4. Click Create Project.""
+
+
+Expected: The project is not saved and the message says the project code already exists.
+
+Actual: ""What happened:
+• Not saved (correct), but the message is """"Project Not Saved — Project could not be saved. Check code and required fields."""" It does not say the code is already used.""
+Error message also not getting closed ","Fixed the proper message will be displayed. ","low","Reopened","0","10/26/2026 5:24 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Failed","IVP-015 (Retest_Modules_2026-10-31_2138.xlsx): a duplicate project code is still refused with ""Project Not Saved - Project could not be saved. Check code and required fields."" Expected: the message says the project code already exists.","31 Oct 2026","v2.0 3110-10"
+"168","Backend","Duplicate product code is refused with a clear message","""1. Sign in as CRM Administrator.
+2. Open Inventory (main menu → Inventory).
+3. Products → New Product: Product Code = an existing code (e.g. the product just created, CB2A-…), Product Name """"3 Bedrooms Coral Bay Residence"""".
+4. Click Save Product.""
+
+
+Expected : The product is not saved and the message says the product code already exists.
+
+Actual: ""What happened:
+• Error """"Something Went Wrong — Something went wrong on our side. Please try again; if it keeps happening, contact support with the reference shown. Reference: 7e93f450-5580-4745-9be2-0348e05938b4"""".
+• The duplicate is refused, but as an unexpected server error, not as a validation message.""
+","Fixed the message will display now as: 
+
+Product code ""APT-3BR-A"" already exists. Please enter a unique product code.","High","Reopened","1","10/26/2026 5:27 PM","Santhoshkumar S","Babu Ramasamy","v2.0 2410-03","","Failed","IVP-024 (Retest_Modules_2026-10-31_2138.xlsx): no server error any more, but the message is ""Product Not Saved - Product could not be created. Check the product code is unique."" Expected (dev comment): ""Product code ... already exists. Please enter a unique product code.""","31 Oct 2026","v2.0 3110-10"
+"NEW-01","Frontend","Leads page intermittently crashes: ""Unexpected Application Error! Cannot read properties of undefined (reading 'total')"" when opened from the left menu, by URL or on refresh","Leads page crashes with ""Unexpected Application Error! Cannot read properties of undefined (reading 'total')""
+
+Steps to reproduce (any CRM Administrator login, build v2.0 3110-10):
+1. Sign in as CRM Administrator (one browser, one user).
+2. On My Smart Workspace, wait about 3 seconds, then click Leads in the left menu.
+3. If the Leads page loads, go back to My Smart Workspace and click Leads again; repeat 2-3 times.
+4. Also try pressing F5 on the Leads page, or opening https://qa-crm.asquareab.com/leads directly.
+→ On some attempts the whole page is replaced by ""Unexpected Application Error! Cannot read properties of undefined (reading 'total')"". The tabs (My Leads, Unassigned, To Qualify, Ready to Convert, All Leads) are then gone too.
+→ On other attempts the page and every tab load normally, so it may take a few tries.
+
+How often:
+- 31 Oct 2026 22:50-23:35 (several browsers): /leads/my crashed 4 of 4, left menu > Leads 3 of 3, /leads direct 10 of 10 OK at 22:50 but most attempts crashed at 23:30.
+- Recheck with ONE browser, manual pace (1 Nov 2026 05:05 IST, 3 rounds of: menu > Leads, each tab, F5, /leads, /leads/my): round 1 crashed on menu > Leads and stayed crashed until F5; round 2 everything OK; round 3 crashed on menu > Leads, F5 and /leads direct, then /leads/my loaded. 13 of 27 checks crashed.
+- So it is intermittent and not caused by parallel sessions; My Leads does not crash every time (it loaded in all 3 direct opens in the recheck).
+
+Actual: on the failing attempts the whole page is replaced by the error and the user has to reload, sometimes several times, to get the Leads page back.
+Expected: the Leads page and every tab load normally.
+
+Technical detail for the developer:
+- Every API call of the page returns 200 with data (e.g. /api/v1/leads/tab-counts → {""all"":227,""my"":181,""unassigned"":14,""qualification"":86,""conversion"":21}; /api/v1/leads?limit=20&offset=0&sortBy=captured&sortDir=desc&mineOnly=true → items), so it is a front-end error: a component reads "".total"" of an object that is undefined (likely a pagination / count object before or without data).
+- Stack: TypeError at index-CzIlLt4.js:20:56221 (useMemo, format-api-error-vrlPyNe7.js:1:7730).
+- No error boundary on the route, so the whole page is lost.
+
+Impact: interrupts lead work on QA and made automated runs unreliable for the retest of #144, #147, #149 and #165 (they need to create or open a lead first). Also seen on builds 3010-07 and 3110-10.","","high","New","4","10/31/2026 11:38 PM","Santhoshkumar S","Babu Ramasamy","v2.0 3110-10","","Failed","Reproduced on 31 Oct 2026 and rechecked on 1 Nov 2026 with one browser at manual pace: still intermittent (13 of 27 checks crashed; one full round had no crash). Evidence in Retesting/evidence/: Leads_Page_Crash_My_Leads.png, Leads_Page_Crash_Menu_Click.png, Leads_Page_Crash_Direct_URL.png, Leads_Page_Crash_attempts.txt, Leads_Page_Recheck_1worker.txt.","1 Nov 2026","v2.0 3110-10"

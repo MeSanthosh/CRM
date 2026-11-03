@@ -1,7 +1,7 @@
-/** Manage projects (IVP-011 … IVP-018) and unit products (IVP-021 … IVP-026). */
-import { test, expect, ivp, ivpRow, note, DATA, tabs, cards, expectChanges, names, row, projectValues, productValues, newForm, saveButton, createdProject, createdProduct } from './shared';
+/** Manage projects (IVP-011 … IVP-018), unit products (IVP-021 … IVP-026) and product details (IVP-047 … IVP-049). */
+import { test, expect, ivp, ivpRow, note, DATA, tabs, cards, expectChanges, names, row, projectValues, productValues, newForm, saveButton, createdProject, createdProduct, fill } from './shared';
 import { withSalesLock } from '../sales-chain/inventory';
-import { ModalForm } from '../pages/SalesPages';
+import { ModalForm, MediaPanel } from '../pages/SalesPages';
 
 const S = (k: string) => DATA.setting(k);
 const tab = (shows: string) => tabs().find(t => t['Shows'] === shows)!['Tab'];
@@ -259,5 +259,87 @@ test.describe('Inventory · Products', () => {
     expect.soft(details, 'Type').toContain(values[n['Unit Type']]);
     expect(details, 'Carpet area').toContain(values[n['Carpet Area']]);
     await new ModalForm(page).close();
+  });
+});
+
+// ── Product details (IVP-047 … IVP-049) ──────────────────────────────────────
+const firstPart = (cell: string) => (cell ?? '').split(' | ')[0].trim();
+/** Caption → value of the Product Details lists (dl > div > dt + dd). */
+async function detailValues(form: ModalForm): Promise<Record<string, string>> {
+  const pairs = await form.root.locator('dl > div').evaluateAll(ds => ds.map(d => [d.querySelector('dt')?.textContent?.trim() ?? '', (d.querySelector('dd')?.textContent ?? '').replace(/\s+/g, ' ').trim()]));
+  return Object.fromEntries(pairs.filter(([k]) => k));
+}
+async function viewProduct(page: import('@playwright/test').Page, inv: import('../sales-chain/inventory').InventoryPage, code: string) {
+  await inv.openTab(PRODUCTS());
+  await inv.search(S('Product Search Placeholder'), code);
+  const r = (await inv.rows()).find(x => x.lines[0] === code)!;
+  expect(r, `${code} listed`).toBeTruthy();
+  await inv.rowAction(r, S('View Button'));
+  const form = new ModalForm(page);
+  await expect(form.root).toBeVisible();
+  return { form, row: r };
+}
+
+test.describe('Inventory · Product details', () => {
+  test.describe.configure({ timeout: 300_000 });
+
+  test(...ivp('IVP-047'), async ({ inv, page }) => {
+    await inv.openTab(PRODUCTS());
+    const first = (await inv.rows())[0];
+    const { form } = await viewProduct(page, inv, first.lines[0]);
+    const headings = (await form.root.locator('h4').allInnerTexts()).map(h => h.trim());
+    const values = await detailValues(form);
+    note('product / sections', `${first.lines[0]} · ${headings.join(' | ')}`);
+    note('catalogue row / details', `${first.text} / ${JSON.stringify(values).slice(0, 600)}`);
+    for (const s of DATA.sheet('Product Sections')) expect.soft(headings, `Section "${s['Section']}"`).toContain(s['Section']);
+    for (const f of DATA.sheet('Product Detail Fields')) {
+      const want = firstPart(first.cells[f['Catalogue Column']]);
+      expect.soft(values[f['Detail Caption']] ?? '', `${f['Detail Caption']} = catalogue "${f['Catalogue Column']}" (${want})`).toContain(want);
+    }
+    await form.close();
+  });
+
+  test(...ivp('IVP-048'), async ({ inv }) => {
+    await inv.openTab(PRODUCTS());
+    const products = await inv.allRows();
+    await inv.openTab(tabs().find(t => t['Shows'] === 'Unit Register')!['Tab']);
+    const units = await inv.allRows();
+    const col = S('Product Column');
+    const bad: string[] = [];
+    for (const p of products) {
+      const [n, avail] = (p.cells[S('Units Available Column')] ?? '').split('/').map(x => Number(x.trim()));
+      const mine = units.filter(u => firstPart(u.cells[col]) === p.lines[0]);
+      const free = mine.filter(u => u.cells['Status'] === S('New Unit Status')).length;
+      if (mine.length !== n || free !== avail) bad.push(`${p.lines[0]}: catalogue ${n} / ${avail}, register ${mine.length} / ${free}`);
+    }
+    note('products / units read', `${products.length} / ${units.length}`);
+    note('differences', bad.join(' | ') || 'none');
+    expect(bad, `"${S('Units Available Column')}" = units of the product / Available ones in the Unit Register`).toEqual([]);
+  });
+
+  test(...ivp('IVP-049'), async ({ inv, page }) => {
+    const { values } = await createdProduct(page, inv);
+    const code = values[names('Product')['Product Code']];
+    const m = DATA.sheet('Media Uploads').find(r => r['Case ID'] === 'IVP-049')!;
+    const link = fill(m['Virtual Tour Link']);
+    const file = m['File'].split('/').pop()!;
+    note('test data', `${code} · tour ${link} · ${m['File Type']} "${m['Caption']}" ${m['File']}`);
+    let { form } = await viewProduct(page, inv, code);
+    const media = new MediaPanel(page);
+    expect.soft(await media.text(), 'Before: no link').toContain(S('No Tour Text'));
+    expect.soft(await media.text(), 'Allowed files').toContain(S('Media Rule Text'));
+    const saved = await media.saveTourLink(link, S('Save Link Button'));
+    const up = await media.upload({ type: m['File Type'], caption: m['Caption'], file: m['File'] }, S('Upload Button'));
+    note('pop-ups', [...saved, ...up].map(x => `${x.title}: ${x.text}`).join(' | ') || 'none');
+    await form.close();
+    ({ form } = await viewProduct(page, inv, code));
+    const tour = await new MediaPanel(page).tourLink();
+    const after = await new MediaPanel(page).text();
+    note('media after re-opening', after.slice(0, 600));
+    note('virtual tour link after re-opening', tour || 'none');
+    expect.soft(tour, 'Virtual tour link kept').toBe(link);
+    expect.soft(after, `Listed under "${S('Product Files Heading')}"`).not.toMatch(new RegExp(`${S('Product Files Heading')}.*?${S('No Files Text').replace('.', '\\.')}`));
+    expect(after.includes(file) || after.includes(m['Caption']), `${file} ("${m['Caption']}") listed`).toBeTruthy();
+    await form.close();
   });
 });

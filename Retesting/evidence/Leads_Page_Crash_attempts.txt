@@ -1,0 +1,24 @@
+Sidebar menu → Leads #1: CRASH · /leads
+Sidebar menu → Leads #2: CRASH · /leads
+Sidebar menu → Leads #3: CRASH · /leads
+Leads → tab "My Leads" #1: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "My Leads" #2: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "My Leads" #3: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "All Leads" #1: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "All Leads" #2: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "All Leads" #3: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "Unassigned" #1: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "Unassigned" #2: ok · /leads/unassigned
+Leads → tab "Unassigned" #3: ok · /leads/unassigned
+Leads → tab "To Qualify" #1: ok · /leads/qualification
+Leads → tab "To Qualify" #2: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "To Qualify" #3: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "Ready to Convert" #1: ok · /leads/conversion
+Leads → tab "Ready to Convert" #2: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "Ready to Convert" #3: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "Insights" #1: ok · /leads/sources
+Leads → tab "Insights" #2: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → tab "Insights" #3: CRASH · /leads · TimeoutError: locator.click: Timeout 8000ms exceeded.
+Leads → refresh (F5) on /leads #1: CRASH · /leads
+Leads → refresh (F5) on /leads #2: ok · /leads
+Leads → refresh (F5) on /leads #3: ok · /leads

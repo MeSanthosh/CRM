@@ -106,14 +106,14 @@ export class DealChain {
     return { ...deal, stage: this.route('Reservation Ready Stage') };
   }
 
-  /** New unit in the test project (Deal Unit sheet). */
+  /** New unit in the test project (Deal Unit sheet), or an existing Available one when Create New Units = No. */
   async unit(): Promise<CreatedUnit> {
     // {seq} is 3 random digits: on "Unit Not Saved" (code taken) try again with another code
     let made = await withSalesLock(() => createUnit(this.page, this.data, this.data.sheet('Deal Unit')[0], { names: this.names('Unit') }));
     for (let i = 0; i < 3 && !made.result.closed; i++) made = await withSalesLock(() => createUnit(this.page, this.data, this.data.sheet('Deal Unit')[0], { names: this.names('Unit') }));
     const { unit, result } = made;
-    expect(result.closed, `Unit ${unit.code} created (${result.notice?.text ?? 'no message'})`).toBeTruthy();
-    this.note('deal unit', `${unit.code} · ${unit.name} · ${unit.price}`);
+    expect(result.closed, `Unit ${unit.code} ready (${result.notice?.text ?? 'no message'})`).toBeTruthy();
+    this.note('deal unit', `${unit.code} · ${unit.name} · ${unit.price}${unit.reused ? ' (existing Available unit of the test project: Create New Units = No)' : ' (created)'}`);
     return unit;
   }
 

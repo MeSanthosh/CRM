@@ -6,6 +6,9 @@
  *  - UnitPicker   "Choose Unit" dialog
  *  - CustomerKyc  Customers → Edit Customer → Documents & KYC
  *  - PipelineBoard  Opportunities → Board (columns, filters, move menus)
+ *  - MediaPanel   Floor Plans & Media of Product Details / a unit (virtual tour link, file upload)
+ *  - UnitView     Inventory → Units → Open (sections Identification … Linked Modules)
+ *  - AvailabilitySummary  Inventory → Availability Summary (summary line, Summary Table, Stack Plan)
  * Selectors come from locators.ts; values come from the suites' TestData files.
  */
 import { Page, Locator, expect } from '@playwright/test';
@@ -161,6 +164,44 @@ export class ModulePage {
     const panel = new RecordPanel(this.page);
     await panel.waitOpen(number);
     return panel;
+  }
+  /** Clicks a column header until it sorts `direction` (aria-sort ascending / descending); returns the aria-sort reached. */
+  async sortBy(column: string, direction: 'ascending' | 'descending'): Promise<string> {
+    const th = at(this.page, XP.sortHeader(column)).first();
+    for (let i = 0; i < 3 && (await th.getAttribute('aria-sort')) !== direction; i++) {
+      const before = (await at(this.page, XP.registerRows).allInnerTexts()).join('¦');
+      await th.locator('button').click();
+      await expect.poll(async () => (await at(this.page, XP.registerRows).allInnerTexts()).join('¦'), { timeout: 5_000 }).not.toBe(before).catch(() => {});
+      await this.page.waitForLoadState('networkidle').catch(() => {});
+      await this.page.waitForTimeout(500);
+    }
+    return (await th.getAttribute('aria-sort')) ?? '';
+  }
+  /** Columns that can be sorted (headers with a sort button). */
+  async sortableColumns(): Promise<string[]> {
+    return (await at(this.page, `${XP.registerHeaders}[contains(@class,'crm-sortable-th')]`).allInnerTexts()).map(h => clean(h.replace(/[↕▲▼]/g, '')));
+  }
+  /** Formula line under a KPI card (its tooltip holds the full wording). */
+  async cardFormula(card: string): Promise<{ text: string; title: string }> {
+    const p = at(this.page, XP.cardFormula(card)).first();
+    if (!(await p.count())) return { text: '', title: '' };
+    return { text: clean(await p.innerText()), title: clean((await p.locator('xpath=..').getAttribute('title')) ?? '') };
+  }
+  async previousPage() {
+    const before = await this.pagerText();
+    await at(this.page, XP.pagerPrevious).first().click();
+    await expect.poll(() => this.pagerText(), { timeout: 15_000 }).not.toBe(before);
+    await this.page.waitForTimeout(800);
+  }
+  async nextPage() {
+    const before = await this.pagerText();
+    await at(this.page, XP.pagerNext).first().click();
+    await expect.poll(() => this.pagerText(), { timeout: 15_000 }).not.toBe(before);
+    await this.page.waitForTimeout(800);
+  }
+  async pagerButtons(): Promise<{ previous: boolean; next: boolean }> {
+    const on = async (xp: string) => { const b = at(this.page, xp).first(); return (await b.count()) > 0 && (await b.isEnabled()); };
+    return { previous: await on(XP.pagerPrevious), next: await on(XP.pagerNext) };
   }
   /** Clicks a register Export button and returns the downloaded file's rows (CSV / XLSX). */
   async export(button = 'Export'): Promise<{ name: string; rows: Record<string, string>[] }> {
@@ -434,6 +475,28 @@ export class RecordPanel {
     await trigger.first().click();
     await new UnitPicker(this.page).choose(code);
   }
+  /**
+   * Documents block of a record (Contract Detail): picks the type, types the description, chooses the file and
+   * presses Upload. Returns the pop-ups / toasts seen and the block's lines afterwards.
+   */
+  async uploadDocument(doc: { type: string; description: string; file: string }, heading = 'Documents', button = 'Upload'): Promise<{ seen: NoticeInfo[]; lines: string[] }> {
+    const block = this.root.locator(`xpath=.//h4[normalize-space()=${JSON.stringify(heading)}]/ancestor::*[.//input[@type='file']][1]`).first();
+    await expect(block, `${heading} block`).toBeVisible();
+    const type = block.locator('select').filter({ has: this.page.locator('option', { hasText: doc.type }) }).first();
+    if (doc.type) await type.selectOption({ label: doc.type });
+    if (doc.description) await block.locator('input[placeholder^="Description"]').first().fill(doc.description);
+    await block.locator('input[type=file]').first().setInputFiles(doc.file);
+    await block.getByRole('button', { name: button, exact: true }).first().click();
+    const seen: NoticeInfo[] = [];
+    const toast = at(this.page, XP.toast).last();
+    await Promise.race([this.notice.root.waitFor({ timeout: 15_000 }), toast.waitFor({ timeout: 15_000 })]).catch(() => {});
+    if (await toast.isVisible().catch(() => false)) seen.push({ title: clean(await toast.locator('strong').first().innerText().catch(() => '')), text: clean(await toast.innerText()), buttons: [], kind: /error/.test((await toast.getAttribute('class')) ?? '') ? 'error' : 'info' });
+    const n = (await this.notice.visible()) ? await this.notice.read() : undefined;
+    if (n) { seen.push(n); await this.notice.close(); }
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1500);
+    return { seen, lines: await this.block(heading) };
+  }
   async copyLink(): Promise<string> {
     await this.root.getByRole('button', { name: 'Copy link', exact: true }).click();
     await this.page.waitForTimeout(300);
@@ -569,5 +632,139 @@ export class PipelineBoard {
       });
     }
     return out;
+  }
+}
+
+// ── Floor Plans & Media (Product Details / unit view) ───────────────────────
+export type MediaFile = { type: string; caption: string; file: string };
+
+export class MediaPanel {
+  readonly notice: Notice;
+  constructor(readonly page: Page) {
+    this.notice = new Notice(page);
+  }
+  get root(): Locator {
+    return at(this.page, XP.mediaPanel);
+  }
+  async text() {
+    return clean(await this.root.innerText());
+  }
+  /** Pop-ups and toasts after a save / upload. */
+  private async outcome(): Promise<NoticeInfo[]> {
+    const seen: NoticeInfo[] = [];
+    const toast = at(this.page, XP.toast).last();
+    await Promise.race([this.notice.root.waitFor({ timeout: 15_000 }), toast.waitFor({ timeout: 15_000 })]).catch(() => {});
+    if (await toast.isVisible().catch(() => false)) seen.push({ title: clean(await toast.locator('strong').first().innerText().catch(() => '')), text: clean(await toast.innerText()), buttons: [], kind: /error/.test((await toast.getAttribute('class')) ?? '') ? 'error' : 'info' });
+    const n = (await this.notice.visible()) ? await this.notice.read() : undefined;
+    if (n) { seen.push(n); await this.notice.close(); }
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1500);
+    return seen;
+  }
+  /** Address of the saved virtual tour (shown as an "Open virtual tour" link; '' when none). */
+  async tourLink(): Promise<string> {
+    const a = this.root.locator('.crm-media-tour a[href]').first();
+    return (await a.count()) ? (await a.getAttribute('href')) ?? '' : '';
+  }
+  async saveTourLink(url: string, button = 'Save Link'): Promise<NoticeInfo[]> {
+    await this.root.getByLabel('Virtual tour link').fill(url);
+    await this.root.getByRole('button', { name: button, exact: true }).click();
+    return this.outcome();
+  }
+  async upload(f: MediaFile, button = 'Upload'): Promise<NoticeInfo[]> {
+    if (f.type) await this.root.getByLabel('File type').selectOption({ label: f.type });
+    if (f.caption) await this.root.getByLabel('Caption').fill(f.caption);
+    await this.root.getByLabel('File', { exact: true }).setInputFiles(f.file);
+    await this.root.getByRole('button', { name: button, exact: true }).click();
+    return this.outcome();
+  }
+}
+
+// ── Inventory → Units → Open ─────────────────────────────────────────────────
+export class UnitView {
+  constructor(readonly page: Page) {}
+  get root(): Locator {
+    return at(this.page, XP.unitView);
+  }
+  /** Section buttons with their state: "Identification" → "VIEW", "Configuration" → "OPEN" … */
+  async sections(names: string[]): Promise<Record<string, string>> {
+    const out: Record<string, string> = {};
+    for (const n of names) {
+      const b = at(this.page, XP.unitSection(n)).first();
+      out[n] = (await b.count()) ? clean((await b.innerText()).slice(n.length)).toUpperCase() : '';
+    }
+    return out;
+  }
+  /** Opens a section and returns its lines (from its heading to the end of the view). */
+  async open(name: string): Promise<string[]> {
+    await at(this.page, XP.unitSection(name)).first().click();
+    await this.page.waitForTimeout(1200);
+    const lines = (await this.root.innerText()).split('\n').map(s => s.trim()).filter(Boolean);
+    const i = lines.lastIndexOf(name);
+    return i >= 0 ? lines.slice(i) : [];
+  }
+  /** Value after a caption in a section's lines (captions are shown in capitals). */
+  static value(lines: string[], caption: string): string {
+    const i = lines.findIndex(l => l.toUpperCase() === caption.toUpperCase());
+    return i >= 0 ? lines[i + 1] ?? '' : '';
+  }
+  async close() {
+    const b = this.root.getByRole('button', { name: 'Close', exact: true }).first();
+    if (await b.count()) await b.click(); else await this.page.keyboard.press('Escape');
+    await this.page.waitForTimeout(800);
+  }
+}
+
+// ── Inventory → Availability Summary ─────────────────────────────────────────
+export type SummaryRow = { block: string; counts: Record<string, number> };
+
+export class AvailabilitySummary {
+  constructor(readonly page: Page) {}
+  private get main() {
+    return this.page.locator('main');
+  }
+  /** Chooses a project by its name (several projects may share a name: `index` picks the n-th). */
+  async project(name: string, index = 0) {
+    const select = this.main.locator('select').first();
+    const opts = (await select.locator('option').allTextContents()).map(o => o.trim());
+    const hits = opts.map((o, i) => (o === name ? i : -1)).filter(i => i >= 0);
+    await select.selectOption({ index: hits[index] ?? hits[0] });
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(2500);
+  }
+  /** "<project>: 68 total units across 2 blocks · 13 Available ($5.38M) · 53 Reserved ($22.26M) · 2 Sold ($840k)" → word → number */
+  async line(project: string, unitsWord: string): Promise<{ text: string; counts: Record<string, number> }> {
+    const text = clean((await this.main.innerText()).split('\n').find(l => l.startsWith(`${project}:`) && l.includes(unitsWord)) ?? '');
+    const counts: Record<string, number> = {};
+    const total = text.match(new RegExp(`(\\d[\\d,]*)\\s+${unitsWord}`, 'i'));
+    if (total) counts[unitsWord] = Number(total[1].replace(/,/g, ''));
+    for (const m of text.matchAll(/·\s*(\d[\d,]*)\s+([A-Za-z]+)/g)) counts[m[2]] = Number(m[1].replace(/,/g, ''));
+    return { text, counts };
+  }
+  async view(name: string) {
+    await at(this.page, XP.availabilityView(name)).click();
+    await this.page.waitForTimeout(2500);
+  }
+  /** Summary Table rows: block (or "Grand Total") → number of units per column (first line of each cell). */
+  async table(): Promise<SummaryRow[]> {
+    const heads = (await at(this.page, XP.registerHeaders).allInnerTexts()).map(clean);
+    const out: SummaryRow[] = [];
+    // each row starts with a row header (th: block name) and the Grand Total row sits in its own row group
+    for (const r of await at(this.page, `(//main//table)[last()]/tbody/tr[td] | (//main//table)[last()]/tfoot/tr[td]`).all()) {
+      const cells = (await r.locator('th, td').allInnerTexts()).map(c => c.split('\n').map(s => s.trim()).filter(Boolean));
+      const counts: Record<string, number> = {};
+      heads.forEach((h, i) => { if (i > 0 && /^\d/.test(cells[i]?.[0] ?? '')) counts[h] = Number(cells[i][0].replace(/,/g, '')); });
+      out.push({ block: (cells[0]?.[0] ?? '').replace(/^▸\s*/, ''), counts });
+    }
+    return out;
+  }
+  /** Stack Plan: status chips "Available (13)" → 13, and every unit cell (code + status letter). */
+  async stackPlan(letters: string[]): Promise<{ chips: Record<string, number>; units: { code: string; letter: string }[] }> {
+    const lines = (await this.main.innerText()).split('\n').map(s => s.trim()).filter(Boolean);
+    const chips: Record<string, number> = {};
+    for (const l of lines) { const m = l.match(/^([A-Za-z][A-Za-z ]*?) \((\d+)\)$/); if (m && !(m[1] in chips)) chips[m[1]] = Number(m[2]); }
+    const units: { code: string; letter: string }[] = [];
+    lines.forEach((l, i) => { if (/^[A-Z0-9]+(-[A-Z0-9]+)+$/.test(l) && letters.includes(lines[i + 1])) units.push({ code: l, letter: lines[i + 1] }); });
+    return { chips, units };
   }
 }

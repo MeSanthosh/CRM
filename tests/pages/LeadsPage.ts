@@ -47,6 +47,12 @@ export class LeadsPage extends BasePage {
     return kpi(this.page, label);
   }
 
+  /** Formula line under a card, e.g. Assigned → "Total (311) − Unassigned (14)" (build v2.0). */
+  async cardFormula(label: string): Promise<string> {
+    const p = at(this.page, XP.leadsKpiCard(label)).locator('p').first();
+    return (await p.count()) ? (await p.innerText()).replace(/\s+/g, ' ').trim() : '';
+  }
+
   async clickCard(label: string) {
     await act(this.page, () => at(this.page, XP.leadsKpiCard(label)).click());
   }

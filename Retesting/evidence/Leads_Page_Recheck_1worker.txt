@@ -1,0 +1,41 @@
+Leads page recheck, 1 worker, 2026-10-31T23:35:50.927Z
+-- round 1
+CRASH | left menu > Leads | https://qa-crm.asquareab.com/leads
+  could not click /^My Leads/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^My Leads | https://qa-crm.asquareab.com/leads
+  could not click /^Unassigned/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^Unassigned | https://qa-crm.asquareab.com/leads
+  could not click /^To Qualify/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^To Qualify | https://qa-crm.asquareab.com/leads
+  could not click /^Ready to Convert/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^Ready to Convert | https://qa-crm.asquareab.com/leads
+  could not click /^All Leads/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^All Leads | https://qa-crm.asquareab.com/leads
+OK    | F5 on current tab | https://qa-crm.asquareab.com/leads
+OK    | open /leads directly | https://qa-crm.asquareab.com/leads
+OK    | open /leads/my directly | https://qa-crm.asquareab.com/leads/my
+-- round 2
+OK    | left menu > Leads | https://qa-crm.asquareab.com/leads
+OK    | tab ^My Leads | https://qa-crm.asquareab.com/leads/my
+OK    | tab ^Unassigned | https://qa-crm.asquareab.com/leads/unassigned
+OK    | tab ^To Qualify | https://qa-crm.asquareab.com/leads/qualification
+OK    | tab ^Ready to Convert | https://qa-crm.asquareab.com/leads/conversion
+OK    | tab ^All Leads | https://qa-crm.asquareab.com/leads
+OK    | F5 on current tab | https://qa-crm.asquareab.com/leads
+OK    | open /leads directly | https://qa-crm.asquareab.com/leads
+OK    | open /leads/my directly | https://qa-crm.asquareab.com/leads/my
+-- round 3
+CRASH | left menu > Leads | https://qa-crm.asquareab.com/leads
+  could not click /^My Leads/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^My Leads | https://qa-crm.asquareab.com/leads
+  could not click /^Unassigned/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^Unassigned | https://qa-crm.asquareab.com/leads
+  could not click /^To Qualify/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^To Qualify | https://qa-crm.asquareab.com/leads
+  could not click /^Ready to Convert/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^Ready to Convert | https://qa-crm.asquareab.com/leads
+  could not click /^All Leads/i: TimeoutError: locator.click: Timeout 10000ms exceeded.
+CRASH | tab ^All Leads | https://qa-crm.asquareab.com/leads
+CRASH | F5 on current tab | https://qa-crm.asquareab.com/leads
+CRASH | open /leads directly | https://qa-crm.asquareab.com/leads
+OK    | open /leads/my directly | https://qa-crm.asquareab.com/leads/my

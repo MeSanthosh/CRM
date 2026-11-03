@@ -1,0 +1,8 @@
+﻿Column,Kind
+Contract,text
+Customer,text
+Unit,text
+Status,text
+Value,number
+ERP,text
+Created Date,date

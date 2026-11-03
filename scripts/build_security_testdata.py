@@ -94,7 +94,7 @@ S['Masking Checks'] = (['Page', 'Route', 'Column', 'Kind'], [
 ])
 
 S['Module Routes'] = (['Permission', 'Menu Label', 'Route'], [
-    ['DASHBOARD', 'Home / Dashboard', '/'],
+    ['DASHBOARD', 'My Smart Workspace', '/'],  # renamed from "Home / Dashboard" in build 3110-10
     ['ACTIVITIES', 'Tasks & Calendar', '/activities'],
     ['LEADS', 'Leads', '/leads'],
     ['OPPORTUNITIES', 'Opportunities', '/opportunities'],

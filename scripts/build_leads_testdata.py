@@ -172,13 +172,14 @@ SHEETS['Tab Rules'] = (['Tab', 'Route', 'Owner Rule', 'Allowed Statuses', 'Page 
     ['Ready to Convert', '/leads/conversion', 'Any owner', 'Qualified', 'Ready to Convert'],
 ])
 
-# Expected change of each count after one action on a lead the signed-in user created (0 = unchanged)
+# Expected change of each count after one action on a lead the signed-in user created (0 = unchanged).
+# Since build 0111-11 the Assigned card = Total − Unassigned (leads with an owner): qualify / disqualify keep the owner.
 SHEETS['Count Changes'] = (['Action', 'All Leads', 'My Leads', 'Unassigned', 'To Qualify', 'Ready to Convert',
                             'Total Leads card', 'Assigned card', 'Qualified card', 'Disqualified card'], [
     ['Create', 1, 1, 0, 1, 0, 1, 1, 0, 0],
     ['Assign', 0, -1, 0, -1, 0, 0, 0, 0, 0],
-    ['Qualify', 0, 0, 0, -1, 1, 0, -1, 1, 0],
-    ['Disqualify', 0, 0, 0, -1, 0, 0, -1, 0, 1],
+    ['Qualify', 0, 0, 0, -1, 1, 0, 0, 1, 0],
+    ['Disqualify', 0, 0, 0, -1, 0, 0, 0, 0, 1],
     ['Convert', 0, 0, 0, 0, -1, 0, 0, -1, 0],
 ])
 

@@ -1,0 +1,3 @@
+﻿Case ID,Record,File Type,Caption,File,Virtual Tour Link
+IVP-049,Product,Floor plan,Floor plan uploaded by the CRM test suite,TestData/files/Sample_Passport_Copy.pdf,https://example.com/tours/product-{unique}
+IVP-053,Unit,Brochure,Brochure uploaded by the CRM test suite,TestData/files/Sample_Passport_Copy.pdf,https://example.com/tours/unit-{unique}

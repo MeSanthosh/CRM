@@ -126,7 +126,10 @@ C(nid(), uc, 'Tab Contents', 'To Qualify shows only leads that still need qualif
 C(nid(), uc, 'Tab Contents', 'Ready to Convert shows only qualified leads', pre,
   steps(LEADS, 'Click "Ready to Convert"', 'Select each status in "Filter by status" and note the number of leads'),
   TR, 'Only status Qualified has leads, and its count equals the tab count.', 'High')
-for card, status in [('Assigned', 'Assigned'), ('Qualified', 'Qualified'), ('Disqualified', 'Disqualified')]:
+C(nid(), uc, 'Card Counts', 'ASSIGNED card matches its formula and its click', pre,
+  steps(LEADS, 'Note the TOTAL LEADS card, its formula line and the Unassigned tab count', 'Note the ASSIGNED card and its formula line "Total (N) − Unassigned (M)"', 'Click the ASSIGNED card and note the pager total'),
+  '—', 'ASSIGNED = TOTAL LEADS − Unassigned, as its formula line says (leads with an owner); the numbers in the formula equal the TOTAL LEADS card and the Unassigned tab; the TOTAL LEADS formula adds up to TOTAL LEADS; clicking ASSIGNED lists that many leads.', 'High')
+for card, status in [('Qualified', 'Qualified'), ('Disqualified', 'Disqualified')]:
     C(nid(), uc, 'Card Counts', f'{card.upper()} card matches the list and its click', pre,
       steps(LEADS, f'Note the {card.upper()} card', f'Select "{status}" in "Filter by status" and note the pager total', 'Reset the filter', f'Click the {card.upper()} card and note the pager total and the Status column'),
       '—', f'Card number = number of {status} leads in the list = number shown after clicking the card, and every row shown has status {status}.', 'High')
@@ -138,6 +141,15 @@ C(nid(), uc, 'Card Counts', 'Status and type counts add up to the total', pre,
 C(nid(), uc, 'Card Counts', 'Search narrows the cards and the list together', pre,
   steps(LEADS, 'Search for the email of a lead created in this run'), f'{TD} → Individual Leads',
   'TOTAL LEADS card = 1 = leads listed; the lead\'s status card shows 1.', 'Medium')
+import csv as _csv
+def changes_text(action):
+    """Expected count changes of an action, in words, from TestData/csv/Count Changes.csv."""
+    with open(os.path.join(ROOT, 'TestData', 'csv', 'Count Changes.csv'), encoding='utf-8-sig') as f:
+        row = next(r for r in _csv.DictReader(f) if r['Action'] == action)
+    moved = [f"{k.replace(' card', ' card').upper() if k.endswith('card') else k} {int(v):+d}" for k, v in row.items() if k != 'Action' and int(v) != 0]
+    same = [k.upper() if k.endswith('card') else k for k, v in row.items() if k != 'Action' and int(v) == 0]
+    return f"Changes: {', '.join(moved) or 'none'}; unchanged: {', '.join(same) or 'none'}"
+
 for action, what in [('Create', 'Create a new Individual lead'), ('Assign', 'Open a lead created in this run and assign it to the user from Lead Actions'),
                      ('Qualify', 'Open a lead created in this run, fill the Qualification checklist and click Qualify Lead'),
                      ('Disqualify', 'Open a lead created in this run, choose the Disqualification Reason and Remarks and click Disqualify Lead'),
@@ -145,10 +157,26 @@ for action, what in [('Create', 'Create a new Individual lead'), ('Assign', 'Ope
     C(nid(), uc, 'Count Updates', f'Counts update after {action.lower()}', 'Signed in; no other user is changing leads during the test',
       steps(LEADS, 'Note every tab count and the TOTAL, ASSIGNED, QUALIFIED and DISQUALIFIED cards on All Leads', what, 'Reload the Leads page and note the same numbers again'),
       f'{TD} → Count Changes (row {action}), Qualification, Lead Actions',
-      f'Each number changes exactly as listed in the Count Changes sheet for "{action}" (e.g. +1, -1 or unchanged).', 'High')
+      f'{changes_text(action)} (Count Changes sheet, row "{action}").', 'High')
 
-HEAD = ['TC ID', 'Use Case', 'Area', 'Test Case', 'Preconditions', 'Test Steps', 'Test Data', 'Expected Result', 'Priority', 'Type', 'Automation']
-WIDTH = [9, 10, 22, 42, 26, 60, 34, 60, 9, 10, 11]
+HEAD = ['TC ID', 'Use Case', 'Area', 'Test Case', 'Preconditions', 'Test Steps', 'Test Data', 'Expected Result', 'Priority', 'Type', 'Automation', 'Why It Matters']
+WIDTH = [9, 10, 22, 42, 26, 60, 34, 60, 9, 10, 11, 50]
+AREA_IMPACT = {
+    'Create Individual Lead': 'Sales cannot capture an individual buyer correctly (missing or wrong fields), so the lead is lost or contacted with wrong details.',
+    'Duplicate Check (Individual)': 'The same buyer can be entered twice, so two salespeople may chase one person and the counts are inflated.',
+    'Create Corporate Lead': 'Sales cannot capture a company lead correctly, so the corporate enquiry is lost or has wrong details.',
+    'Duplicate Check (Corporate)': 'The same company can be entered twice, so two salespeople may chase one company and the counts are inflated.',
+    'Tab Counts': 'The tab numbers do not match their lists, so salespeople and managers work from wrong workload figures.',
+    'Tab Contents': 'A tab lists leads that do not belong there (or misses some), so leads are worked in the wrong queue or forgotten.',
+    'Card Counts': 'The cards at the top of the Leads page show numbers that do not match the list or their own formula, so management reads wrong lead totals.',
+    'Count Updates': 'After a lead action the counts move the wrong way, so the dashboard figures drift away from the real number of leads.',
+}
+CASE_IMPACT = {
+    'LP-070': 'The ASSIGNED card does not equal the formula printed under it (Total − Unassigned): the Disqualified leads are left out without saying so, and the TOTAL LEADS formula does not add up either. Anyone checking the numbers by hand gets a different answer from the screen.',
+    'LP-079': 'Disqualifying a lead takes it out of ASSIGNED although the lead keeps its owner, so ASSIGNED no longer equals Total − Unassigned as its formula says.',
+}
+for c in cases:
+    c.append(CASE_IMPACT.get(c[0], AREA_IMPACT.get(c[2], '')))
 thin = Side(style='thin', color='BFBFBF')
 HDR = PatternFill('solid', fgColor='12465B')
 
@@ -231,6 +259,7 @@ CHANGES = [
     ['25 Oct 2026', 'v2.0 2410-02', 'KPI cards rebuilt (button.crm-metric-card-button: h3 label + value); same labels, click still filters the list', 'LP-061 … LP-075 (locator only, no wording change)'],
     ['25 Oct 2026', 'v2.0 2410-02', 'Lead Detail: owner shown as "Assigned to <owner>" under the name (ASSIGNED tile removed); Assign Lead → Reassign lead', 'LP-013, LP-044, LP-077 (steps reworded)'],
     ['25 Oct 2026', 'v2.0 2410-02', 'Qualify form: Bedrooms now 3 / 4 / 5+ (no 2 Bedrooms); success pop-up "Lead Qualified"; Disqualify asks for confirmation', 'LP-078 … LP-080 (data: Qualification sheet Bedrooms = 3 Bedrooms)'],
+    ['03 Nov 2026', 'v2.0 0111-11', 'ASSIGNED card now counts leads with an owner: formula line "Total (N) − Unassigned (M)"; clicking it lists Assigned, Qualified … leads', 'LP-070 (expected result rewritten); Count Changes data: Qualify and Disqualify leave ASSIGNED unchanged (the lead keeps its owner)'],
     ['25 Oct 2026', 'v2.0 2410-02', 'Create forms unchanged (fields, mandatory list, messages); option lists changed: Gender + Don’t Know, new campaigns, 7 lead owners, new product types', 'No change needed'],
 ]
 sheet(wb.create_sheet('Change Log'), ['Date', 'Build', 'UI change', 'Test cases updated'], CHANGES, [12, 14, 90, 50])

@@ -17,7 +17,10 @@ export const ROUTES = {
   hub: '/reports-analytics',
   leads: '/leads',
   customers: '/customers',
+  opportunities: '/opportunities',
   dashboard: '/', // "Executive Reports" card also opens this
+  /** Executive dashboards since build 3110-10 (Commercial / Sales, Monthly Sales & Marketing, Executive Operations, Lead) */
+  dashboards: '/dashboards',
   reports: {
     leads: '/reports/leads',
     sales: '/reports/sales',
@@ -29,6 +32,7 @@ export const ROUTES = {
     spa: '/reports/spa',
     collections: '/reports/collections',
     exceptions: '/reports/exceptions',
+    governance: '/reports/governance',
   },
 } as const;
 
@@ -42,6 +46,10 @@ export const XP = {
   metricKpi: (label: string) => `//button[contains(@class,'crm-metric-card-button')][h3[normalize-space()=${xl(label)}]]/div[contains(@class,'crm-kpi')]`,
   /** Report module card value: <article.crm-card><h3>Label</h3><div.crm-kpi>39</div> */
   reportKpi: (label: string) => `//article[contains(@class,'crm-card')][h3[normalize-space()=${xl(label)}]]/div[contains(@class,'crm-kpi')]`,
+  /** Report KPI tile (build 3110-10): div.crm-report-tile > span.crm-report-tile-label + strong.crm-report-tile-value */
+  reportTile: (label: string) => `//div[contains(@class,'crm-report-tile')][span[contains(@class,'crm-report-tile-label')][normalize-space()=${xl(label)}]]/strong`,
+  /** Sub-report pill "Reports in …: CUS-01 CUS-02 …", by the query it opens (e.g. "report=byResidence") */
+  subReportPill: (query: string) => `//*[contains(@class,'crm-single-report-sibling-pills')]//a[contains(@href,${xl(query)})]`,
   /** Leads tab badge: <a.crm-leads-tab>All Leads<span.crm-leads-tab-count>615</span></a> */
   leadsTab: (label: string) => `//a[@role='tab'][contains(@class,'crm-leads-tab')][starts-with(normalize-space(),${xl(label)})]`,
   leadsTabCount: (label: string) => `${XP.leadsTab(label)}/span[contains(@class,'crm-leads-tab-count')]`,
@@ -50,7 +58,7 @@ export const XP = {
   moduleCardStatus: (href: string) => `${XP.moduleCard(href)}//span[contains(@class,'crm-module-hub-status')]`,
   reportTab: (name: string) => `//button[contains(@class,'crm-tab-button')][normalize-space()=${xl(name)}]`,
   viewSegment: (name: 'All' | 'You and your team' | 'Mine') => `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()=${xl(name)}]`,
-  reportPanel: (heading: string) => `//section[contains(@class,'crm-panel')][.//h3[normalize-space()=${xl(heading)}]]`,
+  reportPanel: (heading: string) => `//section[contains(@class,'crm-panel')][.//h3[normalize-space()=${xl(tableHeading(heading))}]]`,
   reportTable: (heading: string) => `${XP.reportPanel(heading)}//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]`,
   reportTableRows: (heading: string) => `${XP.reportTable(heading)}/tbody/tr`,
   reportPanelExport: (heading: string) => `${XP.reportPanel(heading)}//button[contains(@class,'crm-export-button')]`,
@@ -265,6 +273,18 @@ export const XP = {
   boardCards: `.//select[starts-with(@aria-label,'Move ')]/ancestor::*[count(.//select[starts-with(@aria-label,'Move ')])=1][last()]`,
   boardMoveSelect: `.//select[starts-with(@aria-label,'Move ')]`,
   boardSummary: `//main//span[contains(@class,'crm-board-summary')]`,
+  /** Sort button of a register column header (th.crm-sortable-th[aria-sort] > button.crm-sortable-th-button) */
+  sortHeader: (column: string) => `(//main//table)[last()]/thead/tr[last()]/th[contains(@class,'crm-sortable-th')][.//span[normalize-space()=${xl(column)}]]`,
+  pagerPrevious: `//main//*[contains(@class,'crm-pagination')]//button[normalize-space()='Previous']`,
+  /** Formula line under a KPI card, e.g. Total → "Draft/Issued (5) + Signed (5) + Canc. (13)" */
+  cardFormula: (card: string) => `//main//article[contains(@class,'crm-card')][h3[normalize-space()=${xl(card)}]]/p[contains(@class,'crm-card-formula')]`,
+  /** Floor Plans & Media panel of Product Details / unit view (virtual tour link, file upload, files list) */
+  mediaPanel: `(//*[contains(concat(' ',normalize-space(@class),' '),' crm-modal ')]//section[contains(@class,'crm-media-panel')])[last()]`,
+  /** Inventory → Unit view: section buttons "Identification VIEW", "Linked Modules OPEN" … */
+  unitSection: (name: string) => `(//*[contains(@class,'crm-unit-detail-modal')])[last()]//button[starts-with(normalize-space(),${xl(name)})]`,
+  unitView: `(//*[contains(@class,'crm-unit-detail-modal')])[last()]`,
+  /** Inventory → Availability Summary: view buttons (⊞ Summary Table / 🏢 Stack Plan) of the page, not of a block row */
+  availabilityView: (name: string) => `(//main//button[contains(@class,'crm-dashboard-view-segment-button')][contains(normalize-space(),${xl(name)})])[1]`,
 };
 
 // ── CSS equivalents (for tools that prefer CSS) ─────────────────────────────
@@ -306,9 +326,94 @@ export const CSS = {
 // ── Playwright helpers ──────────────────────────────────────────────────────
 export const at = (page: Page, xpath: string): Locator => page.locator(`xpath=${xpath}`);
 
-/** Value element of ANY KPI card on any page (hub snapshot, exec/leads cards, report modules). */
+/** Value element of ANY KPI card on any page (hub snapshot, exec/leads cards, report modules, report tiles). */
 export const kpiLocator = (page: Page, label: string): Locator =>
-  page.locator(`xpath=${XP.hubKpi(label)} | ${XP.execKpi(label)} | ${XP.metricKpi(label)} | ${XP.reportKpi(label)}`).first();
+  page.locator(`xpath=${XP.hubKpi(label)} | ${XP.execKpi(label)} | ${XP.metricKpi(label)} | ${XP.reportKpi(label)} | ${XP.reportTile(label)}`).first();
+
+/**
+ * Report sub-reports (build 3110-10): each module shows one sub-report at a time, chosen by the pills
+ * "Reports in …: CUS-01 CUS-02 …" (`?report=<key>`, Lead Reports `?tab=<key>`). Module route → sub-report
+ * query → the table headings it shows. The KPI tiles are the same on every sub-report of a module.
+ */
+export const SUBREPORTS: Record<string, Record<string, string[]>> = {
+  '/reports/governance': {
+    'report=executiveDashboard01': ['Report #01 — Executive Dashboard (Master KPI vs Target & Variance)'],
+    'report=controlAssumptions03': ['Report #03 — Control & Assumptions (Portfolio Baseline Parameters)'],
+    'report=leadBantRegister05_06': ['Report #05 & #06 — Lead Intake & BANT Qualification (SQL) Register'],
+    'report=dataDictionary23': ['Report #23 — Data Dictionary, Formula Definitions & Internal Controls'],
+  },
+  '/reports/leads': {
+    'tab=overview': ['Lead Funnel'],
+    'tab=source': ['Performance by Lead Source'],
+    'tab=aging': ['Open Leads by Salesperson', 'Open Leads by Status', 'Longest Idle Leads'],
+    'tab=qualification': ['Conversion by Lead Rating', 'Conversion by Lead Score'],
+    'tab=scorecard': ['Salesperson Scorecard'],
+  },
+  '/reports/sales': {
+    'report=salesFunnel16': ['Report #16 — Sales Funnel & Stage Conversion Velocity'],
+    'report=smartForecast19': ['Report #19 — Smart Sales Forecast (Monthly Pipeline Absorption)'],
+    'report=openList': ['Report #07 — Opportunities & Pipeline Register'],
+    'report=byOwner': ['Salesperson Pipeline'],
+  },
+  '/reports/inventory': {
+    'report=propertyTypeSummary21': ['Report #21 — Summary by Property Type (Portfolio Absorption)'],
+    'report=revenueManagement18': ['Report #18 — Revenue Management & Dynamic Pricing Engine'],
+    'report=unitInventoryMaster04': ['Report #04 — 133 Unit Inventory Master & Pricing Matrix'],
+  },
+  '/reports/customers': {
+    'report=byType': ['Customers by Type'],
+    'report=byNationality': ['Customers by Nationality'],
+    'report=byResidence': ['Customers by Country of Residence'],
+    'report=newList': ['New Customers in Period'],
+  },
+  '/reports/brokers': {
+    'report=commissionLedger14': ['Report #14 — Broker Commission Ledger (Formula Mode)'],
+    'report=byBroker': ['Report #17 — Partner Broker Scorecard & Quota Achievement'],
+    'report=dealsList': ['Broker SPAs in Period'],
+  },
+  '/reports/marketing': {
+    'report=byCampaign': ['Report #15 — Marketing Channel & Campaign ROAS'],
+    'report=channelAndBrokerSummary22': ['Report #22 — Summary by Channel & Broker (Unified Acquisition Matrix)'],
+  },
+  '/reports/reservations': {
+    'report=activeList': ['Report #08 — Reservations & Token Deposits Register'],
+    'report=byMonth': ['Reservations by Month'],
+    'report=byOwner': ['Reservations by Salesperson'],
+  },
+  '/reports/spa': {
+    'report=spaRegister09': ['Report #09 — Executed SPA & Contract Register'],
+    'report=attentionList': ['SPAs Needing Action'],
+    'report=byMonth': ['SPAs Signed by Month'],
+    'report=byOwner': ['SPAs by Salesperson'],
+  },
+  '/reports/collections': {
+    'report=buyerPaymentLedger10': ['Report #10 — Buyer Payment & Instalment Ledger'],
+    'report=aging': ['Outstanding by Age'],
+  },
+  '/reports/exceptions': {
+    'report=portfolioGovernanceTriggers02': ['Report #02 — Exception Summary & Portfolio Governance Triggers'],
+    'report=summary': ['Operational Exception Checklist', 'Overdue instalments', 'Signed SPAs not handed off to ERP after 3 days', 'Leads not contacted after 2 days'],
+  },
+};
+
+/** Table headings of the old single-page modules → the heading of the same table in build 3110-10. */
+export const RENAMED_TABLES: Record<string, string> = {
+  'Broker Performance': 'Report #17 — Partner Broker Scorecard & Quota Achievement',
+  'Open Opportunities': 'Report #07 — Opportunities & Pipeline Register',
+  'Exception Summary': 'Operational Exception Checklist',
+};
+export const tableHeading = (heading: string) => RENAMED_TABLES[heading] ?? heading;
+/** Columns renamed in build 3110-10, per (new) table heading: old column name → new column name. */
+export const RENAMED_COLUMNS: Record<string, Record<string, string>> = {
+  'Report #17 — Partner Broker Scorecard & Quota Achievement': { SPAs: 'Units Sold (SPA)' },
+  'Report #07 — Opportunities & Pipeline Register': { 'Value (USD)': 'Deal Value (USD)', 'Probability %': 'Probability %' },
+};
+export const columnName = (heading: string, column: string) => RENAMED_COLUMNS[tableHeading(heading)]?.[column] ?? column;
+
+/** Sub-report query (e.g. "report=byResidence") that shows a table on a module route, if any. */
+export function subReportOf(path: string, heading: string): string | undefined {
+  return Object.entries(SUBREPORTS[path] ?? {}).find(([, tables]) => tables.includes(tableHeading(heading)))?.[0];
+}
 
 // ── What lives where (labels exactly as they appear in the DOM) ──────────────
 export const HUB_SNAPSHOT = [

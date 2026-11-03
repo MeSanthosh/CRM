@@ -139,6 +139,14 @@ DEAL_SETTINGS = [
     ['Deposit Percent', '10', 'Reservation deposit the app proposes: this % of the unit price'],
     ['Reservation Ready Stage', 'Reservation Ready', 'Opportunity stage needed before a reservation'],
     ['Reservation Approved Status', 'Approved', 'Reservation status after Approve Reservation'],
+    ['Create New Projects', 'No', 'Yes = the tests may create projects (the test project when missing, Inventory project tests); No = never (requested 02 Nov 2026)'],
+    ['Create New Units', 'No', 'Yes = every deal / unit test creates a new unit; No = reuse an Available unit of the test project that has no active hold and no other deal in this run'],
+    ['Available Status', 'Available', 'Unit Register status of a unit that can be reserved'],
+    ['Holds Tab', 'Holds', 'Inventory tab with the unit holds'],
+    ['Holds Whose Label', 'Whose holds', 'Holds: first filter'],
+    ['Holds Show Label', 'Show', 'Holds: second filter'],
+    ['Holds Scope All', 'All', 'Holds: every user'],
+    ['Holds Active', 'Active', 'Holds: active holds only'],
 ]
 
 # Fictional UK mobile range (Ofcom drama numbers +44 7700 900000–900999) and example.* emails: the app sends

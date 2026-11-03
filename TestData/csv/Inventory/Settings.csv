@@ -18,6 +18,12 @@ New Reservation Button,New Reservation,Opens the New Reservation form
 Choose Unit Button,Choose Unit,Opens the unit picker
 New Proposal Button,New Proposal,Opens the New Proposal form
 Create Proposal Button,Create Proposal,Saves the New Proposal form
+Create New Projects,No,"Yes = the tests may create projects (the test project when missing, Inventory project tests); No = never (requested 02 Nov 2026)"
+Create New Units,No,Yes = every deal / unit test creates a new unit; No = reuse an Available unit of the test project that has no active hold and no other deal in this run
+Available Status,Available,Unit Register status of a unit that can be reserved
+Holds Tab,Holds,Inventory tab with the unit holds
+Holds Whose Label,Whose holds,Holds: first filter
+Holds Show Label,Show,Holds: second filter
 Active Status,ACTIVE,Status of a project in use
 Inactive Status,INACTIVE,Status after Deactivate
 New Unit Status,Available,Status every new unit starts with
@@ -28,12 +34,12 @@ Project Search Placeholder,"Search project, location",Search box of the Project 
 Product Search Placeholder,Search product code or name,Search box of the Unit Product Catalogue
 Unit Search Placeholder,"Search unit, project, status",Search box of the Unit Register
 Value Tolerance %,0.5,Allowed difference between amounts shown rounded (e.g. 210.48M vs $210M)
-Never Click,Recalculate All Units Live,Pricing Matrix button that re-prices every real unit: the tests never click it
+Never Click,Recalculate All,"Pricing Matrix button ""⚡ Recalculate All"" (was ""Recalculate All Units Live"") that re-prices every real unit: the tests never click it"
 Base Rate Note,Governed by Business Rules,Text of the read-only Matrix Base Rate field in New Product
-Pricing Total Label,Total Units Displayed,Pricing Matrix figure: number of units shown
-Pricing Value Label,Operative Portfolio Value,Pricing Matrix figure: value of the units shown
-Summary Units Word,units in,"Availability Summary line ""<project>: N units in M blocks · K available"""
-Summary Available Word,available,Same line: the number before this word is the available units
+Pricing Total Label,Showing,"Pricing Matrix figure: number of units shown (""Showing 201 units (Total Carpet …)"", build 0111-11)"
+Pricing Value Label,Operative GDV,"Pricing Matrix figure: value of the units shown (""Operative GDV: $238,962,480"", build 0111-11)"
+Summary Units Word,total units,"Availability Summary line ""<project>: N total units across M blocks · K Available ($…)"" (build 3110-10)"
+Summary Available Word,Available,Same line: the number before this word is the available units (compared ignoring case)
 Building All Chip,All,Building View status chip with every unit of the block
 Holds Scope All,All,"Holds: first filter, every user"
 Holds Active,Active,"Holds: second filter, active holds only (also the Status of an active hold)"
@@ -47,3 +53,28 @@ Open Button,Open,Row button that opens a unit
 Export Button,Export,Unit Register export
 Unit Edit Button,Edit,Unit view: button that switches Identification to edit mode
 Unit Update Button,Update Identification,Unit view: save button of Identification
+Summary Table View,Summary Table,"Availability Summary view button ""⊞ Summary Table"" (build 0111-11)"
+Stack Plan View,Stack Plan,"Availability Summary view button ""🏢 Stack Plan"" (replaces the Building View tab)"
+Stack All Chip,All,Stack Plan status chip with every unit of the project
+Grand Total Row,Grand Total,Last row of the Summary Table
+Summary Total Column,Total,Summary Table column with every unit of a block
+Units Available Column,Units / Available,"Product catalogue column ""43 / 39"" = units of the product / available ones"
+Product Column,Product,Unit Register column with the product code
+No Product,-,Product column of a unit without a product
+Product Files Heading,Files for this product,Product Details → Floor Plans & Media: list of the product files
+Unit Files Heading,This unit's files,Unit view → Floor Plans & Media: list of the unit files
+No Files Text,No files yet.,Files list before any upload
+No Tour Text,No virtual tour link.,Virtual tour before a link is saved
+Save Link Button,Save Link,Saves the virtual tour link
+Upload Button,Upload,Uploads a media file
+Media Rule Text,"JPG, PNG, WEBP, GIF or PDF, up to 20 MB.",Hint under the media upload
+Linked Reservation Label,Reservation,Unit view → Linked Modules: reservation line
+No Reservation Text,No active reservation,Linked Modules of a unit without a reservation
+Reserved Status,Reserved,Unit status of a reserved unit
+Price Floor Label,PRICE FLOOR (MIN. PRICE),Unit view → Sales
+Current Price Label,OPERATIVE CURRENT PRICE,Unit view → Sales
+Adjusted Price Label,ADJUSTED STANDARD PRICE,Unit view → Sales
+Base Price Label,STANDARD BASE PRICE,"Unit view → Sales: line under it ""<carpet> m² × $<rate>/m²"""
+Premium Label,Total Premium %,Unit view → Sales: Layer 1 total
+Discount Limit Word,Discount Limit,"Unit view → Sales: ""Discount Limit: 3%"" under the price floor"
+Active Tier Word,Active Tier,Unit view → Sales: marks the tier in use

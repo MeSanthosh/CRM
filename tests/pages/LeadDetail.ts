@@ -82,7 +82,7 @@ export class LeadDetail {
 
   /** Text of a history block: from its heading to the next section heading. */
   async history(heading: 'Status History' | 'Owner History'): Promise<string> {
-    const text = await this.root.innerText();
+    const text = await this.historyText(heading);
     const start = text.indexOf(heading);
     if (start < 0) return '';
     const rest = text.slice(start + heading.length);
@@ -94,8 +94,20 @@ export class LeadDetail {
    * ("Contacted → Nurturing" + "reason"); they are joined with " · ":
    * { when: "20 OCT 2026, 07:50 · CRM ADMINISTRATOR", text: "Contacted → Nurturing · reason" }.
    */
+  /** Panel text once the history block has loaded: it shows "No … recorded yet." until the entries arrive (waits up to 15 s). */
+  private async historyText(heading: string): Promise<string> {
+    const until = Date.now() + 15_000;
+    let text = await this.root.innerText();
+    while (Date.now() < until) {
+      const i = text.indexOf(heading);
+      if (i >= 0 && !/^\s*No [a-z ]+ recorded yet/i.test(text.slice(i + heading.length))) break;
+      await this.page.waitForTimeout(1000);
+      text = await this.root.innerText();
+    }
+    return text;
+  }
   async historyEntries(heading: 'Status History' | 'Owner History'): Promise<{ when: string; text: string }[]> {
-    const text = await this.root.innerText();
+    const text = await this.historyText(heading);
     const start = text.indexOf(heading);
     if (start < 0) return [];
     const rest = text.slice(start + heading.length);

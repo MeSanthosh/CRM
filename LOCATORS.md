@@ -148,6 +148,8 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | View: You and your team | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='You and your team']` |  |
 | View: Mine | `//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='Mine']` |  |
 | Report tab (e.g. Sales) | `//button[contains(@class,'crm-tab-button')][normalize-space()='Sales']` | `button.crm-tab-button` |
+| KPI tile (build 3110-10), value | `//div[contains(@class,'crm-report-tile')][span[contains(@class,'crm-report-tile-label')][normalize-space()='Active customers']]/strong` | `div.crm-report-tile` → `strong.crm-report-tile-value` |
+| Sub-report pill (build 3110-10), by query | `//*[contains(@class,'crm-single-report-sibling-pills')]//a[contains(@href,'report=byResidence')]` | `a.crm-single-report-pill` |
 | Module tab bar (Sales … Exceptions are buttons, Leads is a link) | `//main//*[self::button or self::a][contains(@class,'crm-tab-button')][normalize-space()='Sales']` | `main .crm-tab-button` |
 | Any KPI value (template) | `//article[contains(@class,'crm-card')][h3[normalize-space()='<Label>']]/div[contains(@class,'crm-kpi')]` | `article.crm-card:has(> h3) > div.crm-kpi` |
 | Table by heading (template) | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='<Heading>']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |  |
@@ -359,6 +361,13 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | Board column count / value (inside a column) | `.//span[contains(@class,'crm-board-count')]` · `.//span[contains(@class,'crm-board-column-value')]` |
 | Board card / its move menu (inside a column) | `.//select[starts-with(@aria-label,'Move ')]/ancestor::*[count(.//select[starts-with(@aria-label,'Move ')])=1][last()]` · `.//select[starts-with(@aria-label,'Move ')]` |
 | Board summary "Open pipeline: N deals · V USD · weighted W USD" | `//main//span[contains(@class,'crm-board-summary')]` |
+| Register column sort header (`aria-sort` = none / ascending / descending; click its button) | `(//main//table)[last()]/thead/tr[last()]/th[contains(@class,'crm-sortable-th')][.//span[normalize-space()='Value']]` |
+| Pager Previous | `//main//*[contains(@class,'crm-pagination')]//button[normalize-space()='Previous']` |
+| KPI card formula line (Contracts → Total "Draft/Issued (5) + Signed (5) + Canc. (13)") | `//main//article[contains(@class,'crm-card')][h3[normalize-space()='Total']]/p[contains(@class,'crm-card-formula')]` |
+| Floor Plans & Media panel (Product Details / unit view) | `(//*[contains(@class,'crm-modal')]//section[contains(@class,'crm-media-panel')])[last()]` — inputs `input[aria-label='Virtual tour link']`, `select[aria-label='File type']`, `input[aria-label='Caption']`, `input[aria-label='File']` |
+| Contract Detail → Documents inputs | `select` with option "Signed SPA", `input[placeholder='Description (optional)']`, `input[type=file]`, button Upload |
+| Inventory unit view / its section buttons | `(//*[contains(@class,'crm-unit-detail-modal')])[last()]` · `…//button[starts-with(normalize-space(),'Linked Modules')]` |
+| Availability Summary view buttons (⊞ Summary Table / 🏢 Stack Plan) | `(//main//button[contains(@class,'crm-dashboard-view-segment-button')][contains(normalize-space(),'Stack Plan')])[1]` |
 
 ## Ask the developers for `data-testid`
 

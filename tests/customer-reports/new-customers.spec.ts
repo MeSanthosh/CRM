@@ -69,6 +69,7 @@ test.describe('Customer Reports · New Customers in Period', () => {
     await page.goto(ROUTES.customers);
     const rows = at(page, XP.customerRegisterRows);
     await expect(rows.first(), 'Customer Register').toBeVisible({ timeout: 15_000 });
+    await expect(rows.first(), 'Customer Register loaded').not.toContainText(/^\s*Loading/i, { timeout: 20_000 });
     const register = await rows.evaluateAll(trs => trs.map(tr => [...tr.children].map(td => (td as HTMLElement).innerText.trim())));
     const diffs: string[] = [];
     let compared = 0;
@@ -81,7 +82,7 @@ test.describe('Customer Reports · New Customers in Period', () => {
       if (r['Name'] !== name) diffs.push(`${id}: name "${r['Name']}" vs "${name}"`);
       if (shownDate(r['Created']).getTime() !== shownDate(created).getTime()) diffs.push(`${id}: Created ${r['Created']} vs ${cells[cells.length - 1]}`);
     }
-    note('compared', `${compared} customers on the register's first page`);
+    note('compared', `${compared} customers on the register's first page (report IDs e.g. ${[...report.keys()].slice(0, 3).join(', ')}; register e.g. ${register.slice(0, 3).map(c => c[0].replace(/\s+/g, ' ')).join(', ')})`);
     expect.soft(compared, 'Customers found in both').toBeGreaterThan(0);
     expect(diffs.slice(0, 10), 'Report vs Customers register').toEqual([]);
   });

@@ -340,7 +340,9 @@ export class RolesPage {
   }
   /** Permission codes listed in a role's matrix. */
   async matrixCodes(dialog: Locator): Promise<string[]> {
-    return dialog.locator('table tbody tr').evaluateAll(rs => rs.map(r => ((r.querySelector('td') as HTMLElement)?.innerText ?? '').split('\n').map(s => s.trim()).filter(Boolean).pop() ?? ''));
+    // since build 3110-10 the first cell is "<module> / <route> / <CODE> / <description>" and group rows sit between
+    return dialog.locator('table tbody tr:has(input[type=checkbox])').evaluateAll(rs => rs.map(r =>
+      ((r.querySelector('td') as HTMLElement)?.innerText ?? '').split('\n').map(s => s.trim()).find(s => /^[A-Z][A-Z0-9_]+$/.test(s)) ?? ''));
   }
   async matrixHeader(dialog: Locator) {
     return (await dialog.locator('table thead th').allTextContents()).map(s => s.trim());
@@ -362,15 +364,18 @@ export class RolesPage {
   /** Sets the matrix: `grants` = permission code → actions to tick; every other box is cleared. Saves. */
   async setMatrix(code: string, grants: Record<string, string[]>) {
     const d = await this.openRole(code);
-    const rows = d.locator('table tbody tr');
-    const n = await rows.count();
-    for (let i = 0; i < n; i++) {
-      const row = rows.nth(i);
-      const perm = ((await row.locator('td').first().innerText()).split('\n').map(s => s.trim()).filter(Boolean).pop() ?? '');
-      const boxes = row.locator('input[type=checkbox]');
-      for (let a = 0; a < ACTIONS.length; a++) {
-        const want = (grants[perm] ?? []).includes(ACTIONS[a]);
-        const box = boxes.nth(a);
+    // a box belongs to the action of its column (rows offer only some actions; group rows have none)
+    const header = await this.matrixHeader(d);
+    const rows = d.locator('table tbody tr:has(input[type=checkbox])');
+    const codes = await this.matrixCodes(d);
+    for (let i = 0; i < codes.length; i++) {
+      const cells = rows.nth(i).locator(':scope > td');
+      for (const action of ACTIONS) {
+        const col = header.indexOf(action);
+        if (col < 0) continue;
+        const box = cells.nth(col).locator('input[type=checkbox]');
+        if (!(await box.count())) continue;
+        const want = (grants[codes[i]] ?? []).includes(action);
         if ((await box.isChecked()) !== want) await box.setChecked(want);
       }
     }

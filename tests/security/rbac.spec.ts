@@ -14,9 +14,14 @@ async function menu(page: Page) {
 async function refused(page: Page, route: string) {
   await page.goto(route);
   await page.waitForLoadState('networkidle').catch(() => {});
-  await page.waitForTimeout(1500);
-  const path = new URL(page.url()).pathname;
-  const text = await page.locator('main').innerText().catch(() => '');
+  // the permission check can finish after the page has rendered: wait up to 8 s for a refusal
+  let path = '', text = '';
+  for (const end = Date.now() + 8_000; ;) {
+    await page.waitForTimeout(1000);
+    path = new URL(page.url()).pathname;
+    text = await page.locator('main').innerText().catch(() => '');
+    if (path !== route || noAccess().test(text) || Date.now() > end) break;
+  }
   return { refused: path !== route || noAccess().test(text), path, text: text.replace(/\s+/g, ' ').slice(0, 200) };
 }
 async function ensureTestRole(sec: Sec, step: 'Base' | 'Grant') {
@@ -135,7 +140,7 @@ test.describe('Security · Roles & Permissions', () => {
       const view = Object.entries(rolePermissions('Base')).filter(([, a]) => a.includes('View')).map(([p]) => p);
       for (const m of moduleRoutes()) {
         const r = await refused(s.page, m.route);
-        note(m.route, `${r.refused ? 'refused' : 'opened'} · ${r.path}`);
+        note(m.route, `${r.refused ? 'refused' : 'opened'} · ${r.path} · page: ${r.text.slice(0, 120)}`);
         if (view.includes(m.permission)) expect.soft(r.refused, `${m.label} (permitted) opens`).toBeFalsy();
         else expect.soft(r.refused, `${m.label} (no View) refused`).toBeTruthy();
       }

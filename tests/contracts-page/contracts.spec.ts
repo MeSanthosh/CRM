@@ -1,9 +1,9 @@
 /**
- * SPA / Sales Contracts page (SPC-001 … SPC-034). One worker, in this order: register & counts, New Contract,
+ * SPA / Sales Contracts page (SPC-001 … SPC-041). One worker, in this order: register & counts, New Contract,
  * then the life of one contract (issue → payment plan → KYC → sign → ERP), then replace / cancel on a second deal.
  */
 import { test, expect, spc, spcRow, note, DATA, S, acceptedDeal, contractRows, cards, cardsAfter, expectedCard, expectChanges, contractNo, openContract, contractAction, newContract, CON } from './shared';
-import { ModalForm, ModulePage } from '../pages/SalesPages';
+import { ModalForm, ModulePage, RecordPanel } from '../pages/SalesPages';
 import { withSalesLock, findUnit } from '../sales-chain/inventory';
 import { DealChain } from '../sales-chain/deal';
 import { fill, runOnce, runValue } from '../sales-chain/data';
@@ -471,5 +471,153 @@ test.describe('Contracts · ERP, replace & cancel', () => {
       expect.soft(rows.some(r => r.lines[0] === n), `"${text}" finds the contract`).toBeTruthy();
       expect.soft(rows.filter(r => !r.text.toLowerCase().includes(text.toLowerCase())).map(r => r.lines[0]), `Every row matches "${text}"`).toEqual([]);
     }
+  });
+});
+
+// ── Register tools & contract records (SPC-035 … SPC-041) ────────────────────
+const firstPart = (cell: string) => (cell ?? '').split(' | ')[0].trim();
+const sortKey = (kind: string, cell: string): number | string => {
+  const v = firstPart(cell);
+  if (kind === 'number') return /\d/.test(v) ? parseNum(v) : 0;
+  if (kind === 'date') { const t = Date.parse(v.replace(',', '')); return Number.isNaN(t) ? 0 : t; }
+  return v.toLowerCase();
+};
+/** Pairs of neighbouring rows that break the order (empty = sorted). */
+function outOfOrder(values: (number | string)[], dir: 'ascending' | 'descending', shown: string[]): string[] {
+  const bad: string[] = [];
+  for (let i = 1; i < values.length; i++) {
+    const [a, b] = [values[i - 1], values[i]];
+    const cmp = typeof a === 'number' && typeof b === 'number' ? a - b : String(a).localeCompare(String(b));
+    if (dir === 'ascending' ? cmp > 0 : cmp < 0) bad.push(`row ${i} "${shown[i - 1]}" before row ${i + 1} "${shown[i]}"`);
+  }
+  return bad;
+}
+
+test.describe('Contracts · Register tools & records', () => {
+  test.describe.configure({ timeout: 900_000 });
+  test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
+
+  test(...spc('SPC-035'), async ({ contracts }) => {
+    await contracts.open();
+    const sortable = await contracts.sortableColumns();
+    note('sortable columns', sortable.join(', '));
+    for (const c of DATA.sheet('Sort Columns')) {
+      expect.soft(sortable, `"${c['Column']}" can be sorted`).toContain(c['Column']);
+      if (!sortable.includes(c['Column'])) continue;
+      for (const dir of ['ascending', 'descending'] as const) {
+        const reached = await contracts.sortBy(c['Column'], dir);
+        const shown = (await contracts.rows()).map(r => firstPart(r.cells[c['Column']]));
+        const bad = outOfOrder(shown.map(v => sortKey(c['Kind'], v)), dir, shown);
+        note(`sort ${c['Column']} ${dir}`, `${reached}: ${shown.join(' · ')}`);
+        expect.soft(reached, `${c['Column']} header shows ${dir}`).toBe(dir);
+        expect.soft(bad, `Rows sorted by ${c['Column']} (${dir}, ${c['Kind']})`).toEqual([]);
+      }
+    }
+  });
+
+  test(...spc('SPC-036'), async ({ contracts }) => {
+    await contracts.open();
+    const size = Number(S('Page Size'));
+    const total = await contracts.pagerTotal();
+    const pages = Math.max(1, Math.ceil(total / size));
+    note('pager', `${await contracts.pagerText()} (expected ${pages} page(s) of ${size})`);
+    expect.soft(await contracts.pagerText(), 'Pager names page 1 of all pages').toContain(`Page 1 of ${pages}`);
+    expect.soft((await contracts.pagerButtons()).previous, 'Previous disabled on page 1').toBeFalsy();
+    const seen: string[] = [];
+    for (let p = 1; p <= pages; p++) {
+      const rows = (await contracts.rows()).map(r => r.lines[0]);
+      note(`page ${p}`, `${await contracts.pagerText()}: ${rows.length} rows`);
+      expect.soft(rows.length, `Rows on page ${p}`).toBe(p < pages ? size : total - size * (pages - 1));
+      seen.push(...rows);
+      if (p < pages) await contracts.nextPage();
+    }
+    expect.soft((await contracts.pagerButtons()).next, 'Next disabled on the last page').toBeFalsy();
+    expect.soft(seen.filter((n, i) => seen.indexOf(n) !== i), 'No contract on two pages').toEqual([]);
+    expect.soft(seen.length, 'Pages together hold every contract').toBe(total);
+    if (pages > 1) {
+      await contracts.previousPage();
+      expect(await contracts.pagerText(), 'Previous goes back one page').toContain(`Page ${pages - 1} of ${pages}`);
+    }
+  });
+
+  test(...spc('SPC-037'), async ({ contracts }) => {
+    const rows = await contractRows(contracts);
+    const shown = await cards(contracts);
+    const f = await contracts.cardFormula(S('Total Card'));
+    note('Total formula / tooltip', `${f.text} / ${f.title}`);
+    const parts = Object.fromEntries([...f.text.matchAll(/([^+()]+?)\s*\((\d+)\)/g)].map(m => [m[1].trim(), Number(m[2])]));
+    expect(Object.keys(parts).length, 'Formula line under Total').toBeGreaterThan(0);
+    const sum = Object.values(parts).reduce((a, x) => a + x, 0);
+    expect.soft(sum, 'Parts add up to the Total card').toBe(shown[S('Total Card')]);
+    for (const b of DATA.sheet('Total Breakdown')) {
+      const statuses = b['Statuses'].split(',').map(s => s.trim());
+      const inRegister = rows.filter(r => statuses.includes(r.status)).length;
+      note(`part ${b['Part']}`, `formula ${parts[b['Part']]} · register (${statuses.join(' + ')}) ${inRegister}${b['Card'] ? ` · card ${shown[b['Card']]}` : ''}`);
+      expect.soft(parts[b['Part']], `"${b['Part']}" = contracts with status ${statuses.join(' / ')}`).toBe(inRegister);
+      if (b['Card']) expect.soft(parts[b['Part']], `"${b['Part']}" = ${b['Card']} card`).toBe(shown[b['Card']]);
+    }
+  });
+
+  test(...spc('SPC-038'), async ({ contracts, chain, page }) => {
+    const n = await mainContract(contracts, chain);
+    const p = await openContract(contracts, n);
+    const link = await p.copyLink();
+    note('copied link', link);
+    expect(link, 'A link was copied').toMatch(/^https?:\/\//);
+    await page.goto(link);
+    const again = new RecordPanel(page);
+    await again.waitOpen(n);
+    expect((await again.header()).number, 'Opens the same contract').toBe(n);
+  });
+
+  for (const id of ['SPC-039', 'SPC-040']) {
+    const doc = DATA.sheet('Contract Documents').find(r => r['Case ID'] === id)!;
+    test(...spc(id), async ({ contracts, chain }) => {
+      const n = await mainContract(contracts, chain);
+      const file = doc['File'].split('/').pop()!;
+      const p = await openContract(contracts, n);
+      const beforeLines = await p.block(S('Documents Heading'));
+      const before = beforeLines.join(' ');
+      expect.soft(before, 'Documents shows the allowed files').toContain(S('Document Rule Text'));
+      const { seen, lines } = await p.uploadDocument({ type: doc['Document Type'], description: doc['Description'], file: doc['File'] }, S('Documents Heading'), S('Upload Button'));
+      // a message may also be written inside the Documents block instead of a pop-up
+      const inline = lines.filter(l => !beforeLines.includes(l) && !l.includes(file));
+      note('test data', `${n} · ${doc['Document Type']} · ${doc['File']}`);
+      note('upload pop-ups / new text in Documents', `${seen.map(x => `${x.title}: ${x.text}`).join(' | ') || 'none'} / ${inline.join(' | ') || 'none'}`);
+      // re-open: the list must come from the saved contract, not from the form
+      const listed = (await (await openContract(contracts, n)).block(S('Documents Heading'))).join(' ');
+      note('Documents after re-opening', listed.slice(0, 500));
+      if (doc['Expected'] === 'Accepted') {
+        expect.soft(lines.join(' '), 'Listed straight after Upload').toContain(file);
+        expect.soft(listed, 'No longer empty').not.toContain(S('No Documents Text'));
+        expect.soft(listed, 'Type shown').toContain(doc['Document Type']);
+        expect(listed, 'Document kept on the contract').toContain(file);
+      } else {
+        expect.soft(seen.length + inline.length, `A message tells the user that ${file} is refused (only ${S('Document Rule Text')}); nothing was shown`).toBeGreaterThan(0);
+        expect(listed, `${file} is not listed`).not.toContain(file);
+      }
+    });
+  }
+
+  test(...spc('SPC-041'), async ({ contracts, chain }) => {
+    const n = await mainContract(contracts, chain);
+    const current = await statusOf(contracts, n);
+    const p = await openContract(contracts, n);
+    await p.root.getByRole('button', { name: 'Refresh', exact: true }).last().click().catch(() => {});
+    await contracts.page.waitForTimeout(1500);
+    const h = (await p.block(S('History Heading'))).join(' ');
+    note('history', h.slice(0, 1500));
+    const field = S('History Status Field').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const moves = [...h.matchAll(new RegExp(`${field} ([A-Za-z][A-Za-z ]*?) → ${S('History Changed Words')} ([A-Za-z]+)`, 'g'))].map(m => `${m[1]} → ${m[2]}`);
+    note('status changes', `${moves.join(' | ') || 'none'} (register: ${current})`);
+    expect.soft(h, 'Creation entry').toContain(S('History Created Word'));
+    const stamps = [...h.matchAll(new RegExp(`${S('History User')} · \\d{1,2} \\w{3} \\d{4}, \\d{2}:\\d{2}`, 'g'))].length;
+    expect.soft(stamps, 'Every entry names the user and the time').toBeGreaterThanOrEqual(moves.length + 1);
+    const order = [S('Draft Status'), S('Issued Status'), S('Signed Status')];
+    const reached = order.indexOf(current);
+    for (let i = 1; i <= reached; i++) expect.soft(moves, `${order[i - 1]} → ${order[i]} recorded`).toContain(`${order[i - 1]} → ${order[i]}`);
+    // a contract still in Draft has no status change yet; otherwise the newest change (listed first) ends in the register status
+    if (reached > 0) expect(moves[0]?.split(' → ')[1], 'Latest status change = status in the register').toBe(current);
+    else expect(moves, `${current} contract: no status change recorded yet`).toEqual([]);
   });
 });

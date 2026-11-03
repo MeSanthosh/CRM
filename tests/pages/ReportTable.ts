@@ -1,7 +1,7 @@
 /** A table panel on a report module, found by its heading (e.g. "Open Pipeline by Stage"). */
 import { Page, expect } from '@playwright/test';
-import { tableColumn, num, sum, download, Sheet } from '../helpers';
-import { XP, at } from '../locators';
+import { tableColumn, num, sum, download, Sheet, showTable } from '../helpers';
+import { XP, at, RENAMED_COLUMNS, tableHeading } from '../locators';
 
 export class ReportTable {
   constructor(readonly page: Page, readonly heading: string) {}
@@ -15,12 +15,12 @@ export class ReportTable {
   }
 
   async headers(): Promise<string[]> {
-    await expect(this.root, `Table "${this.heading}"`).toBeVisible();
+    await showTable(this.page, this.heading);
     return (await this.root.locator('thead th').allInnerTexts()).map(h => h.replace(/[↕▼▲]/g, '').trim());
   }
 
   async rowCount(): Promise<number> {
-    await expect(this.root, `Table "${this.heading}"`).toBeVisible();
+    await showTable(this.page, this.heading);
     return at(this.page, XP.reportTableRows(this.heading)).count();
   }
 
@@ -39,12 +39,19 @@ export class ReportTable {
     const headers = await this.headers();
     const cells = await this.root.locator('tbody tr').evaluateAll(trs =>
       trs.map(tr => [...tr.children].map(td => (td as HTMLElement).innerText.trim())));
-    return cells.filter(r => r.length === headers.length).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i]])));
+    const alias = Object.entries(RENAMED_COLUMNS[tableHeading(this.heading)] ?? {});
+    // renamed columns are also readable under their old name
+    return cells.filter(r => r.length === headers.length).map(r => {
+      const row: Record<string, string> = Object.fromEntries(headers.map((h, i) => [h, r[i]]));
+      for (const [old, now] of alias) if (now in row && !(old in row)) row[old] = row[now];
+      return row;
+    });
   }
 
   /** The Total row (tfoot) keyed by column header, if the table has one. */
   async total(): Promise<Record<string, string> | undefined> {
     // with no data the table is replaced by "Nothing matches these filters."
+    await showTable(this.page, this.heading).catch(() => {});
     if (!(await this.root.count())) return undefined;
     const headers = await this.headers();
     const foot = at(this.page, XP.reportTableTotal(this.heading));
@@ -59,7 +66,8 @@ export class ReportTable {
   }
 
   /** Clicks the panel's Export and reads the downloaded sheet (the "Total" row is kept apart). */
-  export(): Promise<Sheet> {
+  async export(): Promise<Sheet> {
+    await showTable(this.page, this.heading);
     return download(this.page, this.exportButton);
   }
 }

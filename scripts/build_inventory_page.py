@@ -10,7 +10,7 @@ S = {}
 S['Settings'] = (['Setting', 'Value', 'What it means'], [
     ['Inventory Route', '/inventory', 'Inventory page'],
     ['Page Title', 'Projects and Units', 'Title of the page'],
-    *[r for r in DEAL_SETTINGS if r[0].startswith('Test Project') or r[0].endswith(('Tab', 'Button'))],
+    *[r for r in DEAL_SETTINGS if r[0].startswith(('Test Project', 'Create New', 'Holds Whose', 'Holds Show', 'Available Status')) or r[0].endswith(('Tab', 'Button'))],
     ['Active Status', 'ACTIVE', 'Status of a project in use'],
     ['Inactive Status', 'INACTIVE', 'Status after Deactivate'],
     ['New Unit Status', 'Available', 'Status every new unit starts with'],
@@ -21,12 +21,12 @@ S['Settings'] = (['Setting', 'Value', 'What it means'], [
     ['Product Search Placeholder', 'Search product code or name', 'Search box of the Unit Product Catalogue'],
     *[r for r in DEAL_SETTINGS if r[0] == 'Unit Search Placeholder'],
     ['Value Tolerance %', '0.5', 'Allowed difference between amounts shown rounded (e.g. 210.48M vs $210M)'],
-    ['Never Click', 'Recalculate All Units Live', 'Pricing Matrix button that re-prices every real unit: the tests never click it'],
+    ['Never Click', 'Recalculate All', 'Pricing Matrix button "⚡ Recalculate All" (was "Recalculate All Units Live") that re-prices every real unit: the tests never click it'],
     ['Base Rate Note', 'Governed by Business Rules', 'Text of the read-only Matrix Base Rate field in New Product'],
-    ['Pricing Total Label', 'Total Units Displayed', 'Pricing Matrix figure: number of units shown'],
-    ['Pricing Value Label', 'Operative Portfolio Value', 'Pricing Matrix figure: value of the units shown'],
-    ['Summary Units Word', 'units in', 'Availability Summary line "<project>: N units in M blocks · K available"'],
-    ['Summary Available Word', 'available', 'Same line: the number before this word is the available units'],
+    ['Pricing Total Label', 'Showing', 'Pricing Matrix figure: number of units shown ("Showing 201 units (Total Carpet …)", build 0111-11)'],
+    ['Pricing Value Label', 'Operative GDV', 'Pricing Matrix figure: value of the units shown ("Operative GDV: $238,962,480", build 0111-11)'],
+    ['Summary Units Word', 'total units', 'Availability Summary line "<project>: N total units across M blocks · K Available ($…)" (build 3110-10)'],
+    ['Summary Available Word', 'Available', 'Same line: the number before this word is the available units (compared ignoring case)'],
     ['Building All Chip', 'All', 'Building View status chip with every unit of the block'],
     ['Holds Scope All', 'All', 'Holds: first filter, every user'],
     ['Holds Active', 'Active', 'Holds: second filter, active holds only (also the Status of an active hold)'],
@@ -40,6 +40,54 @@ S['Settings'] = (['Setting', 'Value', 'What it means'], [
     ['Export Button', 'Export', 'Unit Register export'],
     ['Unit Edit Button', 'Edit', 'Unit view: button that switches Identification to edit mode'],
     ['Unit Update Button', 'Update Identification', 'Unit view: save button of Identification'],
+    ['Summary Table View', 'Summary Table', 'Availability Summary view button "⊞ Summary Table" (build 0111-11)'],
+    ['Stack Plan View', 'Stack Plan', 'Availability Summary view button "🏢 Stack Plan" (replaces the Building View tab)'],
+    ['Stack All Chip', 'All', 'Stack Plan status chip with every unit of the project'],
+    ['Grand Total Row', 'Grand Total', 'Last row of the Summary Table'],
+    ['Summary Total Column', 'Total', 'Summary Table column with every unit of a block'],
+    ['Units Available Column', 'Units / Available', 'Product catalogue column "43 / 39" = units of the product / available ones'],
+    ['Product Column', 'Product', 'Unit Register column with the product code'],
+    ['No Product', '-', 'Product column of a unit without a product'],
+    ['Product Files Heading', 'Files for this product', 'Product Details → Floor Plans & Media: list of the product files'],
+    ['Unit Files Heading', "This unit's files", 'Unit view → Floor Plans & Media: list of the unit files'],
+    ['No Files Text', 'No files yet.', 'Files list before any upload'],
+    ['No Tour Text', 'No virtual tour link.', 'Virtual tour before a link is saved'],
+    ['Save Link Button', 'Save Link', 'Saves the virtual tour link'],
+    ['Upload Button', 'Upload', 'Uploads a media file'],
+    ['Media Rule Text', 'JPG, PNG, WEBP, GIF or PDF, up to 20 MB.', 'Hint under the media upload'],
+    ['Linked Reservation Label', 'Reservation', 'Unit view → Linked Modules: reservation line'],
+    ['No Reservation Text', 'No active reservation', 'Linked Modules of a unit without a reservation'],
+    ['Reserved Status', 'Reserved', 'Unit status of a reserved unit'],
+    ['Price Floor Label', 'PRICE FLOOR (MIN. PRICE)', 'Unit view → Sales'],
+    ['Current Price Label', 'OPERATIVE CURRENT PRICE', 'Unit view → Sales'],
+    ['Adjusted Price Label', 'ADJUSTED STANDARD PRICE', 'Unit view → Sales'],
+    ['Base Price Label', 'STANDARD BASE PRICE', 'Unit view → Sales: line under it "<carpet> m² × $<rate>/m²"'],
+    ['Premium Label', 'Total Premium %', 'Unit view → Sales: Layer 1 total'],
+    ['Discount Limit Word', 'Discount Limit', 'Unit view → Sales: "Discount Limit: 3%" under the price floor'],
+    ['Active Tier Word', 'Active Tier', 'Unit view → Sales: marks the tier in use'],
+])
+S['Stack Status'] = (['Chip', 'Letter', 'Summary Column', 'Unit Status'], [
+    ['Available', 'A', 'Available', 'Available'],
+    ['Held', 'H', 'Held', 'Onhold'],
+    ['Reserved', 'R', 'Reserved', 'Reserved'],
+    ['Sold', 'S', 'Sold', 'Sold'],
+])
+S['Product Sections'] = (['Section'], [['Floor Plans & Media'], ['Commercial Profile & Pricing Setup'], ['Standard Room Layout'], ['Specification Defaults'], ['Location Defaults']])
+S['Product Detail Fields'] = (['Catalogue Column', 'Detail Caption'], [
+    ['Type', 'Type'], ['Beds', 'Bedrooms'], ['Unit size (net)', 'Carpet Area (Net Size)'], ['Base Rate ($/m²)', 'Matrix Base Rate'],
+])
+S['Unit Sections'] = (['Section'], [['Identification'], ['Configuration'], ['Area Schedule'], ['View & Location'], ['Parking & Storage'], ['Specification'], ['Sales'], ['Floor Plans & Media'], ['Linked Modules']])
+S['Unit Identification Fields'] = (['Caption', 'Register Column', 'Compare'], [
+    ['Project', 'Project', 'starts with the project code'],
+    ['Unit', 'Unit', 'same code'],
+    ['Unit Name', 'Unit', 'same name'],
+    ['Area', 'Area', 'starts with the net area'],
+    ['Price', 'Price', 'same amount'],
+    ['Status', 'Status', 'same status'],
+])
+S['Media Uploads'] = (['Case ID', 'Record', 'File Type', 'Caption', 'File', 'Virtual Tour Link'], [
+    ['IVP-049', 'Product', 'Floor plan', 'Floor plan uploaded by the CRM test suite', 'TestData/files/Sample_Passport_Copy.pdf', 'https://example.com/tours/product-{unique}'],
+    ['IVP-053', 'Unit', 'Brochure', 'Brochure uploaded by the CRM test suite', 'TestData/files/Sample_Passport_Copy.pdf', 'https://example.com/tours/unit-{unique}'],
 ])
 S['KPI Cards'] = (['Card', 'Equals'], [
     ['Projects', 'Total of the Project Register (pager)'],
@@ -53,8 +101,7 @@ S['Tabs'] = (['Tab', 'Shows', 'New Button', 'Save Button'], [
     ['Products', 'Unit Product Catalogue', 'New Product', 'Save Product'],
     ['Units', 'Unit Register', 'New Unit', 'Create Unit'],
     ['Pricing Matrix', 'Unit Pricing Structure Matrix', '', ''],
-    ['Building View', 'Architectural elevation matrix', '', ''],
-    ['Availability Summary', 'Availability Summary & Inventory Valuation', '', ''],
+    ['Availability Summary', 'Availability Summary & Inventory Valuation (Summary Table, Stack Plan)', '', ''],
     ['Holds', 'Unit Holds', '', ''],
 ])
 S['Projects'] = (['Data ID', 'Project Name', 'Project Code', 'Location', 'Currency', 'Legal Entity', 'Status', 'Description', 'Remarks', 'Edited Location', 'Edited Description'], [
@@ -132,6 +179,9 @@ README = [
     'Units are created only in the test project (Settings → Test Project Name). Projects created by the tests are deactivated at the end of their test. Products cannot be deleted in the app, so a run creates one product per product test.',
     'Count Changes: expected change of each KPI card after an action ("Base Price" = the unit\'s base price is added to Value).',
     'The tests never click "Recalculate All Units Live" and never edit or deactivate real projects / units.',
+    'Stack Status: Stack Plan chips, the letter on each unit cell, the Summary Table column and the Unit Register status of each.',
+    'Product Detail Fields / Unit Identification Fields: which Product Details / unit view value must equal which catalogue / register column.',
+    'Media Uploads: virtual tour link ({unique} = a unique number per run) and file added to the test product / test unit only.',
 ]
 write_testdata('Inventory_Test_Data.xlsx', 'Inventory', 'Inventory — Test Data', README, S)
 
@@ -146,7 +196,7 @@ UC1, UC2, UC3, UC4, UC5 = 'IUC-01 Inventory overview & counts', 'IUC-02 Manage p
 
 A = 'Page & Counts'
 C('IVP-001', UC1, A, 'Inventory page shows its cards and tabs', ADMIN, st(OPEN, 'Read the title, the KPI cards and the tabs'), f'{TD} → KPI Cards, Tabs, Settings (Page Title)',
-  'Title "Projects and Units"; cards Projects, Products, Units, Available and Value; tabs Projects, Products, Units, Pricing Matrix, Building View, Availability Summary and Holds.', 'Medium')
+  'Title "Projects and Units"; cards Projects, Products, Units, Available and Value; tabs Projects, Products, Units, Pricing Matrix, Availability Summary and Holds (Building View is now the Stack Plan of Availability Summary).', 'Medium')
 C('IVP-002', UC1, A, 'Projects card = projects in the Project Register', ADMIN, st(OPEN, 'Read the Projects card', 'On the Projects tab read "Showing … of N projects"'), f'{TD} → KPI Cards',
   'The Projects card equals N.')
 C('IVP-003', UC1, A, 'Products card = products in the catalogue', ADMIN, st(OPEN, 'Read the Products card', 'Open the Products tab, read "Showing … of N products"'), f'{TD} → KPI Cards',
@@ -157,7 +207,7 @@ C('IVP-005', UC1, A, 'Available card = units with status Available', ADMIN, st(O
   'The Available card equals the number of Available units in the register.')
 C('IVP-006', UC1, A, 'Available units agree across Inventory views', ADMIN, st(OPEN, 'Read the Available card', 'Open Availability Summary and read "… N available"'), '—',
   'The Availability Summary shows the same number of available units as the Available card.', kind='Consistency')
-C('IVP-007', UC1, A, 'Value card = portfolio value of the Pricing Matrix and the Availability Summary', ADMIN, st(OPEN, 'Read the Value card', 'Pricing Matrix → read Operative Portfolio Value', 'Availability Summary → read Total Portfolio GDV'), f'{TD} → Settings (Value Tolerance %)',
+C('IVP-007', UC1, A, 'Value card = portfolio value of the Pricing Matrix and the Availability Summary', ADMIN, st(OPEN, 'Read the Value card', 'Pricing Matrix → read Operative GDV', 'Availability Summary → read Total Portfolio GDV'), f'{TD} → Settings (Value Tolerance %)',
   'Both values equal the Value card (within the rounding tolerance).', kind='Consistency')
 C('IVP-008', UC1, A, 'Product category chips count the products of each type', ADMIN, st(OPEN, 'Open Products', 'Read the chips (Apartment N, Residence N, Penthouse N)', 'Count the catalogue rows of each type'), '—',
   'Each chip shows the number of products of that type; clicking it lists only that type.', 'Medium')
@@ -215,14 +265,35 @@ C('IVP-039', UC4, A, 'Unit Register export matches the register', ADMIN, st(OPEN
   'The file has one row per unit of the register (same total) and includes the units listed on the first page.', 'Medium')
 
 A = 'Pricing, Availability & Holds'
-C('IVP-041', UC5, A, 'Pricing Matrix covers every unit', ADMIN, st(OPEN, 'Pricing Matrix → read Total Units Displayed', 'Filter by the test project'), f'{TD} → Settings (Never Click)',
-  'Total Units Displayed equals the Units card; filtering by a project shows only that project\'s units. "Recalculate All Units Live" is not clicked.', 'Medium', kind='Consistency')
-C('IVP-042', UC5, A, 'Building View status chips add up', ADMIN, st(OPEN, 'Building View → for each block read All (N) and the status chips'), '—',
-  'All (N) = Available + Held + Reserved + Sold for every block.', 'Medium', kind='Consistency')
+C('IVP-041', UC5, A, 'Pricing Matrix covers every unit', ADMIN, st(OPEN, 'Pricing Matrix → read "Showing N units"', 'Filter by the test project'), f'{TD} → Settings (Never Click)',
+  '"Showing N units" equals the Units card; filtering by a project shows only that project\'s units. "Recalculate All Units Live" is not clicked.', 'Medium', kind='Consistency')
+C('IVP-042', UC5, A, 'Stack Plan status chips add up', ADMIN, st(OPEN, 'Availability Summary → for each project with units click Stack Plan', 'Read All (N) and the status chips', 'Read the summary line'), f'{TD} → Stack Status, Settings (Stack Plan View, Stack All Chip)',
+  'All (N) = Available + Held + Reserved + Sold; All equals the total units of the summary line and each chip its count there.', 'Medium', kind='Consistency')
 C('IVP-043', UC5, A, 'Availability Summary totals match the cards', ADMIN, st(OPEN, 'Availability Summary → read "… N total units"'), '—',
   'Total units equals the Units card.', 'Medium', kind='Consistency')
 C('IVP-044', UC5, A, 'Holds list follows its filters', ADMIN, st(OPEN, 'Holds → All → Active', 'Then All (incl. history)'), '—',
   'With "Active" every row has status Active and a time left; the history view lists at least as many holds.', 'Low')
+C('IVP-045', UC5, A, 'Summary Table rows add up', ADMIN, st(OPEN, 'Availability Summary → each project with units → Summary Table'), f'{TD} → Stack Status, Settings (Grand Total Row, Summary Total Column)',
+  'For every block Available + Held + Reserved + Sold = Total; Grand Total = the sum of the blocks; Grand Total equals the summary line (total units, Available, Reserved, Sold).', 'Medium', kind='Consistency')
+C('IVP-046', UC5, A, 'Stack Plan shows every unit of the test project with its status', 'The test project has units', st(OPEN, 'Availability Summary → test project → Stack Plan', 'Read every unit cell (code + status letter)', 'Units → search the project code'), f'{TD} → Stack Status, Settings (Test Project Name)',
+  'One cell per unit of the project (count = All chip); each letter count = its chip; every unit of the Unit Register is shown with the letter of its status.', kind='Consistency')
+
+A = 'Product & Unit Details'
+UC6 = 'IUC-06 Product and unit details'
+C('IVP-047', UC6, A, 'Product Details shows its sections and the catalogue values', ADMIN, st(OPEN, 'Products → View on the first product', 'Read the sections and Commercial Profile & Pricing Setup'), f'{TD} → Product Sections, Product Detail Fields',
+  'Sections Floor Plans & Media, Commercial Profile & Pricing Setup, Standard Room Layout, Specification Defaults and Location Defaults; Type, Bedrooms, Carpet Area and Matrix Base Rate equal the catalogue row.', 'Medium')
+C('IVP-048', UC6, A, 'Product "Units / Available" = units of the product in the Unit Register', ADMIN, st(OPEN, 'Products → read "Units / Available" of every product', 'Units → count the units of each product and the Available ones'), f'{TD} → Settings (Units Available Column, Product Column)',
+  'For every product both numbers equal the Unit Register.', 'Medium', kind='Consistency')
+C('IVP-049', UC6, A, 'Add a virtual tour link and a floor plan to a product', 'A product created by the test', st(OPEN, 'Products → View on the product → Floor Plans & Media', 'Save the virtual tour link', 'Upload the floor plan (type, caption, file)', 'Close and View again'), f'{TD} → Media Uploads (IVP-049)',
+  'The link is shown instead of "No virtual tour link."; the file is listed under "Files for this product" with its caption; both are still there after re-opening.', 'Medium')
+C('IVP-050', UC6, A, 'Unit view lists its sections and Identification matches the register', 'A unit created by the test', st(OPEN, 'Units → Open on the unit', 'Open each section', 'Read Identification'), f'{TD} → Unit Sections, Unit Identification Fields',
+  'Sections Identification … Linked Modules are listed and each opens; Project, Unit, Unit Name, Area, Price and Status equal the Unit Register row.', 'Medium')
+C('IVP-051', UC6, A, 'Unit price breakdown adds up (Sales section)', 'A unit linked to a product (read only)', st(OPEN, 'Units → Open on the first unit with a product → Sales'), f'{TD} → Settings (… Price Label, Premium Label, Discount Limit Word)',
+  'Standard base = carpet × base rate; adjusted = base × (1 + total premium %); price floor = current price × (1 − discount limit); every tier price = adjusted × (1 + tier %) and its floor = tier price × (1 − discount limit). "Recalculate Pricing Matrix" is not clicked.', kind='Consistency')
+C('IVP-052', UC6, A, 'Linked Modules shows the unit reservation', 'A reserved unit and an available unit of the test project', st(OPEN, 'Units → Open the reserved unit → Linked Modules', 'Then the available unit'), f'{TD} → Settings (Linked Reservation Label, No Reservation Text)',
+  'The reserved unit shows its reservation (not "No active reservation"); the available unit shows "No active reservation".', 'Medium')
+C('IVP-053', UC6, A, 'Add a virtual tour link and a file to a unit', 'A unit created by the test', st(OPEN, 'Units → Open the unit → Floor Plans & Media', 'Save the virtual tour link', 'Upload the file (type, caption, file)', 'Close and open again'), f'{TD} → Media Uploads (IVP-053)',
+  'The link is shown; the file is listed under "This unit\'s files"; both are still there after re-opening.', 'Medium')
 
 FINDINGS = [
     ['F-01', 'Defect', 'IVP-034', 'New units default to KES', 'New Unit pre-selects "KES - Kenyan Shilling" in Currency instead of "Default project currency"; a unit saved without changing it is priced in KES in a USD project (shown as 3,474.9 USD / 0.45M KES).', 'Start with "Default project currency" (or the project currency).', 'High'],
@@ -232,12 +303,12 @@ FINDINGS = [
     ['F-05', 'To confirm', 'IVP-036', 'Unit status filter: "On hold" lists Available units and duplicates "Onhold"', 'Filter "On hold" lists PEX-APT-0301 whose status is Available (held); the status totals add up to one more than All Statuses; "Onhold" and "On hold" are both offered.', 'One option per status; every unit counted once.', 'Low'],
 ]
 OVERVIEW = [
-    ('Scope', 'Inventory page (/inventory): KPI cards, Projects, Products (unit product catalogue), Units, Pricing Matrix, Building View, Availability Summary and Holds.'),
-    ('Use cases', 'IUC-01 overview & counts · IUC-02 manage projects · IUC-03 manage unit products · IUC-04 manage units · IUC-05 pricing, availability & holds'),
+    ('Scope', 'Inventory page (/inventory): KPI cards, Projects, Products (unit product catalogue, Product Details, media), Units (unit view sections, price breakdown, Linked Modules, media), Pricing Matrix, Availability Summary (Summary Table, Stack Plan) and Holds.'),
+    ('Use cases', 'IUC-01 overview & counts · IUC-02 manage projects · IUC-03 manage unit products · IUC-04 manage units · IUC-05 pricing, availability & holds · IUC-06 product and unit details'),
     ('Test data', f'{TD} (or TestData/csv/Inventory/*.csv with TEST_DATA_FORMAT=csv). No values are hard-coded in the tests.'),
     ('Automation', 'tests/inventory-page/*.spec.ts — run with: npm run test:inventory-page'),
     ('Report', 'reports/Inventory_Page_Test_Report_<date>_<time>.xlsx'),
-    ('Data created', 'Projects (deactivated at the end of their test), products (cannot be deleted in the app) and units in the test project only. Real projects and units are never changed; "Recalculate All Units Live" is never clicked.'),
+    ('Data created', 'Projects (deactivated at the end of their test), products (cannot be deleted in the app) and units in the test project only; a virtual tour link and one sample PDF on the test product and the test unit. Real projects and units are never changed; "Recalculate All Units Live" and "Recalculate Pricing Matrix" are never clicked.'),
     ('Security', 'Out of scope for this module (covered by the Security suite).'),
 ]
 AREA_IMPACT = {
@@ -246,6 +317,7 @@ AREA_IMPACT = {
     'Products': 'The product catalogue (unit types, sizes, base rates) is wrong or cannot be maintained, so new units get wrong defaults.',
     'Units': 'Units cannot be created or maintained correctly, so they cannot be offered, reserved or priced.',
     'Pricing, Availability & Holds': 'Pricing / availability views disagree with the unit register, so salespeople may offer units that are not available or quote wrong values.',
+    'Product & Unit Details': 'Product and unit details (sizes, rates, price breakdown, linked reservation, floor plans) are wrong or cannot be kept, so salespeople quote wrong prices or cannot show the buyer the unit.',
 }
 IMPACT = {
     'IVP-006': 'Two screens give different numbers of available units (a unit on hold is counted as available on the card only), so salespeople may offer a unit that is already held for another buyer.',

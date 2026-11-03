@@ -6,7 +6,7 @@
 import { test as base, expect } from '../auth';
 import { makeCatalog } from '../leads-page/catalog';
 import { moduleData, fill, formValues, seq } from '../sales-chain/data';
-import { InventoryPage, testProject } from '../sales-chain/inventory';
+import { InventoryPage, testProject, mayCreate } from '../sales-chain/inventory';
 import { ModalForm } from '../pages/SalesPages';
 import type { Page } from '@playwright/test';
 import type { Row } from '../leads-page/test-data';
@@ -97,6 +97,7 @@ export async function newForm(page: Page, inv: InventoryPage, tab: string): Prom
 /** A project created for this worker (Projects sheet row 1), shared by the project tests. */
 let made: Promise<{ values: Record<string, string>; result: Awaited<ReturnType<ModalForm['submit']>> }> | undefined;
 export function createdProject(page: Page, inv: InventoryPage) {
+  test.skip(!mayCreate(DATA, 'Projects'), 'Not run: the data says Create New Projects = No (no new projects in this round), and this test needs a project of its own to create / edit / deactivate');
   made ??= (async () => {
     const values = projectValues();
     const form = await newForm(page, inv, 'Projects');
@@ -121,4 +122,4 @@ export function createdProduct(page: Page, inv: InventoryPage) {
   return product;
 }
 
-export { fill, seq, testProject };
+export { fill, seq, testProject, mayCreate };
