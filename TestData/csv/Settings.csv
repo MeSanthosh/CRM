@@ -5,6 +5,12 @@ Name Slug,{first} / {last} / {company},"Replaced by the row's First Name / Last 
 Relative Date,{today} / {today+N} / {today-N},"Replaced by today's date, or N days after / before today."
 Lead No. Format,LD-YYYYMMDDhhmmss-XXXX,"Expected Lead No. pattern: Y M D h m s = digits, X = letter or digit."
 New Lead Status,Assigned,Status a new lead gets when the creator becomes its owner.
-Individual Type Label,IND,Text in the Type column for an Individual lead.
-Corporate Type Label,CORP,Text in the Type column for a Corporate lead.
+Individual Type Label,Individual,Type column of an Individual lead (an icon since build CAITer8U; this is its tooltip).
+Corporate Type Label,Corporate,Type column of a Corporate lead (an icon since build CAITer8U; this is its tooltip).
 Data Selection,random,"""random"" = each run picks a different row; a Data ID (e.g. IND-03) = always use that row."
+Name Selection,unique,"""unique"" = every lead a test saves uses a name (row) no earlier save used, remembered in .auth/used-lead-names.json; add rows to Individual / Corporate Leads when the tests say all names are used. Forms that are not saved may reuse names."
+Page Size,20,Leads shown per page of the list.
+Selection Bar Buttons,"Assign, Change status, Disqualify, Export selected, Clear selection",Buttons of the bar shown while leads are ticked (never pressed except Clear selection).
+Leads Tabs,"All Leads, My Leads, Unassigned, To Qualify, Ready to Convert, Duplicates & Merge, Insights","Tabs of the Leads page, in order."
+Duplicates Route,/leads/duplicates,Page opened by the Duplicates & Merge tab.
+Insights Route,/leads/sources,Page opened by the Insights tab.

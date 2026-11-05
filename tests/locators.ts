@@ -77,6 +77,17 @@ export const XP = {
   leadsPager: `//div[contains(@class,'crm-pagination')]/span`,
   leadsNext: `//div[contains(@class,'crm-pagination')]//button[normalize-space()='Next']`,
   leadsPrev: `//div[contains(@class,'crm-pagination')]//button[normalize-space()='Previous']`,
+  /** Row selection (build CAITer8U): header box, one box per lead, the bar "N selected · Assign · Change status …" */
+  leadsSelectAll: `//table[contains(@class,'crm-leads-inbox-table')]//thead//input[@aria-label='Select all leads on this page']`,
+  leadsSelectRow: (leadNo: string) => `//table[contains(@class,'crm-leads-inbox-table')]//tbody//input[@aria-label=${xl(`Select ${leadNo}`)}]`,
+  leadsBulkBar: `//main//*[contains(concat(' ',normalize-space(@class),' '),' crm-bulk-bar ')]`,
+  leadsBulkButton: (name: string) => `//main//*[contains(concat(' ',normalize-space(@class),' '),' crm-bulk-bar ')]//button[normalize-space()=${xl(name)}]`,
+  /** Pencil button of a row (Act. column) */
+  leadsEditButton: (leadNo: string) => `//table[contains(@class,'crm-leads-inbox-table')]//tbody//button[@aria-label=${xl(`Edit ${leadNo}`)}]`,
+  /** Leads page tab bar links (All Leads … Duplicates & Merge, Insights) */
+  leadsTabLink: (label: string) => `//main//a[contains(@class,'crm-leads-tab')][starts-with(normalize-space(),${xl(label)})]`,
+  /** "Use same as Permanent" / "Use same as Business" in the Addresses section of the create form */
+  leadFormButton: (name: string) => `//section[contains(@class,'crm-lead-modal')]//button[normalize-space()=${xl(name)}]`,
   reportPeriod: `//select[contains(@class,'crm-input')][option[@value='this_month']]`,
   reportResetFilters: `//button[normalize-space()='Reset filters']`,
   /** Shown when the period is "Custom dates": <label>From<input type=date></label> */

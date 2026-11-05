@@ -17,9 +17,22 @@ SHEETS['Settings'] = (['Setting', 'Value', 'What it means'], [
     ['Relative Date', '{today} / {today+N} / {today-N}', 'Replaced by today\'s date, or N days after / before today.'],
     ['Lead No. Format', 'LD-YYYYMMDDhhmmss-XXXX', 'Expected Lead No. pattern: Y M D h m s = digits, X = letter or digit.'],
     ['New Lead Status', 'Assigned', 'Status a new lead gets when the creator becomes its owner.'],
-    ['Individual Type Label', 'IND', 'Text in the Type column for an Individual lead.'],
-    ['Corporate Type Label', 'CORP', 'Text in the Type column for a Corporate lead.'],
+    ['Individual Type Label', 'Individual', 'Type column of an Individual lead (an icon since build CAITer8U; this is its tooltip).'],
+    ['Corporate Type Label', 'Corporate', 'Type column of a Corporate lead (an icon since build CAITer8U; this is its tooltip).'],
     ['Data Selection', 'random', '"random" = each run picks a different row; a Data ID (e.g. IND-03) = always use that row.'],
+    ['Name Selection', 'unique', '"unique" = every lead a test saves uses a name (row) no earlier save used, remembered in .auth/used-lead-names.json; '
+                                 'add rows to Individual / Corporate Leads when the tests say all names are used. Forms that are not saved may reuse names.'],
+    ['Page Size', '20', 'Leads shown per page of the list.'],
+    ['Selection Bar Buttons', 'Assign, Change status, Disqualify, Export selected, Clear selection', 'Buttons of the bar shown while leads are ticked (never pressed except Clear selection).'],
+    ['Leads Tabs', 'All Leads, My Leads, Unassigned, To Qualify, Ready to Convert, Duplicates & Merge, Insights', 'Tabs of the Leads page, in order.'],
+    ['Duplicates Route', '/leads/duplicates', 'Page opened by the Duplicates & Merge tab.'],
+    ['Insights Route', '/leads/sources', 'Page opened by the Insights tab.'],
+])
+
+# Address blocks of the create forms (build CAITer8U): first block, its copy button, second block (never saved)
+SHEETS['Addresses'] = (['Form', 'First Block', 'Second Block', 'Copy Button', 'Address Line 1', 'Address Line 2', 'City', 'Country', 'Postal Code'], [
+    ['Individual', 'Permanent Address', 'Communication Address', 'Use same as Permanent', '14 Palm Grove Road', 'Apartment 3B', 'Mombasa', 'Kenya', '80100'],
+    ['Corporate', 'Business Address', 'Communication Address', 'Use same as Business', 'Plot 22 Harbour Business Park', 'Block C', 'Nairobi', 'Kenya', '00100'],
 ])
 
 # ── People and companies (proper names; mobile/email built from patterns so they are unique every run) ──
@@ -36,6 +49,37 @@ SHEETS['Individual Leads'] = (
     ['IND-08', 'Mr', 'Omar', 'Al Mansoori', '+971 50 ### ####', '{first}.{last}.{unique}@example.ae', 'Strategic Partners', 'Male', 'United Arab Emirates', 'United Arab Emirates', 'Dubai', 'Investor', '900000', 'Immediate', 'Partner referral; ready to reserve this month.'],
     ['IND-09', 'Mrs', 'Anjali', 'Sharma', '+91 99### #####', '{first}.{last}.{unique}@example.in', 'Public Relations', 'Female', 'India', 'India', 'Mumbai', 'End User', '330000', '0-3 Months', 'Read the press feature; asked for a site visit.'],
     ['IND-10', 'Prof', 'Thomas', 'Becker', '+49 151 ########', '{first}.{last}.{unique}@example.de', 'Referrals', 'Male', 'Germany', 'Germany', 'Munich', 'Investor', '680000', '3-6 Months', 'Referred by an existing owner; compares two projects.'],
+    # more people, so every lead a run saves gets a name no earlier run used (Settings → Name Selection)
+    ['IND-11', 'Mr', 'Arjun', 'Krishnan', '+91 98### #####', '{first}.{last}.{unique}@example.in', 'Referrals', 'Male', 'India', 'India', 'Chennai', 'Investor', '400000', '3-6 Months', 'Friend of an owner; wants a unit to rent out.'],
+    ['IND-12', 'Ms', 'Kavya', 'Raghavan', '+91 97### #####', '{first}.{last}.{unique}@example.in', 'Property Portals', 'Female', 'India', 'India', 'Hyderabad', 'End User', '290000', '0-3 Months', 'Found the listing online; asked for floor plans.'],
+    ['IND-13', 'Mr', 'Vikram', 'Bhatia', '+91 99### #####', '{first}.{last}.{unique}@example.in', 'Direct Sales', 'Male', 'India', 'India', 'Delhi', 'Investor', '520000', '6-12 Months', 'Visited the sales office; compares payment plans.'],
+    ['IND-14', 'Mrs', 'Meera', 'Pillai', '+91 98### #####', '{first}.{last}.{unique}@example.in', 'Digital Marketing', 'Female', 'India', 'India', 'Pune', 'Holiday Home Buyer', '360000', '3-6 Months', 'Clicked the beach villa advert.'],
+    ['IND-15', 'Mr', 'Rohan', 'Desai', '+91 97### #####', '{first}.{last}.{unique}@example.in', 'Public Relations', 'Male', 'India', 'India', 'Ahmedabad', 'End User', '310000', '12+ Months', 'Read the magazine article; early research.'],
+    ['IND-16', 'Ms', 'Lakshmi', 'Iyer', '+91 99### #####', '{first}.{last}.{unique}@example.in', 'Broker Channels', 'Female', 'India', 'India', 'Coimbatore', 'Retirement Buyer', '450000', '6-12 Months', 'Broker referral; wants a quiet ground-floor unit.'],
+    ['IND-17', 'Mr', 'Brian', 'Odhiambo', '+254 7## ### ###', '{first}.{last}.{unique}@example.org', 'Events & Exhibitions', 'Male', 'Kenya', 'Kenya', 'Kisumu', 'Investor', '380000', '0-3 Months', 'Met at the expo; ready to view this month.'],
+    ['IND-18', 'Ms', 'Wairimu', 'Gathoni', '+254 7## ### ###', '{first}.{last}.{unique}@example.org', 'Referrals', 'Female', 'Kenya', 'Kenya', 'Nakuru', 'End User', '270000', '3-6 Months', 'Referred by a colleague; first home.'],
+    ['IND-19', 'Mr', 'Collins', 'Barasa', '+254 7## ### ###', '{first}.{last}.{unique}@example.net', 'Direct Sales', 'Male', 'Kenya', 'Kenya', 'Eldoret', 'Investor', '610000', 'Immediate', 'Walk-in; wants two units for rental income.'],
+    ['IND-20', 'Mrs', 'Achieng', 'Owino', '+254 7## ### ###', '{first}.{last}.{unique}@example.com', 'Hospitality Channels', 'Female', 'Kenya', 'Kenya', 'Malindi', 'Holiday Home Buyer', '330000', '6-12 Months', 'Hotel guest; asked about holiday letting.'],
+    ['IND-21', 'Mr', 'Kevin', 'Mutiso', '+254 7## ### ###', '{first}.{last}.{unique}@example.com', 'Digital Marketing', 'Male', 'Kenya', 'Kenya', 'Machakos', 'End User', '300000', '3-6 Months', 'Answered the social media campaign.'],
+    ['IND-22', 'Dr', 'Halima', 'Abdi', '+254 7## ### ###', '{first}.{last}.{unique}@example.org', 'Strategic Partners', 'Female', 'Kenya', 'Kenya', 'Garissa', 'Investor', '700000', '0-3 Months', 'Partner bank client; cash buyer.'],
+    ['IND-23', 'Mr', 'Edward', 'Ashworth', '+44 7### ######', '{first}.{last}.{unique}@example.co.uk', 'Broker Channels', 'Male', 'United Kingdom', 'United Kingdom', 'Manchester', 'Retirement Buyer', '820000', '12+ Months', 'Plans to move to the coast after retiring.'],
+    ['IND-24', 'Ms', 'Charlotte', 'Pembroke', '+44 7### ######', '{first}.{last}.{unique}@example.co.uk', 'Property Portals', 'Female', 'United Kingdom', 'United Kingdom', 'Bristol', 'Holiday Home Buyer', '560000', '6-12 Months', 'Saved three listings on the portal.'],
+    ['IND-25', 'Mr', 'Henry', 'Caldwell', '+44 7### ######', '{first}.{last}.{unique}@example.co.uk', 'Referrals', 'Male', 'United Kingdom', 'United Kingdom', 'Leeds', 'Investor', '640000', '3-6 Months', 'Referred by his accountant.'],
+    ['IND-26', 'Mrs', 'Eleanor', 'Hartley', '+44 7### ######', '{first}.{last}.{unique}@example.co.uk', 'Public Relations', 'Female', 'United Kingdom', 'United Kingdom', 'Oxford', 'End User', '430000', '0-3 Months', 'Saw the TV feature; wants a call back.'],
+    ['IND-27', 'Mr', 'Lucien', 'Moreau', '+33 6 ## ## ## ##', '{first}.{last}.{unique}@example.fr', 'Hospitality Channels', 'Male', 'France', 'France', 'Marseille', 'Holiday Home Buyer', '590000', '6-12 Months', 'Resort guest; likes the marina view.'],
+    ['IND-28', 'Ms', 'Camille', 'Rousseau', '+33 6 ## ## ## ##', '{first}.{last}.{unique}@example.fr', 'Digital Marketing', 'Female', 'France', 'France', 'Bordeaux', 'End User', '340000', '3-6 Months', 'Downloaded the brochure.'],
+    ['IND-29', 'Mr', 'Antoine', 'Lefebvre', '+33 6 ## ## ## ##', '{first}.{last}.{unique}@example.fr', 'Events & Exhibitions', 'Male', 'France', 'France', 'Nice', 'Investor', '780000', 'Immediate', 'Met at the Paris property fair.'],
+    ['IND-30', 'Mrs', 'Margaux', 'Girard', '+33 6 ## ## ## ##', '{first}.{last}.{unique}@example.fr', 'Referrals', 'Female', 'France', 'France', 'Toulouse', 'Retirement Buyer', '510000', '12+ Months', 'Sister owns a villa in the project.'],
+    ['IND-31', 'Mr', 'Yousef', 'Al Hashimi', '+971 50 ### ####', '{first}.{last}.{unique}@example.ae', 'Strategic Partners', 'Male', 'United Arab Emirates', 'United Arab Emirates', 'Abu Dhabi', 'Investor', '950000', '0-3 Months', 'Partner introduction; wants a penthouse.'],
+    ['IND-32', 'Ms', 'Mariam', 'Al Suwaidi', '+971 50 ### ####', '{first}.{last}.{unique}@example.ae', 'Property Portals', 'Female', 'United Arab Emirates', 'United Arab Emirates', 'Sharjah', 'End User', '420000', '3-6 Months', 'Enquired through the portal chat.'],
+    ['IND-33', 'Mr', 'Hamdan', 'Al Ketbi', '+971 50 ### ####', '{first}.{last}.{unique}@example.ae', 'Direct Sales', 'Male', 'United Arab Emirates', 'United Arab Emirates', 'Dubai', 'Investor', '880000', 'Immediate', 'Visited the Dubai roadshow stand.'],
+    ['IND-34', 'Mrs', 'Noora', 'Al Falasi', '+971 50 ### ####', '{first}.{last}.{unique}@example.ae', 'Events & Exhibitions', 'Female', 'United Arab Emirates', 'United Arab Emirates', 'Ajman', 'Holiday Home Buyer', '470000', '6-12 Months', 'Collected a brochure at the exhibition.'],
+    ['IND-35', 'Mr', 'Felix', 'Hoffmann', '+49 151 ########', '{first}.{last}.{unique}@example.de', 'Broker Channels', 'Male', 'Germany', 'Germany', 'Hamburg', 'Investor', '690000', '3-6 Months', 'Broker client; compares yields.'],
+    ['IND-36', 'Ms', 'Lena', 'Schreiber', '+49 151 ########', '{first}.{last}.{unique}@example.de', 'Digital Marketing', 'Female', 'Germany', 'Germany', 'Berlin', 'End User', '350000', '0-3 Months', 'Signed up through the website form.'],
+    ['IND-37', 'Mr', 'Jonas', 'Wagner', '+49 151 ########', '{first}.{last}.{unique}@example.de', 'Referrals', 'Male', 'Germany', 'Germany', 'Frankfurt', 'Retirement Buyer', '730000', '12+ Months', 'Referred by a neighbour who bought last year.'],
+    ['IND-38', 'Mrs', 'Katrin', 'Neumann', '+49 151 ########', '{first}.{last}.{unique}@example.de', 'Hospitality Channels', 'Female', 'Germany', 'Germany', 'Cologne', 'Holiday Home Buyer', '480000', '6-12 Months', 'Stayed at the resort twice.'],
+    ['IND-39', 'Dr', 'Rajesh', 'Venkatesan', '+91 98### #####', '{first}.{last}.{unique}@example.in', 'Strategic Partners', 'Male', 'India', 'India', 'Madurai', 'Investor', '560000', '3-6 Months', 'Introduced by the partner bank.'],
+    ['IND-40', 'Ms', 'Njeri', 'Kariithi', '+254 7## ### ###', '{first}.{last}.{unique}@example.org', 'Public Relations', 'Female', 'Kenya', 'Kenya', 'Thika', 'End User', '260000', '0-3 Months', 'Heard the radio interview.'],
 ])
 
 SHEETS['Corporate Leads'] = (
@@ -49,6 +93,19 @@ SHEETS['Corporate Leads'] = (
     ['CORP-05', 'Inc', 'Northstar Pension Trust', 'Pension Fund', 'Pension', 'Portfolio Manager', 'Sarah', 'Collins', '+1 415 ### ####', '{first}.{last}.{unique}@example.com', 'https://www.northstarpension.example.com', 'Referrals', 'Diversify into international residential property.'],
     ['CORP-06', 'Ltd', 'Savannah Hospitality Group', 'Company', 'Hospitality', 'Operations Director', 'Joseph', 'Njoroge', '+254 7## ### ###', '{first}.{last}.{unique}@example.net', 'https://www.savannahhospitality.example.net', 'Hospitality Channels', 'Serviced apartments for hotel guests.'],
     ['CORP-07', 'Corp', 'Lakeside Realty', 'REIT', 'Real Estate', 'Asset Manager', 'Michael', 'Chen', '+65 9### ####', '{first}.{last}.{unique}@example.sg', 'https://www.lakesiderealty.example.sg', 'Digital Marketing', 'Add a coastal resort asset to the fund.'],
+    ['CORP-08', 'Ltd', 'Tidewater Estates', 'Company', 'Real Estate', 'Director', 'Anne', 'Muthoni', '+254 7## ### ###', '{first}.{last}.{unique}@example.com', 'https://www.tidewaterestates.example.com', 'Direct Sales', 'Staff housing near the new office.'],
+    ['CORP-09', 'LLC', 'Marigold Family Holdings', 'Family Office', 'Investment', 'Managing Partner', 'Ravi', 'Chandran', '+91 98### #####', '{first}.{last}.{unique}@example.in', 'https://www.marigoldholdings.example.in', 'Referrals', 'Holiday homes for the family trust.'],
+    ['CORP-10', 'PLC', 'Kingsbridge Asset Partners', 'Investment Company', 'Banking', 'Chief Investment Officer', 'George', 'Fairfax', '+44 7### ######', '{first}.{last}.{unique}@example.co.uk', 'https://www.kingsbridgeasset.example.co.uk', 'Broker Channels', 'Income-producing residential blocks.'],
+    ['CORP-11', 'FZE', 'Falcon Crest Investments', 'Investment Company', 'Investment', 'Head of Acquisitions', 'Saeed', 'Al Nuaimi', '+971 50 ### ####', '{first}.{last}.{unique}@example.ae', 'https://www.falconcrest.example.ae', 'Strategic Partners', 'Off-plan villas for resale.'],
+    ['CORP-12', 'Inc', 'Evergreen Retirement Fund', 'Pension Fund', 'Pension', 'Portfolio Manager', 'Laura', 'Whitman', '+1 415 ### ####', '{first}.{last}.{unique}@example.com', 'https://www.evergreenretirement.example.com', 'Referrals', 'Long-hold coastal apartments.'],
+    ['CORP-13', 'Ltd', 'Acacia Resort Collection', 'Company', 'Hospitality', 'Operations Director', 'Paul', 'Kiprotich', '+254 7## ### ###', '{first}.{last}.{unique}@example.net', 'https://www.acaciaresorts.example.net', 'Hospitality Channels', 'Branded residences next to the resort.'],
+    ['CORP-14', 'Corp', 'Meridian Coast REIT', 'REIT', 'Real Estate', 'Asset Manager', 'Wei', 'Lin', '+65 9### ####', '{first}.{last}.{unique}@example.sg', 'https://www.meridiancoast.example.sg', 'Digital Marketing', 'Stabilised rental assets in East Africa.'],
+    ['CORP-15', 'Ltd', 'Riverstone Developments', 'Company', 'Real Estate', 'Director', 'Hannah', 'Kiplagat', '+254 7## ### ###', '{first}.{last}.{unique}@example.org', 'https://www.riverstonedev.example.org', 'Events & Exhibitions', 'Joint purchase of a full floor.'],
+    ['CORP-16', 'LLC', 'Seabreeze Family Office', 'Family Office', 'Investment', 'Managing Partner', 'Nikhil', 'Kapoor', '+91 97### #####', '{first}.{last}.{unique}@example.in', 'https://www.seabreezefo.example.in', 'Property Portals', 'Two penthouses for family use.'],
+    ['CORP-17', 'PLC', 'Albion Property Trust', 'Investment Company', 'Banking', 'Chief Investment Officer', 'Fiona', 'Marsh', '+44 7### ######', '{first}.{last}.{unique}@example.co.uk', 'https://www.albiontrust.example.co.uk', 'Public Relations', 'Yield-led investment in serviced units.'],
+    ['CORP-18', 'FZE', 'Oasis Gate Capital', 'Investment Company', 'Investment', 'Head of Acquisitions', 'Rashed', 'Al Mazrouei', '+971 50 ### ####', '{first}.{last}.{unique}@example.ae', 'https://www.oasisgate.example.ae', 'Direct Sales', 'Bulk purchase with a payment plan.'],
+    ['CORP-19', 'Inc', 'Pinecrest Pension Partners', 'Pension Fund', 'Pension', 'Portfolio Manager', 'Mark', 'Ellison', '+1 415 ### ####', '{first}.{last}.{unique}@example.com', 'https://www.pinecrestpension.example.com', 'Broker Channels', 'Diversify the property allocation.'],
+    ['CORP-20', 'Corp', 'Harbour Lights REIT', 'REIT', 'Real Estate', 'Asset Manager', 'Mei', 'Tan', '+65 9### ####', '{first}.{last}.{unique}@example.sg', 'https://www.harbourlights.example.sg', 'Hospitality Channels', 'Resort apartments with a rental pool.'],
 ])
 
 # ── Form fields: label (as shown in the form) → field name in the page; Mandatory drives the required-field tests ──
@@ -94,6 +151,12 @@ SHEETS['Form Fields'] = (['Form', 'Field Label', 'Field Name', 'Field Type', 'Ma
     F('Corporate', 'Interaction Count', 'interactionCount', 'Text', 'No'),
     F('Corporate', 'Score', 'scoreTotal', 'Read-only', 'No'),
 ])
+# Address blocks (build CAITer8U): both blocks use the same labels on screen, so the sheet numbers them (block 1 / 2)
+for _form in ('Individual', 'Corporate'):
+    for _b in (1, 2):
+        for _label, _name, _type in (('Address Line 1', 'addressLine1', 'Text'), ('Address Line 2', 'addressLine2', 'Text'), ('City', 'city', 'Text'),
+                                     ('Country', 'countryCode', 'Dropdown'), ('Postal Code', 'postalCode', 'Text')):
+            SHEETS['Form Fields'][1].append(F(_form, f'Address {_b} {_label}', f'addresses.{_b - 1}.{_name}', _type, 'No'))
 
 EMAIL_MSG = 'Enter a valid email address (e.g. name@example.com).'
 PHONE_MSG = 'Enter the number with country code, for example +91 98765 43210 or +254 712 345 678.'
@@ -188,7 +251,8 @@ README = [
     'Default source: this Excel file. To drive the tests from the CSV files instead, set TEST_DATA_FORMAT=csv (TestData/csv/<sheet name>.csv, same columns).',
     'Keep the Excel and CSV copies in step if you use both (each CSV = one sheet).',
     'Yellow cells are the values to edit. Column headers must not change.',
-    'Individual Leads / Corporate Leads: one row per person or company. Each run picks a random row (Settings → Data Selection).',
+    'Individual Leads / Corporate Leads: one row per person or company. A form that is saved uses a row (name) no earlier save used (Settings → Name Selection); forms that are only filled and closed pick a random row.',
+    'Addresses: the two address blocks of each create form and the values typed to check the "Use same as …" button (never saved).',
     'Mobile: # = random digit. Email: {first}, {last}, {unique} are filled in at run time, so every run creates a new, unique lead.',
     'Names may contain letters, spaces, apostrophes and hyphens only (the app rejects digits).',
     'Invalid Values: each row becomes one test (Case ID + row number), e.g. LP-005.1. Add a row to add a test.',

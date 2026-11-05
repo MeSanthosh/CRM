@@ -2,7 +2,7 @@
  * Test declarations shared by the Individual (HLUC-01) and Corporate (HLUC-02) create-lead specs.
  * Each spec passes its own case IDs; every value comes from TestData/Leads_Test_Data.xlsx.
  */
-import { test, expect, note, createLead, createAndGetLeadNo, fillBasic, todayShown, withLeadsLock } from './shared';
+import { test, expect, note, createLead, fillBasic, todayShown, withLeadsLock, sharedLead } from './shared';
 import { lp, lpRow, caseOf } from './catalog';
 import { Form, LeadData, newLead, variantOf, mandatoryFields, invalidValues, message, setting, leadNoPattern, describe as describeLead, field, actionValue } from './test-data';
 import { LeadsPage } from '../pages/LeadsPage';
@@ -13,15 +13,6 @@ export type CreateIds = {
   create: string; leadNo: string; owner: string; lists: string; profile?: string;
   dupExact: string; dupWording: string; dupCase?: string; sameMobile: string; sameEmail: string; sameName?: string; close: string;
 };
-
-/** One lead per worker and form, created by the first test that needs it and reused by the next ones. */
-const created: Partial<Record<Form, Promise<{ lead: LeadData; leadNo: string }>>> = {};
-function sharedLead(leads: LeadsPage, form: Form) {
-  return (created[form] ??= (async () => {
-    const lead = newLead(form);
-    return { lead, leadNo: await createAndGetLeadNo(leads, lead) };
-  })().catch(e => { delete created[form]; throw e; }));
-}
 
 /** Submits a form that should be refused; checks the pop-up and that nothing was saved. */
 async function expectRefused(form: LeadForm, expectedText: string | RegExp, what: string) {
@@ -117,17 +108,16 @@ export function declareCreateTests(form: Form, ids: CreateIds) {
       expect(await f.placeholder('Score'), 'Score placeholder').toBe(message('Score Placeholder'));
     });
 
+    // this lead is the run's shared lead of the form (the tests below reuse it), so a run saves one, not one per test
     test(...lp(ids.create), async ({ leads }) => {
-      const lead = newLead(form);
-      const { form: f, result } = await createLead(leads, lead);
-      expect(result.saved, `Lead saved (pop-up: ${result.notice?.text ?? 'none'})`).toBeTruthy();
-      expect.soft(result.notice?.title, 'Pop-up title').toBe(message('Created Title'));
-      expect.soft(result.notice?.text ?? '', 'Pop-up text').toContain(message('Created Body', { name: lead.contact }));
-      await f.closeNotice();
-      const d = f.detail();
+      const { lead, leadNo, createdHere } = await sharedLead(leads, form, async (_f, result, l) => {
+        expect.soft(result.notice?.title, 'Pop-up title').toBe(message('Created Title'));
+        expect.soft(result.notice?.text ?? '', 'Pop-up text').toContain(message('Created Body', { name: l.contact }));
+      });
+      // another test created the shared lead first: its pop-up was checked there; the saved details are checked here
+      const d = createdHere ? new LeadForm(leads.page, form).detail() : await leads.openLead(leadNo);
       await d.waitOpen();
       const no = await d.leadNo();
-      note('lead created', `${no} · ${lead.name}`);
       expect.soft(no, 'Lead No. format').toMatch(leadNoPattern());
       const text = (await d.root.innerText()).replace(/\s+/g, ' ');
       expect.soft(text, 'Detail shows the name').toContain(lead.name);
@@ -183,7 +173,7 @@ export function declareCreateTests(form: Form, ids: CreateIds) {
     });
 
     if (ids.profile) test(...lp(ids.profile), async ({ leads }) => {
-      const lead = newLead(form);
+      const lead = newLead(form, { save: true });
       const { form: f, result } = await createLead(leads, lead, { all: true });
       expect(result.saved, `Lead saved (pop-up: ${result.notice?.text ?? 'none'})`).toBeTruthy();
       await f.closeNotice();

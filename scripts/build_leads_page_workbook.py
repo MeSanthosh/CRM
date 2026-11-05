@@ -159,6 +159,35 @@ for action, what in [('Create', 'Create a new Individual lead'), ('Assign', 'Ope
       f'{TD} → Count Changes (row {action}), Qualification, Lead Actions',
       f'{changes_text(action)} (Count Changes sheet, row "{action}").', 'High')
 
+# ── HLUC-04 Leads list & form layout (redesign, build CAITer8U, 04 Nov 2026) ──
+uc = 'HLUC-04'
+ST = f'{TD} → Settings'
+C('LP-081', uc, 'List & Paging', 'Next and Previous move through the list; S.No. runs on across pages', pre,
+  steps(LEADS, 'Note the pager "Showing a–b of N leads · Page x of y" and the S.No. column', 'Click Next until the last page, noting the same on every page', 'Click Previous'),
+  f'{ST} (Page Size)', 'Next can be clicked (nothing, such as the reminder cards, lies on top of it); every page lists Page Size leads (the last page the rest) and its pager range matches the rows; S.No. runs 1 … N across the pages with no gap or repeat; the range ends at the TOTAL LEADS number; Next is disabled on the last page; Previous goes back one page.', 'Medium')
+C('LP-082', uc, 'Row Selection', 'Select all ticks every lead of the page and shows the selection bar', pre,
+  steps(LEADS, 'Tick "Select all leads on this page" in the table header', 'Read the selection bar', 'Click Clear selection'),
+  f'{ST} (Selection Bar Buttons)', 'Every row of the page is ticked; the bar reads "N selected" with N = the rows on the page and shows Assign, Change status, Disqualify, Export selected and Clear selection; Clear selection unticks every row and hides the bar. No bulk action is applied.', 'Medium')
+C('LP-083', uc, 'Row Selection', 'Ticking single leads counts them in the selection bar', pre,
+  steps(LEADS, 'Tick the boxes of the first two leads', 'Untick one of them', 'Untick the other'),
+  '—', 'The bar reads "2 selected", then "1 selected"; with nothing ticked the bar is hidden. Only the ticked leads are selected.', 'Medium')
+C('LP-084', uc, 'Card Counts', 'AVG SCORE card = sum of the scores ÷ total leads', pre,
+  steps(LEADS, 'Note the AVG SCORE card and its formula line "Σ Score (S) ÷ Total (T)"', 'Add up the Score column on every page'),
+  '—', 'T = the TOTAL LEADS card; S = the sum of the Score column over all pages; AVG SCORE = S ÷ T, rounded.', 'Medium')
+C('LP-085', uc, 'Card Counts', 'QUALIFIED and DISQUALIFIED formula lines match the cards', pre,
+  steps(LEADS, 'Read the formula line under QUALIFIED and DISQUALIFIED ("Status = QUALIFIED (N of T)")'),
+  '—', 'In each line N = the card number and T = the TOTAL LEADS card.', 'Medium')
+C('LP-086', uc, 'Tabs', 'Duplicates & Merge and Insights tabs open their pages', pre,
+  steps(LEADS, 'Read the tabs above the list', 'Click Duplicates & Merge', 'Go back and click Insights'),
+  f'{ST} (Leads Tabs, Duplicates Route, Insights Route)', 'The tabs are the Leads Tabs of the Settings sheet, in that order; Duplicates & Merge opens the duplicates page and Insights the lead sources page, each without an error.', 'Medium')
+for id_, form, block1, btn in [('LP-087', 'Individual', 'Permanent Address', 'Use same as Permanent'), ('LP-088', 'Corporate', 'Business Address', 'Use same as Business')]:
+    C(id_, uc, 'Addresses', f'"{btn}" copies the {block1} into the Communication Address ({form} form)', 'Signed in',
+      steps(f'Open Leads → {form}', f'Enter Address Line 1, Address Line 2, City, Country and Postal Code of the {block1}', f'Click "{btn}"', 'Read the Communication Address', 'Close the form and discard'),
+      f'{TD} → Addresses', f'Each Communication Address field shows the value typed in the {block1}. Nothing is saved.', 'Medium')
+C('LP-089', uc, 'Edit Lead', 'Edit lead button opens the lead with its saved values', 'Signed in; at least one Individual lead (no lead is created for this case)',
+  steps(LEADS, 'Click the Individual chip', 'Note the first lead\'s name, mobile and email', 'Click its pencil button (Act. column)', 'Read First Name, Last Name, Mobile and Email', 'Close the form without saving'),
+  '—', 'The pencil button can be clicked (nothing lies on top of it); the edit form opens filled with the same name, mobile and email as the list; closing it changes nothing.', 'Medium')
+
 HEAD = ['TC ID', 'Use Case', 'Area', 'Test Case', 'Preconditions', 'Test Steps', 'Test Data', 'Expected Result', 'Priority', 'Type', 'Automation', 'Why It Matters']
 WIDTH = [9, 10, 22, 42, 26, 60, 34, 60, 9, 10, 11, 50]
 AREA_IMPACT = {
@@ -170,10 +199,17 @@ AREA_IMPACT = {
     'Tab Contents': 'A tab lists leads that do not belong there (or misses some), so leads are worked in the wrong queue or forgotten.',
     'Card Counts': 'The cards at the top of the Leads page show numbers that do not match the list or their own formula, so management reads wrong lead totals.',
     'Count Updates': 'After a lead action the counts move the wrong way, so the dashboard figures drift away from the real number of leads.',
+    'List & Paging': 'Leads are skipped or shown twice when paging, or the row numbers are wrong, so salespeople miss leads or report wrong positions.',
+    'Row Selection': 'Ticking leads selects the wrong ones or the bar shows a wrong number, so a bulk assign / disqualify would hit the wrong leads.',
+    'Tabs': 'A Leads tab is missing or opens the wrong page, so users cannot reach duplicates or lead insights.',
+    'Addresses': 'The copy button does not copy the address, so users retype it (or a lead is saved with a wrong communication address).',
+    'Edit Lead': 'The edit form opens empty or with another lead\'s data, so an edit could overwrite the lead with wrong details.',
 }
 CASE_IMPACT = {
     'LP-070': 'The ASSIGNED card does not equal the formula printed under it (Total − Unassigned): the Disqualified leads are left out without saying so, and the TOTAL LEADS formula does not add up either. Anyone checking the numbers by hand gets a different answer from the screen.',
     'LP-079': 'Disqualifying a lead takes it out of ASSIGNED although the lead keeps its owner, so ASSIGNED no longer equals Total − Unassigned as its formula says.',
+    'LP-081': 'If anything lies on top of Next (such as the reminder cards at the bottom right), users cannot open the next page of leads without first dismissing their reminders; leads after page 1 are easily missed. Paging must also show every lead once with S.No. running on.',
+    'LP-089': 'If anything lies on top of the pencil button (such as the reminder cards over the right-hand columns), users cannot edit a lead from the list; and an edit form that opened with other values could overwrite the lead with wrong details.',
 }
 for c in cases:
     c.append(CASE_IMPACT.get(c[0], AREA_IMPACT.get(c[2], '')))
@@ -203,12 +239,12 @@ ov['A1'] = 'Leads Page — Test Cases'
 ov['A1'].font = Font(name='Arial', size=14, bold=True, color='12465B')
 lines = [
     ('Page', 'Leads (/leads): All Leads, My Leads, Unassigned, To Qualify, Ready to Convert; Create Individual and Create Corporate lead forms; Lead Detail actions.'),
-    ('Use cases', 'HLUC-01 Create Individual Lead · HLUC-02 Create Corporate Lead · HLUC-03 Validate Lead Counts'),
+    ('Use cases', 'HLUC-01 Create Individual Lead · HLUC-02 Create Corporate Lead · HLUC-03 Validate Lead Counts · HLUC-04 Leads list & form layout (redesign, build CAITer8U)'),
     ('Test data', f'{TD} (or TestData/csv/*.csv with TEST_DATA_FORMAT=csv). No values are hard-coded in the tests.'),
     ('Automation', 'tests/leads-page/*.spec.ts — run with: npm run test:leads-page'),
     ('Report', 'reports/Leads_Page_Test_Report_<date>_<time>.xlsx (Summary, Defects with steps + screenshot, All Results with steps and expected result)'),
     ('Test cases', f'{len(cases)} cases; Invalid Values rows run as sub-cases (e.g. LP-005.1, LP-005.2).'),
-    ('Data created', 'The tests create new leads with realistic names and unique example.* emails, and qualify / disqualify / convert / re-assign only leads they created.'),
+    ('Data created', 'About 7 leads per run, each with a name no earlier run used (TestData → Settings → Name Selection) and a unique example.* email: one shared lead per form, one fully filled lead, one same-name lead (LP-021), and 3 for the count updates (create → qualify → convert, assign, disqualify). The tests change only leads they created.'),
 ]
 for i, (k, v) in enumerate(lines, start=3):
     ov.cell(row=i, column=1, value=k).font = Font(name='Arial', size=10, bold=True)
@@ -237,6 +273,11 @@ UC = [
     ['HLUC-03', 'Validate Lead Counts', 'Tab count = Total Leads card = leads listed', 'LP-061, LP-062, LP-063, LP-064, LP-065'],
     ['HLUC-03', 'Validate Lead Counts', 'Assigned / Qualified / Disqualified cards match the list; clicking a card shows exactly that number', 'LP-070, LP-071, LP-072, LP-073, LP-074, LP-075'],
     ['HLUC-03', 'Validate Lead Counts', 'Counts update after create, assign, qualify, disqualify, convert', 'LP-076, LP-077, LP-078, LP-079, LP-080'],
+    ['HLUC-04', 'Leads list & form layout', 'Paging and S.No.; row selection and the selection bar', 'LP-081, LP-082, LP-083'],
+    ['HLUC-04', 'Leads list & form layout', 'AVG SCORE, QUALIFIED and DISQUALIFIED formula lines', 'LP-084, LP-085'],
+    ['HLUC-04', 'Leads list & form layout', 'Duplicates & Merge and Insights tabs', 'LP-086'],
+    ['HLUC-04', 'Leads list & form layout', 'Address blocks: Use same as Permanent / Business', 'LP-087, LP-088'],
+    ['HLUC-04', 'Leads list & form layout', 'Edit lead (pencil) opens the saved lead', 'LP-089'],
 ]
 tr = wb.create_sheet('Traceability')
 sheet(tr, ['Use Case', 'Name', 'Requirement', 'Test Cases'], UC, [10, 24, 80, 50])
@@ -260,6 +301,7 @@ CHANGES = [
     ['25 Oct 2026', 'v2.0 2410-02', 'Lead Detail: owner shown as "Assigned to <owner>" under the name (ASSIGNED tile removed); Assign Lead → Reassign lead', 'LP-013, LP-044, LP-077 (steps reworded)'],
     ['25 Oct 2026', 'v2.0 2410-02', 'Qualify form: Bedrooms now 3 / 4 / 5+ (no 2 Bedrooms); success pop-up "Lead Qualified"; Disqualify asks for confirmation', 'LP-078 … LP-080 (data: Qualification sheet Bedrooms = 3 Bedrooms)'],
     ['03 Nov 2026', 'v2.0 0111-11', 'ASSIGNED card now counts leads with an owner: formula line "Total (N) − Unassigned (M)"; clicking it lists Assigned, Qualified … leads', 'LP-070 (expected result rewritten); Count Changes data: Qualify and Disqualify leave ASSIGNED unchanged (the lead keeps its owner)'],
+    ['04 Nov 2026', 'v2.0 CAITer8U', 'Leads list: S.No. and row boxes with a selection bar (Assign, Change status, Disqualify, Export selected); Type column is an icon (tooltip Individual / Corporate); pencil Edit button (Act. column); AVG SCORE card; tabs Duplicates & Merge and Insights. Create forms: Permanent / Business and Communication address blocks with "Use same as …"', 'LP-014, LP-045 (Type = tooltip); new LP-081 … LP-089'],
     ['25 Oct 2026', 'v2.0 2410-02', 'Create forms unchanged (fields, mandatory list, messages); option lists changed: Gender + Don’t Know, new campaigns, 7 lead owners, new product types', 'No change needed'],
 ]
 sheet(wb.create_sheet('Change Log'), ['Date', 'Build', 'UI change', 'Test cases updated'], CHANGES, [12, 14, 90, 50])

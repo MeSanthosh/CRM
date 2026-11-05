@@ -520,3 +520,36 @@ Technical detail for the developer:
 - No error boundary on the route, so the whole page is lost.
 
 Impact: interrupts lead work on QA and made automated runs unreliable for the retest of #144, #147, #149 and #165 (they need to create or open a lead first). Also seen on builds 3010-07 and 3110-10.","","high","New","4","10/31/2026 11:38 PM","Santhoshkumar S","Babu Ramasamy","v2.0 3110-10","","Failed","Reproduced on 31 Oct 2026 and rechecked on 1 Nov 2026 with one browser at manual pace: still intermittent (13 of 27 checks crashed; one full round had no crash). Evidence in Retesting/evidence/: Leads_Page_Crash_My_Leads.png, Leads_Page_Crash_Menu_Click.png, Leads_Page_Crash_Direct_URL.png, Leads_Page_Crash_attempts.txt, Leads_Page_Recheck_1worker.txt.","1 Nov 2026","v2.0 3110-10"
+"NEW-02","Backend","Leads page: disqualifying a lead lowers the ASSIGNED card although the lead keeps its owner","Disqualifying an assigned lead lowers the ASSIGNED card by 1, but the lead still has its owner.
+
+Steps to reproduce (CRM Administrator):
+1. Open Leads > All Leads and note the cards: TOTAL LEADS, ASSIGNED, QUALIFIED, DISQUALIFIED, and the tab counts.
+2. Open a lead that has an owner and is not qualified (this run: LD-20261104190852-Y75L, Sophie Laurent, sophie.laurent.1931846100@example.fr, owner = the signed-in user).
+3. Change Status > Disqualify: choose a Disqualification Reason, type Remarks, click Disqualify Lead and confirm.
+4. Reload the Leads page and note the same numbers.
+
+Before: All Leads 50, To Qualify 7, Unassigned 14, ASSIGNED 35, DISQUALIFIED 1.
+After: All Leads 50, To Qualify 6, Unassigned 14, ASSIGNED 34, DISQUALIFIED 2.
+
+Actual: ASSIGNED drops 35 > 34 while Unassigned stays 14 and the lead still shows its owner, so ASSIGNED (34) no longer equals TOTAL - Unassigned (50 - 14 = 36 is the formula on the card).
+Expected: ASSIGNED stays the same (the owner did not change); only To Qualify -1 and DISQUALIFIED +1.","","High","New","1","11/5/2026 12:43 AM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found in the Leads page run of 5 Nov 2026: LP-079 (reports/Leads_Page_Final_Test_Report_2026-11-05_0043.xlsx). Screenshot: Retesting/evidence/Leads_Disqualify_Assigned_Card_LP-079.png","5 Nov 2026","v2.0 0411-16"
+"NEW-03","Frontend","Leads page: the reminder cards cover the list's Next button, so a user cannot go to the next page","The reminder cards at the bottom right (""REMINDER - TASK Lead assigned ..."", ""+3 more reminders"") lie on top of the pager's Next button.
+
+Steps to reproduce (CRM Administrator with open task reminders, e.g. ""Lead assigned"" tasks):
+1. Open Leads > All Leads with more than 20 leads (this run: 49 leads, 3 pages).
+2. Scroll to the pager ""Showing 1-20 of 49 leads - Page 1 of 3"".
+3. Try to click Next.
+
+Actual: on pages 1, 2 and 3 the click lands on the ""+3 more reminders"" button of the reminder cards, not on Next. The user has to dismiss reminders (or use the keyboard) to page through the list.
+Expected: nothing lies on top of Next; the reminder cards leave the pager free (or the page leaves room for them).
+Paging itself is correct: 20 per page, S.No. 1-49 with no gap or repeat, Previous works.","","Medium","New","1","11/5/2026 12:43 AM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found in the Leads page run of 5 Nov 2026: LP-081 (reports/Leads_Page_Final_Test_Report_2026-11-05_0043.xlsx). Screenshot: Retesting/evidence/Leads_Next_Covered_By_Reminders_LP-081.png","5 Nov 2026","v2.0 0411-16"
+"NEW-04","Frontend","Leads page: the reminder cards cover the right-hand columns, including the pencil (Edit) button","The same reminder cards cover the right-hand columns of the lead list, including the pencil (Edit) button in the Act. column.
+
+Steps to reproduce (CRM Administrator with open task reminders):
+1. Open Leads > All Leads and click the Individual chip.
+2. Find the pencil button of the first lead (this run: LD-20261104185452-MIUA, James Whitfield).
+3. Try to click it.
+
+Actual: the click lands on the reminder text ""Lead assigned: LD-20261104182433-3X6V - ..."" instead of the pencil. When the pencil is reached another way, the Edit Lead form opens with the right name, mobile and email.
+Expected: nothing lies on top of the list's buttons, so a lead can be edited from the list.
+Same cause as NEW-03 (the reminder card stack).","","Medium","New","1","11/5/2026 12:43 AM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found in the Leads page run of 5 Nov 2026: LP-089 (reports/Leads_Page_Final_Test_Report_2026-11-05_0043.xlsx). Screenshot: Retesting/evidence/Leads_Edit_Button_Covered_LP-089.png","5 Nov 2026","v2.0 0411-16"

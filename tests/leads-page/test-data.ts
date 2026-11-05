@@ -133,13 +133,54 @@ const SHEET: Record<Form, string> = { Individual: 'Individual Leads', Corporate:
 const FIRST: Record<Form, string> = { Individual: 'First Name', Corporate: 'Primary Contact First Name' };
 const LAST: Record<Form, string> = { Individual: 'Last Name', Corporate: 'Primary Contact Last Name' };
 
-/** Picks a row (Settings → Data Selection: "random" or a Data ID) and builds a new, unique lead from it. */
-export function newLead(form: Form, opts: { exclude?: string[] } = {}): LeadData {
+const USED_NAMES = path.resolve(__dirname, '../../.auth/used-lead-names.json');
+const NAMES_LOCK = `${USED_NAMES}.lock`;
+const pause = (ms: number) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+/**
+ * A row (name) no earlier save used, across workers and runs: claimed in .auth/used-lead-names.json under a
+ * small file lock, so a run never saves two leads with the same name and the next run picks new names.
+ */
+function claimRow(form: Form, pool: Row[]): Row {
+  fs.mkdirSync(path.dirname(USED_NAMES), { recursive: true });
+  for (let i = 0; ; i++) {
+    try { fs.mkdirSync(NAMES_LOCK); break; } catch {
+      if (i > 200) fs.rmSync(NAMES_LOCK, { recursive: true, force: true }); // left by a killed run
+      pause(50);
+    }
+  }
+  try {
+    const used: Record<string, { id: string; name: string; at: string }[]> = fs.existsSync(USED_NAMES) ? JSON.parse(fs.readFileSync(USED_NAMES, 'utf8')) : {};
+    const taken = new Set((used[form] ?? []).map(u => u.id));
+    const row = pool.find(r => !taken.has(r['Data ID']));
+    if (!row) throw new Error(`All ${pool.length} ${form} names on the "${SHEET[form]}" sheet were used by earlier saves `
+      + `(${path.relative(process.cwd(), USED_NAMES)}). Add new rows to the sheet (scripts/build_leads_testdata.py), or delete that file to start over.`);
+    const name = form === 'Corporate' ? row['Legal Entity / Company Name'] : `${row[FIRST[form]]} ${row[LAST[form]]}`;
+    (used[form] ??= []).push({ id: row['Data ID'], name, at: new Date().toISOString() });
+    fs.writeFileSync(USED_NAMES, JSON.stringify(used, null, 1));
+    return row;
+  } finally {
+    fs.rmSync(NAMES_LOCK, { recursive: true, force: true });
+  }
+}
+
+/** Address block values typed into the create form (Addresses sheet; never saved). */
+export function addressData(form: Form) {
+  const r = sheet('Addresses').find(x => x['Form'] === form);
+  if (!r) throw new Error(`Addresses sheet has no row for ${form}`);
+  return r;
+}
+
+/**
+ * Picks a row (Settings → Data Selection: "random" or a Data ID) and builds a new, unique lead from it.
+ * `save: true` = the test saves this lead: it gets a name no earlier save used (Settings → Name Selection).
+ */
+export function newLead(form: Form, opts: { exclude?: string[]; save?: boolean } = {}): LeadData {
   const rows = sheet(SHEET[form]);
   const choice = setting('Data Selection');
   const fixed = rows.find(r => r['Data ID'] === choice);
   const pool = rows.filter(r => !opts.exclude?.includes(r['Data ID']));
-  const row = fixed ?? (pool.length ? pool : rows)[Math.floor(Math.random() * (pool.length || rows.length))];
+  const row = fixed ?? (opts.save && /^unique$/i.test(setting('Name Selection')) ? claimRow(form, pool)
+    : (pool.length ? pool : rows)[Math.floor(Math.random() * (pool.length || rows.length))]);
   const first = row[FIRST[form]], last = row[LAST[form]], company = row['Legal Entity / Company Name'] ?? '';
   const unique = uniqueToken();
   const known = new Set(fields(form).map(f => f.label));

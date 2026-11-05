@@ -38,3 +38,23 @@ Corporate,Budget,budgetMax,Text,No
 Corporate,Units Interested,unitsInterestedCount,Text,No
 Corporate,Interaction Count,interactionCount,Text,No
 Corporate,Score,scoreTotal,Read-only,No
+Individual,Address 1 Address Line 1,addresses.0.addressLine1,Text,No
+Individual,Address 1 Address Line 2,addresses.0.addressLine2,Text,No
+Individual,Address 1 City,addresses.0.city,Text,No
+Individual,Address 1 Country,addresses.0.countryCode,Dropdown,No
+Individual,Address 1 Postal Code,addresses.0.postalCode,Text,No
+Individual,Address 2 Address Line 1,addresses.1.addressLine1,Text,No
+Individual,Address 2 Address Line 2,addresses.1.addressLine2,Text,No
+Individual,Address 2 City,addresses.1.city,Text,No
+Individual,Address 2 Country,addresses.1.countryCode,Dropdown,No
+Individual,Address 2 Postal Code,addresses.1.postalCode,Text,No
+Corporate,Address 1 Address Line 1,addresses.0.addressLine1,Text,No
+Corporate,Address 1 Address Line 2,addresses.0.addressLine2,Text,No
+Corporate,Address 1 City,addresses.0.city,Text,No
+Corporate,Address 1 Country,addresses.0.countryCode,Dropdown,No
+Corporate,Address 1 Postal Code,addresses.0.postalCode,Text,No
+Corporate,Address 2 Address Line 1,addresses.1.addressLine1,Text,No
+Corporate,Address 2 Address Line 2,addresses.1.addressLine2,Text,No
+Corporate,Address 2 City,addresses.1.city,Text,No
+Corporate,Address 2 Country,addresses.1.countryCode,Dropdown,No
+Corporate,Address 2 Postal Code,addresses.1.postalCode,Text,No

@@ -1,7 +1,7 @@
 /** HLUC-03 Validate Lead Counts — tab, card and list counts (LP-061 … LP-075). */
-import { test, expect, note, createAndGetLeadNo, acquireLeadsLock, releaseLeadsLock } from './shared';
+import { test, expect, note, sharedLead, acquireLeadsLock, releaseLeadsLock } from './shared';
 import { lp } from './catalog';
-import { tabRule, newLead } from './test-data';
+import { tabRule } from './test-data';
 import { LEADS_TABS } from '../locators';
 
 test.describe('Leads page · Lead counts', () => {
@@ -139,8 +139,7 @@ test.describe('Leads page · Lead counts', () => {
   });
 
   test(...lp('LP-075'), async ({ leads }) => {
-    const lead = newLead('Individual');
-    await createAndGetLeadNo(leads, lead);
+    const { lead } = await sharedLead(leads, 'Individual'); // the run's own lead, no extra record
     await leads.openRoute();
     await leads.search(lead.email);
     const listed = await leads.listed();

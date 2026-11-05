@@ -49,8 +49,14 @@ export class LeadsPage extends BasePage {
 
   /** Formula line under a card, e.g. Assigned → "Total (311) − Unassigned (14)" (build v2.0). */
   async cardFormula(label: string): Promise<string> {
-    const p = at(this.page, XP.leadsKpiCard(label)).locator('p').first();
+    // clickable cards are buttons; AVG SCORE (build CAITer8U) is a plain article card
+    const p = this.page.locator(`xpath=${XP.leadsKpiCard(label)}/p | //main//article[contains(@class,'crm-card')][h3[normalize-space()=${JSON.stringify(label)}]]/p`).first();
     return (await p.count()) ? (await p.innerText()).replace(/\s+/g, ' ').trim() : '';
+  }
+
+  /** Tab labels above the list, without their counts ("All Leads 41" → "All Leads"). */
+  async tabLabels(): Promise<string[]> {
+    return (await this.page.locator(`xpath=//main//a[contains(@class,'crm-leads-tab')]`).allInnerTexts()).map(t => t.replace(/\s*\d+\s*$/, '').replace(/\s+/g, ' ').trim());
   }
 
   async clickCard(label: string) {
@@ -85,6 +91,13 @@ export class LeadsPage extends BasePage {
   async filterStatus(status: string | null) {
     const sel = at(this.page, XP.leadsStatusFilter);
     await act(this.page, () => (status === null ? sel.selectOption({ index: 0 }) : sel.selectOption({ label: status })));
+    if (status === null) return;
+    // the list re-renders a moment after the response: read counts only once every row shows the status (or none is left)
+    await expect.poll(async () => {
+      const shown = await this.rows().catch(() => []);
+      return shown.every(r => r.status === status);
+    }, { message: `List shows only "${status}" leads`, timeout: 15_000 }).toBeTruthy();
+    await this.page.waitForLoadState('networkidle').catch(() => {});
   }
 
   async statusOptions(): Promise<string[]> {
@@ -113,11 +126,93 @@ export class LeadsPage extends BasePage {
         const cells = [...r.children];
         const lead = (cells[heads.indexOf('Lead')] as HTMLElement).innerText.split('\n').map(s => s.trim()).filter(Boolean);
         const contact = col(cells, 'Phone / Email').split('\n').map(s => s.trim()).filter(Boolean);
-        return { name: lead[0] ?? '', leadNo: r.querySelector('a.crm-record-link')!.textContent!.trim(), type: col(cells, 'Type'),
+        // since build CAITer8U the Type column is an icon; its tooltip holds "Individual" / "Corporate"
+        const typeCell = cells[heads.indexOf('Type')] as HTMLElement | undefined;
+        const type = typeCell?.querySelector('[title]')?.getAttribute('title')?.trim() || col(cells, 'Type');
+        return { name: lead[0] ?? '', leadNo: r.querySelector('a.crm-record-link')!.textContent!.trim(), type,
           phone: contact[0] ?? '', email: contact[1] ?? '', source: col(cells, 'Source'), status: col(cells, 'Status'), rating: col(cells, 'Rating'),
           score: col(cells, 'Score'), captured: col(cells, 'Captured'), assigned: col(cells, 'Assigned') };
       });
     });
+  }
+
+  /** Pager text, e.g. "Showing 21–40 of 41 leads · Page 2 of 3" (without the buttons). */
+  async pagerText(): Promise<string> {
+    return (await at(this.page, XP.leadsPager).first().innerText()).replace(/\s+/g, ' ').trim();
+  }
+
+  /** What covered the pager button on the last turnPage() (e.g. the reminder cards), '' when it could be clicked. */
+  coveredBy = '';
+
+  /**
+   * Clicks Next / Previous and waits until the pager changes. Returns false when the button is disabled.
+   * When something lies on top of the button (build 0411-16: the reminder cards at the bottom right), that is kept
+   * in `coveredBy` and the button is pressed with the keyboard instead, so the paging can still be checked.
+   */
+  async turnPage(dir: 'Next' | 'Previous'): Promise<boolean> {
+    const btn = at(this.page, dir === 'Next' ? XP.leadsNext : XP.leadsPrev);
+    if (await btn.isDisabled()) return false;
+    const before = await this.pagerText();
+    await btn.evaluate(b => b.scrollIntoView({ block: 'center' }));
+    this.coveredBy = await btn.evaluate(b => {
+      const r = b.getBoundingClientRect();
+      const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+      return !top || b.contains(top) ? '' : `${top.tagName.toLowerCase()}.${String(top.className).split(' ')[0]} "${(top as HTMLElement).innerText.trim().slice(0, 40)}"`;
+    });
+    await act(this.page, () => (this.coveredBy ? btn.press('Enter') : btn.click()));
+    await expect.poll(() => this.pagerText(), { message: `Pager changes after ${dir}`, timeout: 15_000 }).not.toBe(before);
+    return true;
+  }
+
+  async pagerButtonDisabled(dir: 'Next' | 'Previous'): Promise<boolean> {
+    return at(this.page, dir === 'Next' ? XP.leadsNext : XP.leadsPrev).isDisabled();
+  }
+
+  /** S.No. column of the rows on this page ("01", "02" … → 1, 2 …). */
+  async serialNumbers(): Promise<number[]> {
+    return at(this.page, XP.leadsTable).evaluate(t => {
+      const heads = [...t.querySelectorAll('thead th')].map(h => (h as HTMLElement).innerText.trim());
+      const i = heads.indexOf('S.No.');
+      return [...t.querySelectorAll('tbody tr')].filter(r => r.querySelector('a.crm-record-link')).map(r => Number((r.children[i] as HTMLElement)?.innerText.trim()));
+    });
+  }
+
+  /** Ticks / unticks "Select all leads on this page", or the box of one lead. */
+  async select(what: 'all' | string, on = true) {
+    const box = at(this.page, what === 'all' ? XP.leadsSelectAll : XP.leadsSelectRow(what));
+    await (on ? box.check() : box.uncheck());
+  }
+
+  /** Lead Nos. whose row box is ticked. */
+  async selectedLeads(): Promise<string[]> {
+    return at(this.page, XP.leadsTable).evaluate(t => [...t.querySelectorAll('tbody tr')]
+      .filter(r => (r.querySelector('input[type=checkbox]') as HTMLInputElement | null)?.checked)
+      .map(r => r.querySelector('a.crm-record-link')?.textContent?.trim() ?? ''));
+  }
+
+  /** The selection bar shown while rows are ticked ("20 selected Assign Change status …"), or '' when hidden. */
+  async bulkBar(): Promise<string> {
+    const bar = at(this.page, XP.leadsBulkBar);
+    return (await bar.count()) && (await bar.isVisible()) ? (await bar.innerText()).replace(/\s+/g, ' ').trim() : '';
+  }
+
+  async bulkButton(name: string) {
+    await act(this.page, () => at(this.page, XP.leadsBulkButton(name)).click());
+  }
+
+  /** Clicks a lead's pencil button (Act. column) and returns the edit form. */
+  async editLead(leadNo: string, form: Form): Promise<LeadForm> {
+    const btn = at(this.page, XP.leadsEditButton(leadNo));
+    await btn.evaluate(b => b.scrollIntoView({ block: 'center' }));
+    this.coveredBy = await btn.evaluate(b => {
+      const r = b.getBoundingClientRect();
+      const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+      return !top || b.contains(top) ? '' : `${top.tagName.toLowerCase()}.${String(top.className).split(' ')[0]} "${(top as HTMLElement).innerText.trim().slice(0, 40)}"`;
+    });
+    await (this.coveredBy ? btn.press('Enter') : btn.click());
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await expect(at(this.page, XP.leadForm), 'Edit form opens').toBeVisible({ timeout: 20_000 });
+    return new LeadForm(this.page, form);
   }
 
   /** Searches for a lead (by email, mobile, name or Lead No.) and returns the matching rows. */

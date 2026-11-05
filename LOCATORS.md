@@ -59,6 +59,13 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | Table rows | `//table[contains(@class,'crm-leads-inbox-table')]/tbody/tr` | `table.crm-leads-inbox-table > tbody > tr` |
 | Pager text ("Showing 1–20 of 616 leads · Page 1 of 31") | `//div[contains(@class,'crm-pagination')]/span` | `div.crm-pagination > span` |
 | Next page | `//div[contains(@class,'crm-pagination')]//button[normalize-space()='Next']` |  |
+| Select all leads on this page (build CAITer8U) | `//table[contains(@class,'crm-leads-inbox-table')]//thead//input[@aria-label='Select all leads on this page']` | `input[aria-label="Select all leads on this page"]` |
+| Row box of one lead | `//table[contains(@class,'crm-leads-inbox-table')]//tbody//input[@aria-label='Select LD-2026-0038']` | `input[aria-label="Select LD-2026-0038"]` |
+| Selection bar ("20 selected · Assign · Change status · Disqualify · Export selected · Clear selection") | `//main//*[contains(concat(' ',normalize-space(@class),' '),' crm-bulk-bar ')]` | `main .crm-bulk-bar` |
+| Edit lead (pencil, Act. column) | `//table[contains(@class,'crm-leads-inbox-table')]//tbody//button[@aria-label='Edit LD-2026-0038']` | `button[aria-label="Edit LD-2026-0038"]` |
+| Type column (icon; tooltip = Individual / Corporate) | `…/td/span[contains(@class,'crm-leads-prospect-pill')]/@title` | `span.crm-leads-prospect-pill[title]` |
+| Leads tab link (Duplicates & Merge, Insights) | `//main//a[contains(@class,'crm-leads-tab')][starts-with(normalize-space(),'Insights')]` | `main a.crm-leads-tab` |
+| Create form: Use same as Permanent / Business | `//section[contains(@class,'crm-lead-modal')]//button[normalize-space()='Use same as Permanent']` |  |
 | Previous page | `//div[contains(@class,'crm-pagination')]//button[normalize-space()='Previous']` |  |
 | KPI card button (v2.0; click filters the list) | `//button[contains(@class,'crm-metric-card-button')][h3[normalize-space()='Assigned']]` | `button.crm-metric-card-button` |
 | KPI card value (v2.0) | `//button[contains(@class,'crm-metric-card-button')][h3[normalize-space()='Total Leads']]/div[contains(@class,'crm-kpi')]` | `button.crm-metric-card-button > div.crm-kpi` |

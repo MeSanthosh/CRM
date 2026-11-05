@@ -9,3 +9,33 @@ IND-07,Ms,Sophie,Laurent,+33 6 ## ## ## ##,{first}.{last}.{unique}@example.fr,Ho
 IND-08,Mr,Omar,Al Mansoori,+971 50 ### ####,{first}.{last}.{unique}@example.ae,Strategic Partners,Male,United Arab Emirates,United Arab Emirates,Dubai,Investor,900000,Immediate,Partner referral; ready to reserve this month.
 IND-09,Mrs,Anjali,Sharma,+91 99### #####,{first}.{last}.{unique}@example.in,Public Relations,Female,India,India,Mumbai,End User,330000,0-3 Months,Read the press feature; asked for a site visit.
 IND-10,Prof,Thomas,Becker,+49 151 ########,{first}.{last}.{unique}@example.de,Referrals,Male,Germany,Germany,Munich,Investor,680000,3-6 Months,Referred by an existing owner; compares two projects.
+IND-11,Mr,Arjun,Krishnan,+91 98### #####,{first}.{last}.{unique}@example.in,Referrals,Male,India,India,Chennai,Investor,400000,3-6 Months,Friend of an owner; wants a unit to rent out.
+IND-12,Ms,Kavya,Raghavan,+91 97### #####,{first}.{last}.{unique}@example.in,Property Portals,Female,India,India,Hyderabad,End User,290000,0-3 Months,Found the listing online; asked for floor plans.
+IND-13,Mr,Vikram,Bhatia,+91 99### #####,{first}.{last}.{unique}@example.in,Direct Sales,Male,India,India,Delhi,Investor,520000,6-12 Months,Visited the sales office; compares payment plans.
+IND-14,Mrs,Meera,Pillai,+91 98### #####,{first}.{last}.{unique}@example.in,Digital Marketing,Female,India,India,Pune,Holiday Home Buyer,360000,3-6 Months,Clicked the beach villa advert.
+IND-15,Mr,Rohan,Desai,+91 97### #####,{first}.{last}.{unique}@example.in,Public Relations,Male,India,India,Ahmedabad,End User,310000,12+ Months,Read the magazine article; early research.
+IND-16,Ms,Lakshmi,Iyer,+91 99### #####,{first}.{last}.{unique}@example.in,Broker Channels,Female,India,India,Coimbatore,Retirement Buyer,450000,6-12 Months,Broker referral; wants a quiet ground-floor unit.
+IND-17,Mr,Brian,Odhiambo,+254 7## ### ###,{first}.{last}.{unique}@example.org,Events & Exhibitions,Male,Kenya,Kenya,Kisumu,Investor,380000,0-3 Months,Met at the expo; ready to view this month.
+IND-18,Ms,Wairimu,Gathoni,+254 7## ### ###,{first}.{last}.{unique}@example.org,Referrals,Female,Kenya,Kenya,Nakuru,End User,270000,3-6 Months,Referred by a colleague; first home.
+IND-19,Mr,Collins,Barasa,+254 7## ### ###,{first}.{last}.{unique}@example.net,Direct Sales,Male,Kenya,Kenya,Eldoret,Investor,610000,Immediate,Walk-in; wants two units for rental income.
+IND-20,Mrs,Achieng,Owino,+254 7## ### ###,{first}.{last}.{unique}@example.com,Hospitality Channels,Female,Kenya,Kenya,Malindi,Holiday Home Buyer,330000,6-12 Months,Hotel guest; asked about holiday letting.
+IND-21,Mr,Kevin,Mutiso,+254 7## ### ###,{first}.{last}.{unique}@example.com,Digital Marketing,Male,Kenya,Kenya,Machakos,End User,300000,3-6 Months,Answered the social media campaign.
+IND-22,Dr,Halima,Abdi,+254 7## ### ###,{first}.{last}.{unique}@example.org,Strategic Partners,Female,Kenya,Kenya,Garissa,Investor,700000,0-3 Months,Partner bank client; cash buyer.
+IND-23,Mr,Edward,Ashworth,+44 7### ######,{first}.{last}.{unique}@example.co.uk,Broker Channels,Male,United Kingdom,United Kingdom,Manchester,Retirement Buyer,820000,12+ Months,Plans to move to the coast after retiring.
+IND-24,Ms,Charlotte,Pembroke,+44 7### ######,{first}.{last}.{unique}@example.co.uk,Property Portals,Female,United Kingdom,United Kingdom,Bristol,Holiday Home Buyer,560000,6-12 Months,Saved three listings on the portal.
+IND-25,Mr,Henry,Caldwell,+44 7### ######,{first}.{last}.{unique}@example.co.uk,Referrals,Male,United Kingdom,United Kingdom,Leeds,Investor,640000,3-6 Months,Referred by his accountant.
+IND-26,Mrs,Eleanor,Hartley,+44 7### ######,{first}.{last}.{unique}@example.co.uk,Public Relations,Female,United Kingdom,United Kingdom,Oxford,End User,430000,0-3 Months,Saw the TV feature; wants a call back.
+IND-27,Mr,Lucien,Moreau,+33 6 ## ## ## ##,{first}.{last}.{unique}@example.fr,Hospitality Channels,Male,France,France,Marseille,Holiday Home Buyer,590000,6-12 Months,Resort guest; likes the marina view.
+IND-28,Ms,Camille,Rousseau,+33 6 ## ## ## ##,{first}.{last}.{unique}@example.fr,Digital Marketing,Female,France,France,Bordeaux,End User,340000,3-6 Months,Downloaded the brochure.
+IND-29,Mr,Antoine,Lefebvre,+33 6 ## ## ## ##,{first}.{last}.{unique}@example.fr,Events & Exhibitions,Male,France,France,Nice,Investor,780000,Immediate,Met at the Paris property fair.
+IND-30,Mrs,Margaux,Girard,+33 6 ## ## ## ##,{first}.{last}.{unique}@example.fr,Referrals,Female,France,France,Toulouse,Retirement Buyer,510000,12+ Months,Sister owns a villa in the project.
+IND-31,Mr,Yousef,Al Hashimi,+971 50 ### ####,{first}.{last}.{unique}@example.ae,Strategic Partners,Male,United Arab Emirates,United Arab Emirates,Abu Dhabi,Investor,950000,0-3 Months,Partner introduction; wants a penthouse.
+IND-32,Ms,Mariam,Al Suwaidi,+971 50 ### ####,{first}.{last}.{unique}@example.ae,Property Portals,Female,United Arab Emirates,United Arab Emirates,Sharjah,End User,420000,3-6 Months,Enquired through the portal chat.
+IND-33,Mr,Hamdan,Al Ketbi,+971 50 ### ####,{first}.{last}.{unique}@example.ae,Direct Sales,Male,United Arab Emirates,United Arab Emirates,Dubai,Investor,880000,Immediate,Visited the Dubai roadshow stand.
+IND-34,Mrs,Noora,Al Falasi,+971 50 ### ####,{first}.{last}.{unique}@example.ae,Events & Exhibitions,Female,United Arab Emirates,United Arab Emirates,Ajman,Holiday Home Buyer,470000,6-12 Months,Collected a brochure at the exhibition.
+IND-35,Mr,Felix,Hoffmann,+49 151 ########,{first}.{last}.{unique}@example.de,Broker Channels,Male,Germany,Germany,Hamburg,Investor,690000,3-6 Months,Broker client; compares yields.
+IND-36,Ms,Lena,Schreiber,+49 151 ########,{first}.{last}.{unique}@example.de,Digital Marketing,Female,Germany,Germany,Berlin,End User,350000,0-3 Months,Signed up through the website form.
+IND-37,Mr,Jonas,Wagner,+49 151 ########,{first}.{last}.{unique}@example.de,Referrals,Male,Germany,Germany,Frankfurt,Retirement Buyer,730000,12+ Months,Referred by a neighbour who bought last year.
+IND-38,Mrs,Katrin,Neumann,+49 151 ########,{first}.{last}.{unique}@example.de,Hospitality Channels,Female,Germany,Germany,Cologne,Holiday Home Buyer,480000,6-12 Months,Stayed at the resort twice.
+IND-39,Dr,Rajesh,Venkatesan,+91 98### #####,{first}.{last}.{unique}@example.in,Strategic Partners,Male,India,India,Madurai,Investor,560000,3-6 Months,Introduced by the partner bank.
+IND-40,Ms,Njeri,Kariithi,+254 7## ### ###,{first}.{last}.{unique}@example.org,Public Relations,Female,Kenya,Kenya,Thika,End User,260000,0-3 Months,Heard the radio interview.

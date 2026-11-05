@@ -156,6 +156,24 @@ function reproSteps(r: Row, steps: string[]): string {
   return [...steps.map((s, n) => `${n + 1}. ${s}`), ...(data.length ? ['', 'Data used in this run:', ...data] : [])].join('\n');
 }
 
+/** All Results rows of an earlier report (EXCEL_CARRY_FROM) whose test IDs this run did not run again. */
+async function carryFrom(file: string | undefined, ran: Set<string>): Promise<Record<string, ExcelJS.CellValue>[]> {
+  if (!file) return [];
+  if (!fs.existsSync(file)) throw new Error(`EXCEL_CARRY_FROM: ${file} not found`);
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.readFile(file);
+  const sheet = wb.getWorksheet('All Results');
+  if (!sheet) throw new Error(`EXCEL_CARRY_FROM: no "All Results" sheet in ${file}`);
+  const keys = ['id', 'title', 'module', 'severity', 'status', 'dur', 'att', 'fail', 'file', 'steps', 'expected', 'actual'];
+  const out: Record<string, ExcelJS.CellValue>[] = [];
+  sheet.eachRow((row, n) => {
+    if (n === 1) return;
+    const e = Object.fromEntries(keys.map((k, i) => [k, row.getCell(i + 1).value]));
+    if (e.id && !ran.has(String(e.id))) out.push(e);
+  });
+  return out;
+}
+
 class ExcelReporter implements Reporter {
   private rows = new Map<string, Row>();
   private start = new Date();
@@ -173,13 +191,20 @@ class ExcelReporter implements Reporter {
 
   onTestEnd(test: TestCase, result: TestResult) {
     const { id, title } = splitId(test.title);
-    const outcome = test.outcome();
+    // EXCEL_LATEST_RESULT=1 (merging the blobs of reruns): a test's status is that of its newest run, not pass-after-fail = Flaky
+    const outcome = process.env.EXCEL_LATEST_RESULT
+      ? (result.status === 'passed' ? 'expected' : result.status === 'skipped' ? 'skipped' : 'unexpected')
+      : test.outcome();
     const status =
       outcome === 'skipped' ? 'Skipped'
       : outcome === 'flaky' ? 'Flaky'
       : outcome === 'expected' ? 'Passed'
       : result.status === 'timedOut' ? 'Timed out' : 'Failed';
-    this.rows.set(test.id, { test, result, id, title, status, attempts: result.retry + 1 });
+    // merged blobs give each rerun its own test.id: with EXCEL_LATEST_RESULT the case ID is the key, newest run wins
+    const key = process.env.EXCEL_LATEST_RESULT ? id : test.id;
+    const prev = this.rows.get(key);
+    if (prev && process.env.EXCEL_LATEST_RESULT && prev.result.startTime > result.startTime) return;
+    this.rows.set(key, { test, result, id, title, status, attempts: result.retry + 1 });
   }
 
   async onEnd(full: FullResult) {
@@ -313,9 +338,9 @@ ${info.hint}` : '',
       { header: 'Expected Result', key: 'expected', width: 50 },
       { header: 'Actual Result', key: 'actual', width: 50 },
     ];
-    for (const r of rows) {
+    const entries: Record<string, ExcelJS.CellValue>[] = rows.map(r => {
       const info = infoOf(r);
-      const row = all.addRow({
+      return {
         id: r.id, title: r.title, module: info.module, severity: info.severity, status: r.status,
         dur: Math.round(r.result.duration / 100) / 10, att: r.attempts,
         fail: r.status === 'Failed' || r.status === 'Timed out' ? actualResult(r.result).actual.replace(/\s*\n\s*/g, ' | ').replace(/:\s*\|/g, ':').slice(0, 300) : r.status === 'Skipped' ? (r.test.annotations.find(a => a.type === 'skip')?.description ?? 'Skipped') : '',
@@ -323,8 +348,15 @@ ${info.hint}` : '',
         steps: info.steps.map((s, i) => `${i + 1}. ${s}`).join('\n'),
         expected: info.expected,
         actual: actualText(r),
-      });
-      row.getCell('status').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: STATUS_FILL[r.status] ?? 'FFFFFFFF' } };
+      };
+    });
+    // EXCEL_CARRY_FROM=<earlier report.xlsx>: tests not run again keep their row from that report (one report for a run + its reruns)
+    const carried = await carryFrom(process.env.EXCEL_CARRY_FROM, new Set(rows.map(r => r.id)));
+    entries.push(...carried);
+    entries.sort((a, b) => String(a.id).localeCompare(String(b.id), 'en', { numeric: true }));
+    for (const e of entries) {
+      const row = all.addRow(e);
+      row.getCell('status').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: STATUS_FILL[String(e.status)] ?? 'FFFFFFFF' } };
       row.getCell('dur').numFmt = '0.0';
     }
     style(all);
@@ -333,11 +365,11 @@ ${info.hint}` : '',
 
     // ── Summary (first tab) ───────────────────────────────────────────────────
     sm.columns = [{ width: 30 }, { width: 22 }, { width: 4 }, { width: 24 }, { width: 12 }];
-    const n = rows.length + 1; // last data row in All Results
+    const n = entries.length + 1; // last data row in All Results
     const fd = Math.max(2, failed.length + 1); // last data row in Defects
-    const count = (st: string) => rows.filter(r => r.status === st).length;
+    const count = (st: string) => entries.filter(r => r.status === st).length;
     const passed = count('Passed'), failCount = failed.length, skipped = count('Skipped'), flaky = count('Flaky');
-    const executed = rows.length - skipped;
+    const executed = entries.length - skipped;
 
     sm.getCell('A1').value = pageName ? `${pageName} — Automated Test Report` : 'CRM Reports & Analytics — Automated Test Report';
     sm.getCell('A1').font = { name: FONT, size: 14, bold: true, color: { argb: HEADER_FILL } };
@@ -346,7 +378,7 @@ ${info.hint}` : '',
       ['Duration (min)', Math.round((Date.now() - d.getTime()) / 6000) / 10, '0.0'],
       ['Environment', baseURL],
       ['Overall result', full.status === 'passed' ? 'PASSED' : 'FAILED'],
-      ['Total test cases', { formula: `COUNTA('All Results'!A2:A${n})`, result: rows.length }],
+      ['Total test cases', { formula: `COUNTA('All Results'!A2:A${n})`, result: entries.length }],
       ['Passed', { formula: `COUNTIF('All Results'!E2:E${n},"Passed")`, result: passed }],
       ['Failed (defects)', { formula: `COUNTIF('All Results'!E2:E${n},"Failed")+COUNTIF('All Results'!E2:E${n},"Timed out")`, result: failCount }],
       ['Flaky (passed on retry)', { formula: `COUNTIF('All Results'!E2:E${n},"Flaky")`, result: flaky }],
@@ -363,6 +395,12 @@ ${info.hint}` : '',
       c.alignment = { horizontal: 'left' };
       if (fmt) c.numFmt = fmt;
     });
+    if (carried.length) {
+      sm.getCell('A13').value = 'Earlier results included';
+      sm.getCell('A13').font = { name: FONT, size: 10, bold: true };
+      sm.getCell('B13').value = `${carried.length} tests not run again, from ${path.basename(process.env.EXCEL_CARRY_FROM!)}`;
+      sm.getCell('B13').font = { name: FONT, size: 10 };
+    }
     const res = sm.getCell('B6');
     res.font = { name: FONT, size: 10, bold: true, color: { argb: full.status === 'passed' ? 'FF006100' : 'FF9C0006' } };
 

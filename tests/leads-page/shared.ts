@@ -7,7 +7,8 @@ import path from 'path';
 import { test as base, expect } from '../auth';
 import { LeadsPage } from '../pages/LeadsPage';
 import { LeadForm } from '../pages/LeadForm';
-import { Form, LeadData, basicValues, describe } from './test-data';
+import { Form, LeadData, basicValues, describe, newLead } from './test-data';
+import { runOnce } from '../sales-chain/data';
 
 export const test = base.extend<{ leads: LeadsPage }>({
   leads: async ({ page }, use) => use(new LeadsPage(page)),
@@ -84,6 +85,32 @@ export async function createAndGetLeadNo(leads: LeadsPage, lead: LeadData): Prom
   const no = await detail.leadNo();
   note('lead created', `${no} · ${lead.name} · ${lead.email}`);
   return no;
+}
+
+export type SharedLead = { lead: LeadData; leadNo: string };
+/**
+ * The one lead of each form this run creates for the tests that only need "a lead of this run" (Lead No.,
+ * owner, lists, duplicates, search …). Created once per run under the lock, whichever worker asks first;
+ * `onCreated` (the create test's checks) runs only when this call is the one that saves it.
+ */
+export async function sharedLead(leads: LeadsPage, form: Form,
+  onCreated?: (f: LeadForm, result: Awaited<ReturnType<LeadForm['submit']>>, lead: LeadData) => Promise<void>): Promise<SharedLead & { createdHere: boolean }> {
+  let createdHere = false;
+  const s = await withLeadsLock(() => runOnce<SharedLead>(`leads-shared-${form}`, async () => {
+    const lead = newLead(form, { save: true });
+    const { form: f, result } = await createLead(leads, lead);
+    expect(result.saved, `Lead saved (${result.notice?.text ?? 'no pop-up'})`).toBeTruthy();
+    createdHere = true;
+    if (onCreated) await onCreated(f, result, lead);
+    await f.closeNotice();
+    const detail = f.detail();
+    await detail.waitOpen();
+    const leadNo = await detail.leadNo();
+    note('lead created', `${leadNo} · ${lead.name} · ${lead.email}`);
+    return { lead, leadNo };
+  }));
+  if (!createdHere) note('lead of this run (shared)', `${s.leadNo} · ${s.lead.name} · ${s.lead.email}`);
+  return { ...s, createdHere };
 }
 
 /** Fills a form with a lead's mandatory values (no save). */
