@@ -21,6 +21,7 @@ export const ROUTES = {
   reservations: '/reservations',
   brokersChannels: '/brokers-channels',
   constructionUpdates: '/construction-updates',
+  currencyMaster: '/currencies',
   dashboard: '/', // "Executive Reports" card also opens this
   /** Executive dashboards since build 3110-10 (Commercial / Sales, Monthly Sales & Marketing, Executive Operations, Lead) */
   dashboards: '/dashboards',
