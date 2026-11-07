@@ -42,6 +42,15 @@ export class ReportTable {
     return cells.filter(r => r.length === headers.length).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i]])));
   }
 
+  /** The "Total" row (in <tfoot>) keyed by column header, or undefined when the table has none. */
+  async totalRow(): Promise<Record<string, string> | undefined> {
+    const headers = await this.headers();
+    const total = at(this.page, XP.reportTableTotal(this.heading));
+    if (!(await total.count())) return undefined;
+    const cells = await total.first().locator('td, th').allInnerTexts();
+    return Object.fromEntries(headers.map((h, i) => [h, (cells[i] ?? '').trim()]));
+  }
+
   /** Clicks the panel's Export and reads the downloaded sheet (the "Total" row is kept apart). */
   export(): Promise<Sheet> {
     return download(this.page, this.exportButton);

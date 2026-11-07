@@ -11,7 +11,7 @@
     "db:discover": "node scripts/db-discover.mjs",
     "test:db": "playwright test db",
     "test:scenarios": "playwright test --grep @scenario",
-    "test:core": "playwright test --grep-invert \"@scenario|@pages|@lead-workbook\"",
+    "test:core": "playwright test --grep-invert \"@scenario|@pages|@service-requests|@reports-workbook\"",
     "test:pages": "playwright test --grep @pages",
     "test:hub": "playwright test --grep @hub",
     "test:lead-reports": "playwright test --grep @lead-reports",
@@ -25,7 +25,8 @@
     "test:collection-reports": "playwright test --grep @collection-reports",
     "test:executive-reports": "playwright test --grep @executive-reports",
     "test:exception-reports": "playwright test --grep @exception-reports",
-    "test:lead-workbook": "playwright test tests/lead-reports"
+    "test:service-requests": "playwright test tests/service-request",
+    "test:reports": "playwright test tests/reports/"
   },
   "devDependencies": {
     "@playwright/test": "^1.47.0",

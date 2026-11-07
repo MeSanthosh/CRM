@@ -4,6 +4,6 @@ auth.json
 test-results/
 playwright-report/
 db-schema.md
-reports/
+/reports/
 .auth/
 ~$*

@@ -266,6 +266,37 @@ Use in Playwright: `page.locator("xpath=…")` · Selenium: `By.xpath("…")` ·
 | Detail list: Open opportunities past expected close date | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Open opportunities past expected close date']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 | Detail list: Leads not contacted after 2 days | `//section[contains(@class,'crm-panel')][.//h3[normalize-space()='Leads not contacted after 2 days']]//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]` |
 
+## Service Requests (`/service-requests`)
+
+Taken from the frontend bundle `index-BDfmsX8C.js` on 2026-10-22 (`SR_XP` in `tests/locators.ts`). `Q` = the queue panel `//main//section[contains(@class,'crm-panel')][.//h3[starts-with(normalize-space(),'Queue (')]]`; `D` = the detail panel `//main//section[contains(@class,'crm-detail-panel')]`.
+
+| Element | XPath |
+|---|---|
+| Hide tips / Show tips | `//main//section[contains(@class,'crm-module-header')]//button[normalize-space()='Hide tips' or normalize-space()='Show tips']` |
+| New Request (header) | `//main//section[contains(@class,'crm-module-header')]//button[normalize-space()='New Request']` |
+| Help panel | `//main//section[contains(@class,'crm-help-panel')]` |
+| Success banner | `//main//div[contains(@class,'crm-success-banner')]` |
+| Queue heading "Queue (N)" | `Q//h3[starts-with(normalize-space(),'Queue (')]` |
+| Search box | `Q//input[@placeholder='Search request no, customer, subject']` |
+| Status filter | `Q//select[option[1][normalize-space()='All statuses']]` |
+| Queue rows (tickets only) | `Q//table/tbody/tr[not(td[contains(@class,'crm-empty-cell')])]` |
+| Request number link | `…rows…//button[contains(@class,'crm-link-button')][normalize-space()='SR-…']` |
+| Empty queue message | `Q//table/tbody//td[contains(@class,'crm-empty-cell')]` |
+| "Select a request" panel | `D//div[contains(@class,'crm-empty-state')]` |
+| Detail / form title | `D/div[contains(@class,'crm-panel-header')]//h3` |
+| Field by label (Customer, Type, Priority, Subject, Description, Status, Assigned to) | `D//label[contains(@class,'crm-field')][span[normalize-space()='Status']]/*[self::select or self::input or self::textarea]` |
+| Create Request | `D//form//button[@type='submit']` |
+| Cancel | `D//button[normalize-space()='Cancel']` |
+| Ticket description | `D/p[contains(@class,'crm-aftersales-body')]` |
+| Progress timeline entries | `D//div[contains(@class,'crm-section')][h3[normalize-space()='Progress timeline']]/ol/li` |
+| History / Refresh | `D//section[@aria-label='Change history']` · `…//button[normalize-space()='Refresh']` |
+| Conversation comments | `D//div[contains(@class,'crm-aftersales-thread')]/div[contains(@class,'crm-aftersales-bubble')]` (`.is-staff` / `.is-customer`) |
+| Reply box / Post Reply | `D//label[contains(@class,'crm-field')][span[normalize-space()='Reply to customer']]/textarea` · `D//button[normalize-space()='Post Reply']` |
+| Add File (input) | `D//label[contains(@class,'crm-file-button')]/input[@type='file']` |
+| Attachment links | `D//div[contains(@class,'crm-section')][div[contains(@class,'crm-panel-header')]/h3[normalize-space()='Attachments']]//ul/li/a` |
+
+API (`https://crm-be-93614024352.asia-southeast1.run.app/api/v1`): `GET /service-requests?search=&statusCode=&limit=100` → `{ items, totalCount }`, `GET|PATCH /service-requests/{id}`, `POST /service-requests`, `POST /service-requests/{id}/comments`, `POST /service-requests/{id}/attachments`.
+
 ## Ask the developers for `data-testid`
 
 The app has no test IDs. These attributes would make every locator above a one-liner that never breaks:

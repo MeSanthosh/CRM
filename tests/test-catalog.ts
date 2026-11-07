@@ -5,7 +5,8 @@
  */
 import { SAME, where } from './consistency-cases';
 import { SCENARIOS, isScenarioId } from './scenarios/catalog';
-import { LEAD_CASES } from './lead-reports/catalog';
+import { SR_CASES } from './service-request/catalog';
+import { REP_CASES } from './reports/catalog';
 import { HUB_MODULES, REPORT_PAGES, LEADS_TABS, DASHBOARD_KPIS, ROUTES } from './locators';
 
 export type Severity = 'Critical' | 'High' | 'Medium' | 'Low';
@@ -145,15 +146,25 @@ const PAGE_TESTS: Record<string, { module: string; path: string }> = {
 /** Info for a test ID, with a generic fallback (e.g. DB-* tests). */
 export function caseInfo(id: string, title: string): CaseInfo {
   if (C[id]) return C[id];
-  if (id.startsWith('LR-')) {
-    const leads = url(ROUTES.reports.leads);
-    const c = LEAD_CASES[id];
+  if (id.startsWith('SR-')) {
+    const page = url(ROUTES.serviceRequests);
+    const c = SR_CASES[id];
     if (c) {
       const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
-      return { module: `Lead Reports · ${c.tab}`, page: leads, severity, category: c.component, steps: c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')), expected: c.expected };
+      return { module: `Service Requests · ${c.area}`, page, severity, category: c.component,
+        steps: c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')), expected: c.expected, hint: c.remarks || undefined };
     }
-    const kind = id.startsWith('LR-MAP') ? 'Clickable Map' : id.startsWith('LR-OBS') ? 'Observations' : id.startsWith('LR-DDV') ? 'Drill-down Verification' : 'Coverage';
-    return { module: `Lead Reports · ${kind}`, page: leads, severity: kind === 'Observations' ? 'Low' : 'Medium', category: kind, steps: [title], expected: 'See the expected result recorded by the test' };
+    return { module: 'Service Requests · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
+  if (id.startsWith('REP-')) {
+    const page = url(ROUTES.hub);
+    const c = REP_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      return { module: `Reports · ${c.report}`, page, severity, category: c.component,
+        steps: c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')), expected: c.expected, hint: c.remarks || undefined };
+    }
+    return { module: 'Reports · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
   }
   const pageTest = PAGE_TESTS[id.split('-')[0]];
   if (pageTest && /^[A-Z]+-\d+$/.test(id)) {

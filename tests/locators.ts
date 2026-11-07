@@ -17,6 +17,7 @@ export const ROUTES = {
   hub: '/reports-analytics',
   leads: '/leads',
   dashboard: '/', // "Executive Reports" card also opens this
+  serviceRequests: '/service-requests',
   reports: {
     leads: '/reports/leads',
     sales: '/reports/sales',
@@ -37,8 +38,8 @@ export const XP = {
   hubKpi: (label: string) => `//div[contains(@class,'crm-module-hub-kpi')][span[normalize-space()=${xl(label)}]]/strong`,
   /** Leads page + Executive Dashboard card value: <div.crm-exec-kpi-copy><span>Label</span><strong>615</strong> */
   execKpi: (label: string) => `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()=${xl(label)}]]/strong`,
-  /** Report module card value: <article.crm-card><h3>Label</h3><div.crm-kpi>39</div> */
-  reportKpi: (label: string) => `//article[contains(@class,'crm-card')][h3[normalize-space()=${xl(label)}]]/div[contains(@class,'crm-kpi')]`,
+  /** Report module / Leads card value: <article|button class=crm-card><h3>Label</h3><div.crm-kpi>39</div> (Leads cards are buttons since v2.0) */
+  reportKpi: (label: string) => `//*[self::article or self::button][contains(@class,'crm-card')][h3[normalize-space()=${xl(label)}]]/div[contains(@class,'crm-kpi')]`,
   /** Leads tab badge: <a.crm-leads-tab>All Leads<span.crm-leads-tab-count>615</span></a> */
   leadsTab: (label: string) => `//a[@role='tab'][contains(@class,'crm-leads-tab')][starts-with(normalize-space(),${xl(label)})]`,
   leadsTabCount: (label: string) => `${XP.leadsTab(label)}/span[contains(@class,'crm-leads-tab-count')]`,
@@ -50,8 +51,12 @@ export const XP = {
   reportPanel: (heading: string) => `//section[contains(@class,'crm-panel')][.//h3[normalize-space()=${xl(heading)}]]`,
   reportTable: (heading: string) => `${XP.reportPanel(heading)}//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]`,
   reportTableRows: (heading: string) => `${XP.reportTable(heading)}/tbody/tr`,
+  /** Total row of a report table (in <tfoot>) */
+  reportTableTotal: (heading: string) => `${XP.reportTable(heading)}/tfoot/tr`,
   reportPanelExport: (heading: string) => `${XP.reportPanel(heading)}//button[contains(@class,'crm-export-button')]`,
   navLink: (href: string) => `//a[contains(@class,'crm-nav-link')][@href=${xl(href)}]`,
+  /** Side-nav mode switch ("Frequent" / "All Modules"); Frequent lists only pinned modules. */
+  navMode: (label: string) => `//button[contains(@class,'crm-sidebar-mode-btn')][contains(normalize-space(),${xl(label)})]`,
 
   // single elements
   leadsStatusFilter: `//select[@aria-label='Filter by status']`,
@@ -99,6 +104,74 @@ export const XP = {
   globalSearch: `//input[contains(@class,'crm-search-input')][starts-with(@placeholder,'Search Customer')]`,
   pageTitle: `//main//h1 | //main//h2[1]`,
 };
+
+// ── Service Requests (/service-requests), taken from frontend bundle index-BDfmsX8C.js on 2026-10-22 ──
+// Two panels side by side: the queue (left) and the detail panel (right), which shows "Select a request",
+// the "New service request" form or the open ticket.
+const srHeader = `//main//section[contains(@class,'crm-module-header')]`;
+const srQueue = `//main//section[contains(@class,'crm-panel')][.//h3[starts-with(normalize-space(),'Queue (')]]`;
+const srDetail = `//main//section[contains(@class,'crm-detail-panel')]`;
+const srHistory = `${srDetail}//section[@aria-label='Change history']`;
+const srAttachments = `${srDetail}//div[contains(@class,'crm-section')][div[contains(@class,'crm-panel-header')]/h3[normalize-space()='Attachments']]`;
+const srRows = `${srQueue}//table/tbody/tr[not(td[contains(@class,'crm-empty-cell')])]`;
+
+export const SR_XP = {
+  eyebrow: `${srHeader}//p[contains(@class,'crm-eyebrow')]`,
+  heading: `${srHeader}//h2`,
+  subtitle: `${srHeader}//p[contains(@class,'crm-muted-text')]`,
+  /** Reads "Hide tips" while the help panel is shown, "Show tips" while hidden. */
+  tipsButton: `${srHeader}//button[normalize-space()='Hide tips' or normalize-space()='Show tips']`,
+  newRequest: `${srHeader}//button[normalize-space()='New Request']`,
+  helpPanel: `//main//section[contains(@class,'crm-help-panel')]`,
+  helpTitle: `//main//section[contains(@class,'crm-help-panel')]//h3`,
+  helpSteps: `//main//section[contains(@class,'crm-help-panel')]//ol/li`,
+  helpNote: `//main//section[contains(@class,'crm-help-panel')]//aside`,
+  // the inline banner; the same message also appears in a toast (role=status) further down the page
+  successBanner: `(//main//div[contains(@class,'crm-success-banner')])[1]`,
+
+  // queue
+  queueHeading: `${srQueue}//h3[starts-with(normalize-space(),'Queue (')]`,
+  search: `${srQueue}//input[@placeholder='Search request no, customer, subject']`,
+  statusFilter: `${srQueue}//select[option[1][normalize-space()='All statuses']]`,
+  queueColumns: `${srQueue}//table/thead//th`,
+  /** Ticket rows only (not the "No service requests…" row). */
+  queueRows: srRows,
+  queueEmpty: `${srQueue}//table/tbody//td[contains(@class,'crm-empty-cell')]`,
+  queueRow: (requestNo: string) => `${srRows}[.//button[normalize-space()=${xl(requestNo)}]]`,
+  requestLink: (requestNo: string) => `${srRows}//button[contains(@class,'crm-link-button')][normalize-space()=${xl(requestNo)}]`,
+
+  // detail panel: empty state and new-request form
+  detailPanel: srDetail,
+  emptyState: `${srDetail}//div[contains(@class,'crm-empty-state')]`,
+  emptyNewRequest: `${srDetail}//div[contains(@class,'crm-empty-state')]//button[normalize-space()='New Request']`,
+  /** h3 of the detail panel: "New service request" or "SR-… — subject". */
+  detailTitle: `${srDetail}/div[contains(@class,'crm-panel-header')]//h3`,
+  detailSubtitle: `${srDetail}/div[contains(@class,'crm-panel-header')]//p`,
+  detailDescription: `${srDetail}/p[contains(@class,'crm-aftersales-body')]`,
+  form: `${srDetail}//form`,
+  cancel: `${srDetail}//button[normalize-space()='Cancel']`,
+  createButton: `${srDetail}//form//button[@type='submit']`,
+  /** A form/detail field by its label: Customer, Type, Priority, Subject, Description, Status, Assigned to. */
+  fieldLabel: (label: string) => `${srDetail}//label[contains(@class,'crm-field')][span[normalize-space()=${xl(label)}]]`,
+  field: (label: string) => `${srDetail}//label[contains(@class,'crm-field')][span[normalize-space()=${xl(label)}]]/*[self::select or self::input or self::textarea]`,
+
+  // detail panel: open ticket
+  timelineItems: `${srDetail}//div[contains(@class,'crm-section')][h3[normalize-space()='Progress timeline']]/ol/li`,
+  timelineEmpty: `${srDetail}//div[contains(@class,'crm-section')][h3[normalize-space()='Progress timeline']]/p`,
+  history: srHistory,
+  historyRefresh: `${srHistory}//button[normalize-space()='Refresh' or normalize-space()='Refreshing...']`,
+  historyEntries: `${srHistory}//li[contains(@class,'crm-audit-entry')]`,
+  historyShowAll: `${srHistory}//button[starts-with(normalize-space(),'Show all')]`,
+  conversation: `${srDetail}//div[contains(@class,'crm-section')][h3[normalize-space()='Conversation']]`,
+  comments: `${srDetail}//div[contains(@class,'crm-aftersales-thread')]/div[contains(@class,'crm-aftersales-bubble')]`,
+  replyBox: `${srDetail}//label[contains(@class,'crm-field')][span[normalize-space()='Reply to customer']]/textarea`,
+  postReply: `${srDetail}//button[normalize-space()='Post Reply' or normalize-space()='Posting…']`,
+  attachments: srAttachments,
+  addFile: `${srAttachments}//label[contains(@class,'crm-file-button')]`,
+  fileInput: `${srAttachments}//label[contains(@class,'crm-file-button')]/input[@type='file']`,
+  attachmentLinks: `${srAttachments}//ul/li/a`,
+};
+
 
 // ── CSS equivalents (for tools that prefer CSS) ─────────────────────────────
 export const CSS = {
@@ -236,3 +309,102 @@ export const LEAD_REPORT_TABS: { name: string; param: string; kpis: string[]; pa
     panels: ['Conversion by Lead Rating', 'Conversion by Lead Score', 'Where the Leads Are Now', 'Lost Reasons'] },
   { name: 'Salesperson Scorecard', param: 'scorecard', kpis: [], panels: ['Salesperson Scorecard'] },
 ];
+
+/** Service Requests: texts as they appear on the page (index-BDfmsX8C.js). */
+export const SR_TEXT = {
+  eyebrow: 'After-Sales',
+  heading: 'Service Requests',
+  subtitle: 'Staff ticket queue — assign owners, update status, reply to customers, and attach files.',
+  helpTitle: 'How to work Service Requests',
+  helpNote: 'Not a chat inbox',
+  emptyTitle: 'Select a request',
+  emptyText: 'Open a ticket from the queue to assign an owner, change status, and reply to the customer.',
+  formTitle: 'New service request',
+  formSubtitle: 'Create a staff ticket on behalf of a customer.',
+  queueEmpty: 'No service requests in this filter. Portal tickets will appear here when customers submit them.',
+  columns: ['Request', 'Customer', 'Priority', 'Status', 'Opened'],
+  formFields: ['Customer', 'Type', 'Priority', 'Subject', 'Description'],
+  requiredFields: ['Customer', 'Subject', 'Description'],
+  detailFields: ['Status', 'Priority', 'Type', 'Assigned to'],
+  /** Success banners (message body). */
+  created: (requestNo: string) => `Created ${requestNo}.`,
+  updated: 'Request updated.',
+  replyPosted: 'Reply sent to customer.', // was "Reply posted to customer." before build index-DGibO5LD
+  attachmentUploaded: 'Attachment uploaded.',
+  required: (label: string) => `${label} is required.`,
+};
+
+// ── Reports catalogue (/reports-analytics, build v2.0 0411) and single reports — tests/reports ──
+const repCard = (code: string) => `//main//article[contains(@class,'crm-report-catalog-card')][.//span[contains(@class,'crm-report-code-badge')][normalize-space()=${xl(code)}]]`;
+const repHeader = `//main//section[contains(@class,'crm-module-header')]`;
+export const REP_XP = {
+  /** Category tab: <button role=tab class=crm-report-tab-btn><span…label>Lead Reports</span><span…badge>7</span></button> */
+  catalogTab: (label: string) => `//main//button[@role='tab'][.//span[contains(@class,'crm-report-tab-btn-label')][normalize-space()=${xl(label)}]]`,
+  catalogTabBadge: (label: string) => `${REP_XP.catalogTab(label)}//span[contains(@class,'crm-report-tab-badge')]`,
+  catalogCards: `//main//article[contains(@class,'crm-report-catalog-card')]`,
+  catalogCard: repCard,
+  cardTitle: (code: string) => `${repCard(code)}//h4[contains(@class,'crm-report-catalog-card-title')]`,
+  cardDescription: (code: string) => `${repCard(code)}//p[contains(@class,'crm-report-catalog-card-desc')]`,
+  cardColumns: (code: string) => `${repCard(code)}//span[contains(@class,'crm-report-metric-tag')]`,
+  cardCategory: (code: string) => `${repCard(code)}//span[contains(@class,'crm-report-catalog-card-cat')]`,
+  cardOpen: (code: string) => `${repCard(code)}//a[contains(@class,'crm-report-open-btn')]`,
+  /** Single report page */
+  backLink: `//main//div[contains(@class,'crm-single-report-nav-bar')]/a`,
+  siblingPill: (code: string) => `//main//a[contains(@class,'crm-single-report-pill')][normalize-space()=${xl(code)}]`,
+  reportCode: `${repHeader}//span[contains(@class,'crm-report-code-badge')]`,
+  reportTitle: `${repHeader}//h2`,
+  reportDescription: `${repHeader}//p[contains(@class,'crm-muted-text')]`,
+  /** Header metadata chip value: <div.crm-report-meta-chip>…<span…label>Total Records</span><strong…val>41</strong> (tiles before build index-DGibO5LD) */
+  tile: (label: string) => `//main//div[contains(@class,'crm-report-meta-chip-content')][span[contains(@class,'crm-report-meta-chip-label')][normalize-space()=${xl(label)}]]/strong`,
+  /** The report's table panel: <section class=crm-panel id="leadRegister05"> */
+  panelTable: (panelId: string) => `//main//section[@id=${xl(panelId)}]//table[contains(@class,'crm-report-table')]`,
+  panelExport: (panelId: string) => `//main//section[@id=${xl(panelId)}]//button[contains(@class,'crm-export-button')]`,
+  definitionTerms: `//main//details[contains(@class,'crm-report-definitions')]//li/strong`,
+  userName: `//button[contains(@class,'crm-user-menu-button')]//span[contains(@class,'crm-user-menu-text')]/strong`,
+  /** Any element showing exactly this text (e.g. a Lead ID in the Leads module detail) */
+  exactText: (text: string) => `//main//*[normalize-space()=${xl(text)}]`,
+  /** Filter dropdown by its label: <label class=crm-field><span class=crm-label>Project</span><select> */
+  // filters sit in the report toolbar since build index-DGibO5LD (section.crm-report-filters before)
+  filter: (label: string) => `//main//section[contains(@class,'crm-report-toolbar')]//label[span[contains(@class,'crm-label')][normalize-space()=${xl(label)}]]/select`,
+  /** Any visible message containing this text (inline error or toast) */
+  message: (text: string) => `//*[not(self::script)][contains(normalize-space(),${xl(text)})][not(*[contains(normalize-space(),${xl(text)})])]`,
+  /** Leads module "Lead Detail" dialog opened from a report's Lead ID link */
+  leadDetail: `//section[@role='dialog'][contains(@class,'crm-lead-detail-modal')]`,
+  /** "LD-2026-0037 · Sebastian Weber" under the dialog title */
+  leadDetailSubtitle: `//section[@role='dialog'][contains(@class,'crm-lead-detail-modal')]/div[contains(@class,'crm-panel-header')]//p`,
+  leadDetailTile: (label: string) => `//section[@role='dialog'][contains(@class,'crm-lead-detail-modal')]//div[contains(@class,'crm-lead-summary-tile')][.//div[contains(@class,'crm-lead-summary-tile-label')][normalize-space()=${xl(label)}]]/div[contains(@class,'crm-lead-summary-tile-value')]`,
+};
+
+/** Cells of a Leads module row (CSS, relative to the <tr>). */
+export const LEADS_ROW = {
+  name: 'div.crm-leads-lead-cell > strong',
+  leadNo: 'div.crm-leads-lead-cell a.crm-record-link',
+  source: 'td.crm-leads-source-cell',
+  status: 'span.crm-leads-status-chip',
+  assigned: 'td.crm-leads-assigned-cell',
+};
+
+/** Reports catalogue texts and the reports covered by tests/reports. */
+export const REP_TEXT = {
+  leadRegister: {
+    code: 'RPT-05',
+    category: 'Lead Reports',
+    title: 'Report #05 — Lead Register',
+    route: '/reports/governance',
+    query: 'report=leadRegister05',
+    panelId: 'leadRegister05',
+    columns: ['Lead ID', 'Prospect Name', 'Channel Source', 'Assigned Broker / Rep', 'Qualification Status',
+      'Target Unit Interest', 'Budget Range ($)', 'Current Stage', 'Next Follow-up Date'],
+    backLabel: '← Back to Lead Reports',
+    /** Filter label → query parameter the report request carries for it */
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId' },
+  },
+  // chip labels since build index-DGibO5LD (were "Total Records in Report" / "Report Created Date & Time")
+  tiles: { total: 'Total Records', created: 'Report Created', createdBy: 'Created By' },
+  periods: ['This month', 'Last month', 'This quarter', 'Last quarter', 'Year to date', 'Last 12 months', 'Custom dates'],
+  /** The app's own rule for custom dates (shown when an export is rejected) */
+  rangeError: 'To date must be on or after From date',
+  leadDetail: { source: 'Source' },
+  myLeadsTab: 'My Leads',
+  allLeadsTab: 'All Leads',
+};

@@ -15,6 +15,11 @@ import { SpaReportsPage } from './SpaReportsPage';
 import { CollectionReportsPage } from './CollectionReportsPage';
 import { ExecutiveReportsPage } from './ExecutiveReportsPage';
 import { ExceptionReportsPage } from './ExceptionReportsPage';
+import { ServiceRequestsPage } from './ServiceRequestsPage';
+import { ReportCatalogPage } from './ReportCatalogPage';
+import { SingleReportPage } from './SingleReportPage';
+import { LeadsListPage } from './LeadsListPage';
+import { REP_TEXT } from '../locators';
 
 export type Pages = {
   hub: ReportsHubPage;
@@ -29,6 +34,10 @@ export type Pages = {
   collections: CollectionReportsPage;
   executive: ExecutiveReportsPage;
   exceptions: ExceptionReportsPage;
+  serviceRequests: ServiceRequestsPage;
+  reportCatalog: ReportCatalogPage;
+  leadRegister: SingleReportPage;
+  leadsList: LeadsListPage;
 };
 
 export const test = base.extend<Pages>({
@@ -44,6 +53,10 @@ export const test = base.extend<Pages>({
   collections: async ({ page }, use) => use(new CollectionReportsPage(page)),
   executive: async ({ page }, use) => use(new ExecutiveReportsPage(page)),
   exceptions: async ({ page }, use) => use(new ExceptionReportsPage(page)),
+  serviceRequests: async ({ page }, use) => use(new ServiceRequestsPage(page)),
+  reportCatalog: async ({ page }, use) => use(new ReportCatalogPage(page)),
+  leadRegister: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.leadRegister)),
+  leadsList: async ({ page }, use) => use(new LeadsListPage(page)),
 });
 
 export { expect } from '../auth';

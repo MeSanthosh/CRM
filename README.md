@@ -46,27 +46,30 @@ the results, All ≥ Team ≥ Mine, Reset filters, panel exports match the table
 From -12 on are that page's own checks (its tables add up to its KPIs, its formulas, its lists).
 In the Excel report these tests appear under modules named `Page · <page name>`.
 
-## Lead Reports test cases (Testcase/Lead_Reports_Test_Cases.xlsx)
-Every sheet of the Lead Reports workbook is automated in `tests/lead-reports/`:
+## Service Requests test cases (Testcase/Service_Requests_Test_Cases.xlsx)
+The After-Sales › Service Requests page (`/service-requests`) has 74 test cases (SR-001 … SR-074),
+automated in `tests/service-request/` with the `ServiceRequestsPage` page object:
 
-| Sheet | Tests | Spec |
+| Area | Tests | Spec |
 |---|---|---|
-| Test Cases | LR-001 … LR-166, one test each, titled from the sheet | `general-tabs`, `filters-views`, `filter-combinations`, `filter-counts`, `overview`, `drill-down`, `source-channel`, `aging`, `qualification`, `scorecard`, `cross-page` |
-| Drill-down Verification | LR-DDV-01 … 13: every count link on the page, live | `drill-verification.spec.ts` |
-| Clickable Map | LR-MAP-01 … 32: each element is (or is not) clickable and does what the sheet says | `clickable-map.spec.ts` |
-| Observations | LR-OBS-01 … 13: defects fail until fixed; questions record the current behaviour | `observations.spec.ts` |
-| (all) | LR-COV-01 fails if any test case in the sheet has no test | `coverage.spec.ts` |
+| Page: navigation, header, help panel, empty panel | SR-001 … 008 | `page.spec.ts` |
+| Queue: count vs API, columns, rows, sorting, selection | SR-009 … 018 | `queue.spec.ts` |
+| Search and status filter | SR-019 … 031 | `search-filter.spec.ts` |
+| New request form: fields, defaults, validation, Cancel | SR-032 … 045 | `new-request.spec.ts` |
+| Ticket detail (an existing ticket, read only) | SR-052 … 059 | `ticket-detail.spec.ts` |
+| Create → update → reply → attach (one new ticket) | SR-046 … 051, 060 … 070 | `lifecycle.spec.ts` |
+| Customer Portal / other roles (Skipped, manual) | SR-071 … 074 | `manual.spec.ts` |
+| Every workbook case has a test | SR-COV-01 | `coverage.spec.ts` |
 
 ```bash
-npm run test:lead-workbook                       # everything above (the drill-down verification takes ~15 min)
-npx playwright test tests/lead-reports -g "LR-044"
-npx playwright test tests/lead-reports --grep-invert LR-DDV   # skip the long drill-down sweep
+npm run test:service-requests                        # all of the above
+npx playwright test tests/service-request -g "SR-046"
 ```
 
-No report figure is hard-coded: every expected value is read from the page and checked against its
-relationship (rates = part ÷ Leads Captured, rows add up to the Total row, every drill-down lists exactly
-the number clicked, exports match the screen, "as of today" figures don't move with the period, …).
-Test names, steps and expected results in the Excel report come from the workbook, so edit them there.
+**This suite writes QA data.** `lifecycle.spec.ts` creates ONE ticket per run (subject `[AUTO] Service request test <timestamp>`),
+then changes it, replies to it and attaches a file to it. It never touches any other ticket. Set `SKIP_SR_WRITE_TESTS=true` in `.env` to skip it,
+and set `SR_CUSTOMER` to choose the customer. SR-069 and SR-070 need S3 configured on the backend.
+Test titles, steps and expected results come from the workbook, so edit them there.
 
 ## Workbook scenarios (RA-001 … RA-133)
 The 133 scenarios in `Testcase/Reports_Analytics_Test_Scenarios.xlsx` are automated in `tests/scenarios/`,

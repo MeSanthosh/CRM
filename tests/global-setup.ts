@@ -40,7 +40,11 @@ async function type(page: Page, name: string, value: string) {
 export async function login(page: Page, user: string, pass: string) {
   await page.goto('/login');
   await page.waitForLoadState('networkidle').catch(() => {}); // login options load after the page and re-render the form
-  await page.getByRole('button', { name: 'Password Login' }).click();
+  const passwordLogin = page.getByRole('button', { name: 'Password Login' });
+  if (await passwordLogin.count()) await passwordLogin.click();
+  // since build v1.0 0111 the form has a Database dropdown that defaults to crm_dev
+  const database = page.locator('form.crm-login-form select[aria-label="Database"]');
+  if (await database.count()) await database.selectOption(process.env.CRM_DATABASE || 'crm_qa');
   // typing in one field can reset the other, so re-check both right before submitting
   await expect(async () => {
     await type(page, 'username', user);
