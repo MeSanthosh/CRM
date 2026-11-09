@@ -37,6 +37,20 @@ export class ReportCatalogPage extends BasePage {
     };
   }
 
+  /** Every report in the catalogue: each tab's cards (code, title, category tab). */
+  async allCards(): Promise<{ code: string; title: string; tab: string }[]> {
+    await this.open();
+    const tabs = (await at(this.page, REP_XP.catalogTabLabels).allInnerTexts()).map(t => t.trim());
+    const out: { code: string; title: string; tab: string }[] = [];
+    for (const tab of tabs) {
+      await this.openTab(tab);
+      for (const code of (await at(this.page, REP_XP.catalogCardCodes).allInnerTexts()).map(c => c.trim())) {
+        out.push({ code, title: (await at(this.page, REP_XP.cardTitle(code)).first().innerText()).trim(), tab });
+      }
+    }
+    return out;
+  }
+
   /** Clicks "Open <code> →" on a card and waits for the report page. */
   async openReport(code: string) {
     await at(this.page, REP_XP.cardOpen(code)).click();

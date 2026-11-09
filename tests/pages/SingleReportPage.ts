@@ -23,6 +23,8 @@ export type ReportData = {
   total: number;
   columns: { key: string; label: string; format: string }[];
   rows: Record<string, unknown>[];
+  /** The table's total row, when it has one */
+  totalRow?: Record<string, unknown>;
 };
 
 export type Option = { value: string; label: string };
@@ -58,7 +60,7 @@ export class SingleReportPage extends ReportModulePage {
         const table = body.tables?.find((t: { key: string }) => t.key === spec.panelId);
         if (!table) return;
         const query = selectionOf(new URL(r.url()).searchParams);
-        this.seen.set(keyOf(query), { query, meta: body.meta, total: table.total, columns: table.columns, rows: table.rows });
+        this.seen.set(keyOf(query), { query, meta: body.meta, total: table.total, columns: table.columns, rows: table.rows, totalRow: table.totalRow });
       } catch { /* page closed or not JSON */ }
     });
   }
@@ -96,6 +98,15 @@ export class SingleReportPage extends ReportModulePage {
     const cells = await this.tableRoot.locator('tbody tr').evaluateAll(trs =>
       trs.map(tr => [...tr.children].map(td => (td as HTMLElement).innerText.trim())));
     return cells.filter(c => c.length === headers.length).map(c => Object.fromEntries(headers.map((h, i) => [h, c[i]])));
+  }
+
+  /** The table's total row (in <tfoot>) keyed by column header, or undefined when it has none. */
+  async totalRow(): Promise<Record<string, string> | undefined> {
+    const headers = await this.headers();
+    const foot = this.tableRoot.locator('tfoot tr');
+    if (!(await foot.count())) return undefined;
+    const cells = await foot.first().locator('td, th').allInnerTexts();
+    return Object.fromEntries(headers.map((h, i) => [h, (cells[i] ?? '').trim()]));
   }
 
   /** Record IDs (first column) shown in the table. */

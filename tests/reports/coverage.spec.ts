@@ -4,7 +4,7 @@ import path from 'path';
 import { test, expect } from '../auth';
 import { REP_CASES, TAG } from './catalog';
 
-test('REP-COV-01 Every test case in Reports_Test_Cases.xlsx has a test', { tag: TAG }, () => {
+test('REP-COV-01 Every test case in the report workbooks (Testcase/Reports) has a test', { tag: TAG }, () => {
   const root = path.resolve(__dirname, '../..');
   const listing = execSync('npx playwright test tests/reports/ --list --reporter=list', { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
   const automated = [...listing.matchAll(/›\s(REP-\d{3})\s/g)].map(m => m[1]);

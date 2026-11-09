@@ -19,6 +19,7 @@ import { ServiceRequestsPage } from './ServiceRequestsPage';
 import { ReportCatalogPage } from './ReportCatalogPage';
 import { SingleReportPage } from './SingleReportPage';
 import { LeadsListPage } from './LeadsListPage';
+import { CrmData } from './CrmData';
 import { REP_TEXT } from '../locators';
 
 export type Pages = {
@@ -38,6 +39,12 @@ export type Pages = {
   reportCatalog: ReportCatalogPage;
   leadRegister: SingleReportPage;
   leadsList: LeadsListPage;
+  executiveDashboard: SingleReportPage;
+  controlAssumptions: SingleReportPage;
+  dataDictionary: SingleReportPage;
+  propertySummary: SingleReportPage;
+  revenueManagement: SingleReportPage;
+  crmData: CrmData;
 };
 
 export const test = base.extend<Pages>({
@@ -57,6 +64,12 @@ export const test = base.extend<Pages>({
   reportCatalog: async ({ page }, use) => use(new ReportCatalogPage(page)),
   leadRegister: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.leadRegister)),
   leadsList: async ({ page }, use) => use(new LeadsListPage(page)),
+  executiveDashboard: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.executiveDashboard)),
+  controlAssumptions: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.controlAssumptions)),
+  dataDictionary: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.dataDictionary)),
+  propertySummary: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.propertySummary)),
+  revenueManagement: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.revenueManagement)),
+  crmData: async ({ page }, use) => use(new CrmData(page)),
 });
 
 export { expect } from '../auth';

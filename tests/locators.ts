@@ -342,6 +342,9 @@ export const REP_XP = {
   catalogTab: (label: string) => `//main//button[@role='tab'][.//span[contains(@class,'crm-report-tab-btn-label')][normalize-space()=${xl(label)}]]`,
   catalogTabBadge: (label: string) => `${REP_XP.catalogTab(label)}//span[contains(@class,'crm-report-tab-badge')]`,
   catalogCards: `//main//article[contains(@class,'crm-report-catalog-card')]`,
+  /** Labels of every category tab, and the code badge of every card on the open tab */
+  catalogTabLabels: `//main//button[@role='tab']//span[contains(@class,'crm-report-tab-btn-label')]`,
+  catalogCardCodes: `//main//article[contains(@class,'crm-report-catalog-card')]//span[contains(@class,'crm-report-code-badge')]`,
   catalogCard: repCard,
   cardTitle: (code: string) => `${repCard(code)}//h4[contains(@class,'crm-report-catalog-card-title')]`,
   cardDescription: (code: string) => `${repCard(code)}//p[contains(@class,'crm-report-catalog-card-desc')]`,
@@ -360,6 +363,10 @@ export const REP_XP = {
   panelTable: (panelId: string) => `//main//section[@id=${xl(panelId)}]//table[contains(@class,'crm-report-table')]`,
   panelExport: (panelId: string) => `//main//section[@id=${xl(panelId)}]//button[contains(@class,'crm-export-button')]`,
   definitionTerms: `//main//details[contains(@class,'crm-report-definitions')]//li/strong`,
+  /** The whole "How these numbers are calculated" section (its text holds the stated targets) */
+  definitions: `//main//details[contains(@class,'crm-report-definitions')]`,
+  /** Every entry of that section, nested ones included ("Owner: … (CFO, Sales Director, …)") */
+  definitionItems: `//main//details[contains(@class,'crm-report-definitions')]//li`,
   userName: `//button[contains(@class,'crm-user-menu-button')]//span[contains(@class,'crm-user-menu-text')]/strong`,
   /** Any element showing exactly this text (e.g. a Lead ID in the Leads module detail) */
   exactText: (text: string) => `//main//*[normalize-space()=${xl(text)}]`,
@@ -398,6 +405,118 @@ export const REP_TEXT = {
     backLabel: '← Back to Lead Reports',
     /** Filter label → query parameter the report request carries for it */
     filters: { Project: 'projectCode', Salesperson: 'ownerUserId' },
+  },
+  executiveDashboard: {
+    code: 'RPT-01',
+    category: 'Executive & Governance',
+    title: 'Report #01 — Executive Dashboard (KPI vs Target)',
+    route: '/reports/governance',
+    query: 'report=executiveDashboard01',
+    panelId: 'executiveDashboard01',
+    columns: ['Metric Category', 'Baseline Target', 'Current Actual', 'Variance ($)', 'Variance (%)', 'Status Flag',
+      'Primary Driver', 'Control Action'],
+    backLabel: '← Back to Executive & Governance',
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId' },
+    /** Rows of the scorecard, in order (the methodology lists the same five) */
+    metrics: { gross: 'Gross Portfolio Realization', spas: 'Executed SPAs', escrow: 'Escrow Collections',
+      broker: 'Broker Commissions Accrued', roas: 'Marketing ROAS' },
+    /** Other reports of the category, shown as pills next to RPT-01 */
+    siblings: ['RPT-03', 'RPT-23'],
+    exportSheet: 'Executive Dashboard',
+    /** Status flags as the methodology defines them: performing well / within a cost budget */
+    goodFlags: ['ON_TARGET', 'EXCEEDED', 'HEALTHY', 'OPTIMAL'],
+    budgetFlag: 'ON_BUDGET',
+    /** Section headings of the methodology ("Baseline Target: … targets …"), in page order */
+    methodology: { baseline: 'Baseline Target', actual: 'Current Actual' },
+  },
+  /** RPT-03 Control & Assumptions Register: the commercial parameters RPT-01 and the CRM models use */
+  controlAssumptions: {
+    code: 'RPT-03',
+    category: 'Executive & Governance',
+    title: 'Report #03 — Control & Assumptions Register',
+    route: '/reports/governance',
+    query: 'report=controlAssumptions03',
+    panelId: 'controlAssumptions03',
+    columns: ['Parameter', 'Base Value', 'Optimistic', 'Conservative', 'Unit of Measure', 'Owner', 'Review', 'Control Logic'],
+    backLabel: '← Back to Executive & Governance',
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId' },
+    exportSheet: 'Control & Assumptions',
+    brokerRate: 'Standard Broker Commission Rate',
+    tierBonus: 'Tier 1 Gold Broker Bonus Accelerator',
+    /** Unit of Measure values: a percentage, and a rate per area (its parameter name ends in the unit types) */
+    percentUnit: 'Percentage',
+    perArea: '/ sqm',
+  },
+  /** RPT-23 Master Data Dictionary & Report Index: KPI definitions, formulas and source sheets */
+  dataDictionary: {
+    code: 'RPT-23',
+    category: 'Executive & Governance',
+    title: 'Report #23 — Master Data Dictionary & Report Index',
+    route: '/reports/governance',
+    query: 'report=dataDictionary23',
+    panelId: 'dataDictionary23',
+    columns: ['Term Code', 'KPI / Control Term', 'Technical Definition', 'Standard Formula / Calculation', 'Primary Data Source', 'Governance Control'],
+    backLabel: '← Back to Executive & Governance',
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId' },
+    exportSheet: 'Data Dictionary & Controls',
+    /** Words of the report description that promise more than KPI definitions */
+    indexPromise: 'all business reports',
+    cadencePromise: 'refresh cadence',
+    /** Prefix of the numbered reports in the catalogue ("RPT-04" ↔ "Sheet 04") */
+    reportPrefix: 'RPT-',
+  },
+  /** RPT-21 Summary by Property Type: inventory and sales totals per property category */
+  propertySummary: {
+    code: 'RPT-21',
+    category: 'Inventory Reports',
+    title: 'Report #21 — Summary by Property Type',
+    route: '/reports/inventory',
+    query: 'report=propertyTypeSummary21',
+    panelId: 'propertyTypeSummary21',
+    columns: ['Property Category', 'Total Keys', 'Total Carpet Area (sqm)', 'Base Gross Value ($)', 'SPA Sold Keys',
+      'Contracted SPA Value ($)', 'Unsold Value ($)', 'Absorption %'],
+    backLabel: '← Back to Inventory Reports',
+    /** This report has no Salesperson filter */
+    filters: { Project: 'projectCode' },
+    filterLabels: ['Period', 'Project'],
+    siblings: ['RPT-18', 'RPT-04'],
+    exportSheet: 'Summary by Property Type',
+    totalLabel: 'TOTAL PORTFOLIO SUMMARY',
+    /** Data keys of the columns: inventory columns (no period) and sales columns (executed SPAs) */
+    keys: { category: 'propertyCategory', keys: 'totalKeys', area: 'totalCarpetAreaSqm', base: 'baseGrossValue',
+      sold: 'spaSoldKeys', contracted: 'contractedSpaValue', unsold: 'unsoldValue', absorption: 'absorptionPct' },
+  },
+  /** RPT-18 Revenue Management Engine: quarterly absorption and dynamic rate action per product (sub-category) */
+  revenueManagement: {
+    code: 'RPT-18',
+    category: 'Inventory Reports',
+    title: 'Report #18 — Revenue Management Engine',
+    route: '/reports/inventory',
+    query: 'report=revenueManagement18',
+    panelId: 'revenueManagement18',
+    columns: ['Property Sub-Category', 'Total Units', 'Target Qtr Absorption', 'Actual Qtr Absorption', 'Target Achievement %',
+      'Demand Trigger Status', 'Automated Pricing Action', 'Rate Adjustment %', 'Base Avg Rate / sqm', 'Adjusted Rate / sqm'],
+    backLabel: '← Back to Inventory Reports',
+    filters: { Project: 'projectCode' },
+    filterLabels: ['Period', 'Project'],
+    siblings: ['RPT-21', 'RPT-04'],
+    exportSheet: 'Revenue Management Engine',
+    keys: { name: 'propertySubCategory', units: 'totalUnits', target: 'targetQtrAbsorption', actual: 'actualQtrAbsorption',
+      achievement: 'targetAchievementPct', status: 'demandTriggerStatus', action: 'automatedPricingAction',
+      adjustment: 'rateAdjustmentPct', base: 'baseAvgRateSqm', adjusted: 'adjustedRateSqm' },
+    /**
+     * The engine's pricing rule as its methodology states it: status → action ("Escalate Price (+3.0%) … for high-demand
+     * apartments", "(+5.0%) … for high-demand penthouses", Maintain for on-target, Discount for slowdown).
+     */
+    actions: {
+      HIGH_DEMAND: { premium: 'Escalate Price (+5.0%)', standard: 'Escalate Price (+3.0%)' },
+      ON_TARGET: 'Maintain Base Rate',
+      CRITICAL_SLOWDOWN: 'Apply Discount (-5.0%)',
+    },
+    /** Unit type priced at the premium escalation */
+    premiumType: 'Penthouse',
+    /** Reservation statuses that count as a confirmed reservation (cancelled ones do not) */
+    confirmedReservations: ['APPROVED', 'CONVERTED_TO_CONTRACT'],
   },
   // chip labels since build index-DGibO5LD (were "Total Records in Report" / "Report Created Date & Time")
   tiles: { total: 'Total Records', created: 'Report Created', createdBy: 'Created By' },
