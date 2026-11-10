@@ -518,6 +518,83 @@ export const REP_TEXT = {
     /** Reservation statuses that count as a confirmed reservation (cancelled ones do not) */
     confirmedReservations: ['APPROVED', 'CONVERTED_TO_CONTRACT'],
   },
+  /** RPT-16 Sales Funnel & Conversion Analysis: five pipeline stages from lead intake to executed SPA */
+  salesFunnel: {
+    code: 'RPT-16',
+    category: 'Sales Reports',
+    title: 'Report #16 — Sales Funnel & Conversion Analysis',
+    route: '/reports/sales',
+    query: 'report=salesFunnel16',
+    panelId: 'salesFunnel16',
+    columns: ['Stage Code', 'Funnel Stage Name', 'Prospect Count', 'Aggregate Value ($)', 'Stage Conversion %',
+      'Cumulative Conversion %', 'Avg Stage Velocity (Days)', 'Leakage Control Strategy'],
+    backLabel: '← Back to Sales Reports',
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId', Broker: 'brokerId', Campaign: 'campaignId' },
+    filterLabels: ['Period', 'Project', 'Salesperson', 'Broker', 'Campaign'],
+    siblings: ['RPT-19', 'RPT-20', 'RPT-07', 'SLS-04'],
+    exportSheet: 'Sales Funnel & Conversion',
+    keys: { code: 'stageCode', name: 'funnelStageName', count: 'prospectCount', value: 'aggregateValue',
+      stage: 'stageConversionPct', cumulative: 'cumulativeConversionPct', velocity: 'avgStageVelocityDays', leakage: 'leakageControlStrategy' },
+    /** The five stages in funnel order (the methodology lists the same names); each is counted from its own module */
+    stages: ['Lead Intake', 'SQL (Qualified)', 'Opportunity / VR Presentation', 'Reservation (Hold)', 'SPA Executed & Active'],
+    /** Lead statuses that have passed qualification, and the reservation status that left the funnel */
+    qualifiedStatuses: ['QUALIFIED', 'CONVERTED'],
+    cancelledReservation: 'CANCELLED',
+  },
+  /** RPT-19 Smart Sales Forecast: probability-weighted pipeline and unit absorption per forecast month */
+  smartForecast: {
+    code: 'RPT-19',
+    category: 'Sales Reports',
+    title: 'Report #19 — Smart Sales Forecast',
+    route: '/reports/sales',
+    query: 'report=smartForecast19',
+    panelId: 'smartForecast19',
+    columns: ['Forecast Period', 'Pipeline Opportunity Volume', 'Weighted Conversion Probability %', 'Expected Unit Sales Absorption',
+      'Avg Selling Price / Unit ($)', 'Projected Monthly Contract Sales ($)', 'Cumulative Projected Sales ($)'],
+    backLabel: '← Back to Sales Reports',
+    /** No filters or All / Mine since build index-Dmirkzo4 (the toolbar is hidden on this report) */
+    filters: {},
+    siblings: ['RPT-16', 'RPT-20', 'RPT-07', 'SLS-04'],
+    exportSheet: 'Smart Sales Forecast',
+    totalLabel: 'TOTAL FORECAST',
+    keys: { period: 'forecastPeriod', volume: 'pipelineOpportunityVolume', probability: 'weightedConversionProbabilityPct',
+      absorption: 'expectedUnitSalesAbsorption', price: 'avgSellingPriceUnit', monthly: 'projectedMonthlyContractSales',
+      cumulative: 'cumulativeProjectedSales' },
+    /** Opportunity statuses: still in the pipeline, won and lost (the closing yield is won ÷ won + lost) */
+    openStatus: 'OPEN',
+    wonStatus: 'WON',
+    lostStatus: 'LOST',
+    /** Inventory availability of a unit that is for sale */
+    available: 'AVAILABLE',
+    /** RPT-20 Project Cash Flow, whose forecast months use the same "Mnn (Mon YYYY)" labels */
+    cashFlow: { code: 'RPT-20', panelId: 'projectCashFlow20', period: 'forecastPeriod' },
+  },
+  /** RPT-20 Project Cash Flow Forecast: monthly buyer inflows, outflows, net cash and escrow runway */
+  cashFlow: {
+    code: 'RPT-20',
+    category: 'Sales Reports',
+    title: 'Report #20 — Project Cash Flow Forecast',
+    route: '/reports/sales',
+    query: 'report=projectCashFlow20',
+    panelId: 'projectCashFlow20',
+    columns: ['Forecast Period', 'Estimated Buyer Inflows ($)', 'Projected Dev Outflows ($)', 'Broker Comm Outflows ($)',
+      'Mkt OpEx Outflows ($)', 'Net Monthly Cash ($)', 'Closing Escrow Fund Balance ($)'],
+    backLabel: '← Back to Sales Reports',
+    /** No filters or All / Mine since build index-Dmirkzo4 */
+    filters: {},
+    siblings: ['RPT-16', 'RPT-19', 'RPT-07', 'SLS-04'],
+    exportSheet: 'Project Cash Flow Forecast',
+    totalLabel: 'TOTAL CASH FLOW',
+    keys: { period: 'forecastPeriod', inflows: 'estimatedBuyerInflows', dev: 'projectedDevOutflows', broker: 'brokerCommOutflows',
+      mkt: 'mktOpexOutflows', net: 'netMonthlyCash', balance: 'closingEscrowFundBalance' },
+    /** Methodology entries that state the escrow formula and the horizon totals */
+    runwayTerm: 'Escrow Cash Reserve Runway',
+    summaryTerm: 'Total Cash Flow Summary',
+    /** Broker commission timing as the methodology states it: half at signing, half once this share is collected */
+    brokerSplit: 0.5,
+    /** RPT-10 Buyer Payment Ledger: receipts and their escrow status */
+    ledger: { route: '/reports/collections', panelId: 'buyerPaymentLedger10', received: 'amountReceived', status: 'bankStatus', cleared: 'Cleared in Escrow' },
+  },
   // chip labels since build index-DGibO5LD (were "Total Records in Report" / "Report Created Date & Time")
   tiles: { total: 'Total Records', created: 'Report Created', createdBy: 'Created By' },
   periods: ['This month', 'Last month', 'This quarter', 'Last quarter', 'Year to date', 'Last 12 months', 'Custom dates'],

@@ -28,9 +28,9 @@ export const reportNo = (code: string, prefix: string) =>
 /** Spreadsheet functions a formula calls ("SUMIFS(Unit_Value, …)" → ["SUMIFS"]). */
 export const functionsIn = (formula: string) => [...formula.matchAll(/\b([A-Z][A-Z0-9_.]*)\s*\(/g)].map(m => m[1]);
 
-/** "(e.g. KPI-01 to KPI-06)" → the codes in that range: KPI-01 … KPI-06. */
+/** "(e.g. KPI-01 to KPI-06)" or "(STG-01 through STG-05)" → the codes in that range. */
 export function codeRange(text: string): string[] {
-  const m = text.match(/([A-Z]+)-(\d+)\s+to\s+\1-(\d+)/);
+  const m = text.match(/([A-Z]+)-(\d+)\s+(?:to|through)\s+\1-(\d+)/);
   if (!m) return [];
   const width = m[2].length;
   const out: string[] = [];

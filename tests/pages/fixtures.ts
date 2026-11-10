@@ -44,6 +44,9 @@ export type Pages = {
   dataDictionary: SingleReportPage;
   propertySummary: SingleReportPage;
   revenueManagement: SingleReportPage;
+  salesFunnel: SingleReportPage;
+  smartForecast: SingleReportPage;
+  cashFlow: SingleReportPage;
   crmData: CrmData;
 };
 
@@ -69,6 +72,9 @@ export const test = base.extend<Pages>({
   dataDictionary: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.dataDictionary)),
   propertySummary: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.propertySummary)),
   revenueManagement: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.revenueManagement)),
+  salesFunnel: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.salesFunnel)),
+  smartForecast: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.smartForecast)),
+  cashFlow: async ({ page }, use) => use(new SingleReportPage(page, REP_TEXT.cashFlow)),
   crmData: async ({ page }, use) => use(new CrmData(page)),
 });
 

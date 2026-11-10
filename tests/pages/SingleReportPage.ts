@@ -160,23 +160,33 @@ export class SingleReportPage extends ReportModulePage {
     await this.settle();
   }
 
+  /** False on reports that show no All / Mine toggle (fixed reports since build index-Dmirkzo4). */
   async isMine(): Promise<boolean> {
+    if (!(await this.viewButton('Mine').count())) return false;
     return (await this.viewButton('Mine').getAttribute('aria-pressed')) === 'true';
   }
 
-  /** Query parameters of filters the page does not show at the moment (Mine hides Salesperson). */
+  /** True when the page shows the filter toolbar (fixed reports hide it since build index-Dmirkzo4). */
+  async hasFilters(): Promise<boolean> {
+    return (await this.periodSelect.count()) > 0;
+  }
+
+  /** Query parameters of filters the page does not show at the moment (Mine hides Salesperson; fixed reports hide all). */
   async hiddenParams(): Promise<string[]> {
-    const hidden: string[] = [];
+    const hidden: string[] = (await this.hasFilters()) ? [] : ['period', 'from', 'to'];
     for (const [label, param] of Object.entries(this.spec.filters ?? {})) if (!(await this.filter(label).count())) hidden.push(param);
     return hidden;
   }
 
   /** The selection shown on screen, as the query parameters the report request should carry. */
   async selection(): Promise<Record<string, string>> {
-    const q: Record<string, string> = { period: await this.period() };
-    if (q.period === 'custom') {
-      q.from = await at(this.page, XP.reportFrom).inputValue();
-      q.to = await at(this.page, XP.reportTo).inputValue();
+    const q: Record<string, string> = {};
+    if (await this.hasFilters()) {
+      q.period = await this.period();
+      if (q.period === 'custom') {
+        q.from = await at(this.page, XP.reportFrom).inputValue();
+        q.to = await at(this.page, XP.reportTo).inputValue();
+      }
     }
     for (const [label, param] of Object.entries(this.spec.filters ?? {})) {
       if (await this.filter(label).count()) q[param] = await this.filter(label).inputValue();
