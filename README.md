@@ -19,6 +19,26 @@ npm run test:headed               # watch it run
 npm run report                    # HTML pass/fail report (values shown as annotations)
 ```
 
+## Reference Data Management test cases
+The 14 cases in `Testcase/Reference_Data_Test_Cases.xlsx` are automated in `tests/reference-data/`.
+They cover the live register, filters, search, pagination, and category/group/value forms. The suite
+is read-only: it does not save or change reference data.
+
+```bash
+npm run test:reference-data
+npx playwright test tests/reference-data -g "RDM-010"
+```
+
+## Preferences test cases
+The 7 cases in `Testcase/Preferences_Test_Cases.xlsx` are automated in `tests/preferences/`.
+They cover General, Notifications, Security, and Operations & ETL settings. Tests only inspect settings;
+they do not save changes, send email, or run ETL jobs.
+
+```bash
+npm run test:preferences
+npx playwright test tests/preferences -g "PREF-004"
+```
+
 ## Page tests: one spec per hub card (Page Object Model)
 The Reports & Analytics hub lists 11 cards. Each card's page has its own page object in `tests/pages/`
 and its own spec in `tests/modules/`, so you can run one page at a time:

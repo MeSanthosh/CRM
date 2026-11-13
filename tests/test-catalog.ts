@@ -16,6 +16,8 @@ import { CONTRACT_CASES } from './contracts-page/shared';
 import { LEAD_INSIGHTS_CASES } from './lead-insights/shared';
 import { OPPORTUNITY_CASES } from './opportunities-page/shared';
 import { RESERVATION_CASES } from './reservations-page/shared';
+import { REFERENCE_DATA_CASES } from './reference-data/shared';
+import { PREFERENCES_CASES } from './preferences/shared';
 import type { PageCase } from './leads-page/catalog';
 import path from 'path';
 import * as XLSX from 'xlsx';
@@ -205,6 +207,8 @@ const PAGE_SUITES: Record<string, { cases: Record<string, PageCase>; module: str
   LSI: { cases: LEAD_INSIGHTS_CASES, module: 'Lead Insights Page', path: '/leads/sources' },
   OPP: { cases: OPPORTUNITY_CASES, module: 'Opportunities Page', path: '/opportunities' },
   RSV: { cases: RESERVATION_CASES, module: 'Reservations Page', path: '/reservations' },
+  RDM: { cases: REFERENCE_DATA_CASES, module: 'Reference Data Management', path: ROUTES.referenceData },
+  PREF: { cases: PREFERENCES_CASES, module: 'Preferences', path: ROUTES.preferences },
 };
 
 export function caseInfo(id: string, title: string): CaseInfo {
