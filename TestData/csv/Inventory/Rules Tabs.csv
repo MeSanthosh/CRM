@@ -1,0 +1,8 @@
+﻿Tab,Table Columns,Matrix Column
+1. Base Rates,"Product Code, Product Name, Base Rate ($ / sqm)",Base Rate
+2. Floor Bands,"Floor Band Label, Min Floor, Max Floor, Adjustment %",Floor %
+3. View %,"Code, View Category, Adjustment %",View
+4. Orientation %,"Code, Orientation, Adjustment %",Orient.
+5. Position %,"Code, Position, Adjustment %",Pos.
+6. Commercial Tiers & Governance,,"Tier columns, Floor (-N%)"
+🔍 Live Simulator,,

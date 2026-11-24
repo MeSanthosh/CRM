@@ -1,0 +1,13 @@
+﻿Section,Caption,Matrix Column,Compare
+Identification,UNIT,Unit Code,same
+Identification,PRODUCT,Product,starts with
+Identification,BLOCK / FLOOR,Blk/Flr,block code / floor
+Identification,STATUS,Status,same
+Identification,PRICE,Current Price,amount
+Sales,OPERATIVE CURRENT PRICE,Current Price,amount
+Sales,PRICE FLOOR (MIN. PRICE),Floor (,amount
+Sales,ADJUSTED STANDARD PRICE,Adj Std,amount
+Sales,STANDARD BASE PRICE,Std Price,amount
+Sales,Total Premium %,Total %,percent
+Sales,Net Unit Adj ($),Net Adj,amount
+Sales,Other Adj,Other %,percent

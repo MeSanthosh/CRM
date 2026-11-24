@@ -1,0 +1,4 @@
+﻿Tab,Unique Text,Data Source
+Commercial / Sales,SALES FUNNEL (THIS MONTH),GET /analytics/snapshots/<period>
+Monthly Sales & Marketing,1. SALES SUMMARY,GET /analytics/snapshots/<period>
+Lead & Customer Insights,LEADS CAPTURED,GET /dashboard/summary?view=audience&period=<period>

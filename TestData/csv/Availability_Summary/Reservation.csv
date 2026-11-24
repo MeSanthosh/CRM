@@ -1,0 +1,10 @@
+﻿Setting,Value,What it means
+Route,/reservations,Page Start Reservation opens
+Notice Title,Unit Selected,Pop-up on the Reservations page
+Notice Text,Unit {unit} is selected.,Start of its text ({unit} = the unit code)
+Form Heading,Create Reservation,Form shown after OK
+Unit Label,Unit,Form field that must show the unit
+Price Label,Unit Price,Form field: the unit price
+Deposit Label,Reservation Deposit,Form field: deposit (its % is in the label)
+Create Button,Create Reservation,Never clicked by the tests
+Close Button,Close,Leaves the form without a reservation

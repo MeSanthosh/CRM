@@ -11,9 +11,13 @@ import { LEADS_PAGE_CASES } from './leads-page/catalog';
 import { LEAD_DETAIL_CASES } from './lead-detail/shared';
 import { SECURITY_CASES } from './security/shared';
 import { INVENTORY_CASES } from './inventory-page/shared';
+import { AVS_CASES } from './availability-summary/shared';
+import { ADM_CASES } from './admin-governance/shared';
 import { PROPOSAL_CASES } from './proposals-page/shared';
 import { CONTRACT_CASES } from './contracts-page/shared';
 import { LEAD_INSIGHTS_CASES } from './lead-insights/shared';
+import { ED_CASES } from './executive-dashboards/shared';
+import { RSE_CASES } from './role-sales-executive/shared';
 import { OPPORTUNITY_CASES } from './opportunities-page/shared';
 import { RESERVATION_CASES } from './reservations-page/shared';
 import type { PageCase } from './leads-page/catalog';
@@ -200,11 +204,16 @@ function stepsOf(c: PageCase): string[] {
 /** Page suites with their own workbook (Testcase/<Page>_Page_Test_Cases.xlsx): ID prefix → cases, report name, page. */
 const PAGE_SUITES: Record<string, { cases: Record<string, PageCase>; module: string; path: string }> = {
   IVP: { cases: INVENTORY_CASES, module: 'Inventory Page', path: '/inventory' },
+  AVS: { cases: AVS_CASES, module: 'Availability Summary', path: '/inventory' },
+  ADM: { cases: ADM_CASES, module: 'Admin & Governance', path: '/configuration' },
   PRO: { cases: PROPOSAL_CASES, module: 'Proposals Page', path: '/proposals' },
   SPC: { cases: CONTRACT_CASES, module: 'SPA Contracts Page', path: '/spa-contracts' },
   LSI: { cases: LEAD_INSIGHTS_CASES, module: 'Lead Insights Page', path: '/leads/sources' },
   OPP: { cases: OPPORTUNITY_CASES, module: 'Opportunities Page', path: '/opportunities' },
   RSV: { cases: RESERVATION_CASES, module: 'Reservations Page', path: '/reservations' },
+  EXD: { cases: ED_CASES, module: 'Executive Dashboards', path: '/dashboards' },
+  MSW: { cases: ED_CASES, module: 'Executive Dashboards', path: '/' },
+  RSE: { cases: RSE_CASES, module: 'Role Sales Executive', path: '/' },
 };
 
 export function caseInfo(id: string, title: string): CaseInfo {

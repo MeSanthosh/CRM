@@ -1,0 +1,19 @@
+﻿Match Mode,Minimum Fields,First Name Check,Last Name Check
+All enabled fields must match,,On,On
+All enabled fields must match,,Off,On
+All enabled fields must match,,On,Off
+All enabled fields must match,,Off,Off
+Any enabled field may match,,On,On
+Any enabled field may match,,Off,On
+Any enabled field may match,,On,Off
+Any enabled field may match,,Off,Off
+Minimum matched fields,1,On,On
+Minimum matched fields,1,Off,On
+Minimum matched fields,1,On,Off
+Minimum matched fields,1,Off,Off
+Minimum matched fields,2,On,On
+Minimum matched fields,2,Off,On
+Minimum matched fields,2,On,Off
+Minimum matched fields,2,Off,Off
+Minimum matched fields,3,On,On
+Minimum matched fields,4,On,On

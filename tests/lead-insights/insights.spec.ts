@@ -117,6 +117,8 @@ test.describe('Lead Insights · Drill-down', () => {
     for (const r of await insights.sources()) {
       await insights.open();
       await insights.clickSource(r.source);
+      // the list can show "Leads 0 matching" for a moment while it loads: wait up to 10 s for the count to settle
+      await expect.poll(() => insights.drillCount(S('Drill Count Word')), { timeout: 10_000 }).toBe(r.total).catch(() => {});
       const text = await insights.text();
       const count = await insights.drillCount(S('Drill Count Word'));
       const leads = await insights.drillLeads();

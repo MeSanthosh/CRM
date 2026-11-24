@@ -1,0 +1,11 @@
+﻿Caption,Meaning
+Carpet Area × Base Rate:,"line ""<carpet> sqm × $<rate> = $<standard>"""
+Floor Adjustment:,floor %
+View Adjustment:,view %
+Orientation Adjustment:,orientation %
+Position Adjustment:,position %
+Total Unit Premium %:,"total % and $ ""+13% ($+109,200)"""
+Adjusted Standard Price:,adjusted standard
+Commercial Tier Pricing:,"start of the tier lines ""<tier> (<%>): $<price>"""
+Operative Current Price,current price (caption ends with the chosen tier)
+Price Floor,"price floor (caption ""Price Floor (-N%):"")"

@@ -1,0 +1,7 @@
+﻿Tab,Section,Heading,Save Button
+General,Application defaults,Application defaults,Save application defaults
+General,Time & locale,Time & locale,Save time & locale
+Notifications,Email (SMTP),Email (SMTP),Save SMTP settings
+Notifications,Notification channel,Notification Channels,Save Notification Channels
+Security,,Security & Authentication Policies,Save Security Policies
+Operations & ETL,,Analytical Data Movement (Operations & ETL),

@@ -25,7 +25,21 @@ export class Notice {
       return undefined;
     }
     await this.page.waitForTimeout(150); // the text renders just after the frame
-    return this.read();
+    // since build 1411-23 the "Lead Created" pop-up can close by itself at once: read it in one go, never wait for it
+    return this.snapshot();
+  }
+
+  /** Reads the last pop-up shown now, without waiting (undefined when none). */
+  private async snapshot(): Promise<NoticeInfo | undefined> {
+    const all = await this.page.locator(`xpath=${XP.notice}`).evaluateAll(els => els.map(e => ({
+      cls: e.getAttribute('class') ?? '',
+      title: ((e.querySelector('h3') as HTMLElement | null)?.innerText ?? '').trim(),
+      buttons: [...e.querySelectorAll('button')].map(b => (b as HTMLElement).innerText.trim()),
+      text: (e as HTMLElement).innerText.replace(/\s+/g, ' ').trim(),
+    })));
+    const n = all[all.length - 1];
+    if (!n) return undefined;
+    return { title: n.title, text: n.text, buttons: n.buttons, kind: /success/.test(n.cls) ? 'success' : /error/.test(n.cls) ? 'error' : 'info' };
   }
 
   async read(): Promise<NoticeInfo> {

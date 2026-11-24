@@ -1,0 +1,6 @@
+﻿Filter,Label,All Option,Matrix Column,Option Text
+Project,Project:,All Projects,Unit Code,CODE - Name (no count): rows whose unit code starts with the project prefix of the Unit window
+Block,Block:,All Blocks,Blk/Flr,"Block X (N): rows whose Blk/Flr starts with ""X/"""
+Product,Product:,All Products,Product,CODE (N): rows of that product
+Status,Status:,All Statuses,Status,Status (N): rows with that status
+Tier,Tier:,All Tiers,Tier,Tier name (+N%): rows whose Tier is that tier (STD = Standard …)

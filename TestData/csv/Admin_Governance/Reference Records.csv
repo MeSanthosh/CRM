@@ -1,0 +1,4 @@
+﻿Step,Button,Category,Group Code,Group Name,Value Code,Value Name,Edited Value Name,Description
+Category,New Category,ZZ_AUTOMATED_TEST,ZZ_GROUP_ONE,Automated Test Group One,ZZ_VALUE_ONE,Automated Test Value One,Automated Test Value One Edited,"Kept by the automated tests, always left inactive"
+Group,New Group,ZZ_AUTOMATED_TEST,ZZ_GROUP_TWO,Automated Test Group Two,ZZ_VALUE_TWO,Automated Test Value Two,,"Kept by the automated tests, always left inactive"
+Value,New Reference Value,ZZ_AUTOMATED_TEST,ZZ_GROUP_ONE,Automated Test Group One,ZZ_VALUE_THREE,Automated Test Value Three,,"Kept by the automated tests, always left inactive"

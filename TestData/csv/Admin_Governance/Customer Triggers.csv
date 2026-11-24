@@ -1,0 +1,5 @@
+﻿Trigger,Status After Conversion
+Lead converted to opportunity (legacy),Customer
+Reservation of Unit completed,Prospect (pre-customer)
+Proposal accepted (recommended — SPA equivalent),Prospect (pre-customer)
+Contract / SPA signed,Prospect (pre-customer)

@@ -1,0 +1,9 @@
+﻿Case ID,Product,Carpet Area,Floor Number,View,Orientation,Position,Commercial Tier,What it covers
+IVP-082,1,175,1,1,1,1,2,"first product, ground band, best view / orientation / position, Standard tier"
+IVP-082,last,420,56,last,last,last,last,"last product, top band, worst view / orientation / position, highest tier"
+IVP-082,2,180.5,4,3,2,3,1,"decimal area, band edge (first floor of band 2), Early Bird"
+IVP-082,3,205,15,4,3,4,3,"band edge (last floor of band 2), Premium I"
+IVP-082,4,260,16,6,7,5,4,"band 3 edge, neutral view, negative position, Premium II"
+IVP-082,7,300,25,7,11,6,5,"penthouse product, band 4, negative view, Premium III"
+IVP-082,8,350,50,8,12,7,2,"band 5, every negative premium"
+IVP-082,11,500,99,2,1,8,1,"largest band, signature position, Early Bird"

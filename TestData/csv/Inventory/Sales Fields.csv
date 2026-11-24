@@ -1,0 +1,12 @@
+﻿Field Label,Field Name,Field Type,Saved Value Shown As
+Carpet Area for Pricing (sqm),carpetAreaPricing,Number,"STANDARD BASE PRICE line ""<carpet> m² × $<rate>/m²"""
+Base Rate ($/sqm),baseRatePerSqm,Number,same line
+Other Additive Adjustment %,otherAdjPct,Number,Other Adj
+Active Commercial Tier (Layer 2),activeCommercialTier,Dropdown,Active Tier
+Discount Limit % (Price Floor),discountLimitPct,Number,Discount Limit: N%
+Enable Manual Price Override,isPriceOverridden,Checkbox,Pricing Governance line
+Reservation Amount,reservationAmount,Number,RESERVATION AMOUNT
+Approved Selling Price,approvedSellingPrice,Number,OPERATIVE CURRENT PRICE when the override is on
+Current Market Value,currentMarketValue,Number,CURRENT MARKET VALUE
+Sales Status,salesStatusRefId,Dropdown,SALES STATUS
+Remarks,remarks,Text,REMARKS

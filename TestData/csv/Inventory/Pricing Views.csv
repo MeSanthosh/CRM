@@ -1,0 +1,5 @@
+﻿Group,Button,Default
+Amounts,Exact ($),Yes
+Amounts,Compact ($k/$M),No
+Layers,Standard View,Yes
+Layers,Full 2-Layer,No

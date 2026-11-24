@@ -1,0 +1,33 @@
+﻿Tab,Label,Source,Kind,Scope
+Commercial / Sales,TOTAL LEADS,kpi:TOTAL_LEADS,count,period
+Commercial / Sales,QUALIFIED LEADS,kpi:QUALIFIED_LEADS,count,period
+Commercial / Sales,SITE VISITS,kpi:SITE_VISITS,count,period
+Commercial / Sales,RESERVATIONS,kpi:RESERVATIONS,count,as of
+Commercial / Sales,UNITS SOLD,kpi:UNITS_SOLD,count,period
+Commercial / Sales,SALES VALUE,kpi:SALES_VALUE,money,period
+Commercial / Sales,COLLECTIONS,kpi:COLLECTIONS,money,period
+Commercial / Sales,CONVERSION RATE,calc:conversion,percent,period
+Monthly Sales & Marketing,TOTAL INVENTORY,kpi:PORTFOLIO_UNITS,count,as of
+Monthly Sales & Marketing,UNITS AVAILABLE,kpi:AVAILABLE_UNITS,count,as of
+Monthly Sales & Marketing,UNITS RESERVED,kpi:RESERVED_UNITS,count,as of
+Monthly Sales & Marketing,UNITS SOLD (PERIOD),kpi:MONTH_UNITS_SOLD,count,period
+Monthly Sales & Marketing,UNITS SOLD (YTD),meta:ytdSoldUnits,count,ytd
+Monthly Sales & Marketing,GROSS SALES (PERIOD),kpi:MONTH_SALES_VALUE,money,period
+Monthly Sales & Marketing,COLLECTIONS (PERIOD),kpi:MONTH_COLLECTIONS,money,period
+Monthly Sales & Marketing,GROSS SALES (YTD),meta:ytdSalesValue,money,ytd
+Monthly Sales & Marketing,COLLECTIONS (YTD),meta:ytdCollectionsValue,money,ytd
+Monthly Sales & Marketing,CANCELLATIONS (PERIOD),kpi:CANCELLATIONS_COUNT,count,period
+Lead & Customer Insights,Total Leads,sum:metrics.totalLeads,count,as of
+Lead & Customer Insights,Active Leads,sum:metrics.activeLeads,count,as of
+Lead & Customer Insights,Open Opportunities,sum:metrics.openOpportunities,count,as of
+Lead & Customer Insights,Won / SPAs Executed,sum:metrics.wonOpportunities,count,period
+Lead & Customer Insights,Disqualified Leads,sum:metrics.disqualifiedLeads,count,as of
+Lead & Customer Insights,Units Available,sum:metrics.availableUnits,count,as of
+Lead & Customer Insights,Reserved Units,sum:metrics.reservedUnits,count,as of
+Lead & Customer Insights,Sales Value (SPAs),sum:metrics.totalContractValue,money,as of
+Lead & Customer Insights,Collections Received,coll:totals.amountReceived,money,as of
+Lead & Customer Insights,Outstanding Amount,coll:totals.outstanding,money,as of
+Lead & Customer Insights,Leads Captured,sum:audience.leadsCaptured,count,period
+Lead & Customer Insights,Converted,sum:audience.leadsConverted,count,period
+Lead & Customer Insights,Period Conversion,sum:audience.conversionRate,percent,period
+Lead & Customer Insights,Overall Conversion,sum:audience.overallConversionRate,percent,as of

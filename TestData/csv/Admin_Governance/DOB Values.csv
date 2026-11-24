@@ -1,0 +1,6 @@
+﻿Value,Date Kind,Accepted
+exactly the minimum age,min,Yes
+one day under the minimum age,under,No
+exactly the maximum age,max,Yes
+one day over the maximum age,over,No
+tomorrow,future,No

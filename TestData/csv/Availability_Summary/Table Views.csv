@@ -1,0 +1,4 @@
+﻿View,Shows,Default
+Units & Value,count and value in each cell,Yes
+Units Only,count only,No
+Value ($),"value only (""–"" when 0)",No

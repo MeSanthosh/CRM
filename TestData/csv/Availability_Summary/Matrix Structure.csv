@@ -1,0 +1,8 @@
+﻿Caption,Pricing Matrix Column,Kind
+Base Rate ($/m²),Base Rate,amount
+Standard Price,Std Price,amount
+Total Physical Prem %,Total %,percent
+Net Unit Adj ($),Net Adj,amount
+Adjusted Standard,Adj Std,amount
+Operative Current Price,Current Price,amount
+Floor Limit:,Floor (,amount

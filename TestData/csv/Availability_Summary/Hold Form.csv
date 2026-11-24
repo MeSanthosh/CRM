@@ -1,0 +1,18 @@
+﻿Setting,Value,What it means
+Title Prefix,Hold,"Heading ""Hold <unit code>"""
+Opportunity Label,Opportunity,Required: open opportunity the unit is held for
+Opportunity Placeholder,Select an open opportunity,First option of the Opportunity list
+Duration Label,Hold for,Hold duration
+Default Duration,2 days (48h),"Duration chosen when the form opens (the button reads ""Hold for 48h"")"
+Reason Label,Reason (optional),Optional reason
+Reason Text,Automated test hold - released by the test,Reason typed for the test holds
+Submit Button,Hold Unit,Places the hold
+Cancel Button,Cancel,Leaves without a hold
+Release Buttons,"Release Hold, Release, Release hold, End Hold","Buttons that end a hold early (unit window or Holds tab); the first one found is used (build 0411-16: ""Release"" on the Holds tab row)"
+Release Confirm Title,Release this unit?,"Pop-up of Release: ""Unit <code> will become free for other sales reps to hold or reserve."""
+Release Confirm Button,Release,Confirms the release
+Holds Tab,Holds,Inventory tab with the holds
+Holds Scope All,All,"Holds: first filter, every user"
+Holds Show All,All (incl. history),"Holds: second filter, every hold"
+Held Until Tolerance Minutes,10,"Allowed difference between ""Held Until"" and now + the duration"
+Own Opportunity Names,TestData/Leads_Test_Data.xlsx,The hold is placed for an opportunity whose customer is a name of the Leads test data (our own test records); none → the test is skipped

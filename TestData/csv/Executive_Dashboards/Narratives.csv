@@ -1,0 +1,15 @@
+﻿Tab,Sentence Contains
+Commercial / Sales,{UNITS SOLD} unit(s) sold ({SALES VALUE})
+Commercial / Sales,Collections realized: {COLLECTIONS}
+Commercial / Sales,{TOTAL LEADS} lead(s) and {QUALIFIED LEADS} qualified lead(s) captured
+Commercial / Sales,conversion rate is {CONVERSION RATE}
+Commercial / Sales,{RESERVATIONS} active reservation(s) pending contract signing
+Commercial / Sales,Fast-track SPA execution on {RESERVATIONS} reserved unit(s)
+Commercial / Sales,Engage {QUALIFIED LEADS} qualified lead(s)
+Monthly Sales & Marketing,{UNITS SOLD (PERIOD)} unit(s) sold during
+Monthly Sales & Marketing,(YTD: {UNITS SOLD (YTD)} units)
+Monthly Sales & Marketing,Available inventory stands at {UNITS AVAILABLE} of {TOTAL INVENTORY} portfolio units
+Monthly Sales & Marketing,{UNITS RESERVED} active unit reservation(s)
+Monthly Sales & Marketing,{CANCELLATIONS (PERIOD)} cancellation(s) recorded
+Monthly Sales & Marketing,Expedite contract signing on {UNITS RESERVED} reserved unit(s)
+Monthly Sales & Marketing,Promote remaining {UNITS AVAILABLE} available unit(s)

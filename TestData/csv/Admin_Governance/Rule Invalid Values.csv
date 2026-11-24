@@ -1,0 +1,8 @@
+﻿Case ID,Engine,Field,Change,Expected Message Contains,What it checks
+ADM-054,LEAD_SCORING,number:0,+1,,enabled scores total 101
+ADM-054,LEAD_CLASSIFICATION,number:0,+1,,a gap between two bands
+ADM-054,LEAD_QUALIFICATION,label:Auto-qualify minimum score,to:150,,score above 100
+ADM-054,DATE_OF_BIRTH,label:Minimum age,to:130,,minimum above maximum age
+ADM-054,DATE_OF_BIRTH,label:Minimum age,to:abc,,letters in an age
+ADM-054,UNIT_HOLD,label:Default hold length,to:500,,default above the maximum hold
+ADM-054,DISCOUNT_APPROVAL,label:Up to (%),to:99,,the first tier above the next tier

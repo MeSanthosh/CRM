@@ -1,0 +1,6 @@
+﻿Check,Rule
+No broken values,"No text from Settings → Broken Values on the tab, the breakdown or the unit window"
+Buttons not covered,"The centre of every row button (unit code, ⊞ Breakdown, Edit) and every filter is the button itself, not something on top of it (e.g. the reminder cards)"
+No page side-scroll,At every Layout Width the page itself does not scroll sideways (the table may scroll inside its own box)
+Headers line up,Column groups span exactly the columns under them
+Amount format,"Every amount in Exact view is ""$"" + digits with thousands commas; every % is ""+N%"", ""-N%"" or ""0%"""

@@ -1,0 +1,9 @@
+﻿Tab,Rule,Field,Change,Caption,Check,Simulator Field,Simulator Option
+2. Floor Bands,Ground-floor band,rownum:Ground:2,+1,Floor Adjustment:,value,Floor Number,1
+3. View %,View V1,rownum:V1:0,+1,View Adjustment:,value,View,V1
+4. Orientation %,Orientation O1,rownum:O1:0,+1,Orientation Adjustment:,value,Orientation,O1
+5. Position %,Position P1,rownum:P1:0,+1,Position Adjustment:,value,Position,P1
+6. Commercial Tiers & Governance,Early Bird tier,number:0,+1,Early Bird,tier,,
+6. Commercial Tiers & Governance,Premium Tier 1,number:2,+1,Premium I,tier,,
+6. Commercial Tiers & Governance,Maximum Discount Limit,number:5,+1,Price Floor,floor,,
+6. Commercial Tiers & Governance,Rounding Rule,label:Rounding Rule,to:Nearest Hundred ($100),Early Bird,round,,

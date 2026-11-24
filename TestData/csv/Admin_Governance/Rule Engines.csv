@@ -1,0 +1,14 @@
+﻿Code,Name,Saved By Tests
+LEAD_DUPLICATE,Lead Duplicate Rules,Yes
+LEAD_SCORING,Lead Scoring Matrix,Yes
+LEAD_QUALIFICATION,Lead Qualification Threshold,Yes
+LEAD_CLASSIFICATION,Lead Classification Bands,Yes
+DATE_OF_BIRTH,Date of Birth Rules,Yes
+CUSTOMER_CREATION,When Lead Becomes Customer,No
+UNIT_HOLD,Unit Hold Rules,Yes
+DISCOUNT_APPROVAL,Discount Approval Tiers,Yes
+COMMUNICATION_CHANNELS,Communication Channels,No
+LOGIN_OTP,Login & OTP,No
+PII_PROTECTION,Personal Data Protection,No
+UNIT_PRICING_RULES,Unit Pricing Matrix Rules,No
+SALES_TARGETS,Sales Velocity Targets,Yes

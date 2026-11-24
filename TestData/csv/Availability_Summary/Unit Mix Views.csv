@@ -1,0 +1,5 @@
+﻿View,Rows,Scope
+By Product,"one row per product (code, name, category / beds)",any
+By Bedrooms,one row per bedroom group,any
+Floor × Product Matrix,"one row per floor, one column per product",a block
+🏢 Stack Plan,one tile per unit of the scope,any

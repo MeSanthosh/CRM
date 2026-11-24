@@ -390,6 +390,26 @@ Filters send `projectCode`, `ownerUserId`, `brokerId`, `campaignId` and `view=te
 | Contract Detail → Documents inputs | `select` with option "Signed SPA", `input[placeholder='Description (optional)']`, `input[type=file]`, button Upload |
 | Inventory unit view / its section buttons | `(//*[contains(@class,'crm-unit-detail-modal')])[last()]` · `…//button[starts-with(normalize-space(),'Linked Modules')]` |
 | Availability Summary view buttons (⊞ Summary Table / 🏢 Stack Plan) | `(//main//button[contains(@class,'crm-dashboard-view-segment-button')][contains(normalize-space(),'Stack Plan')])[1]` |
+| Unit window shown (a hidden "Create Unit" window can stay in the page: take the **visible** one) | `//*[contains(@class,'crm-unit-detail-modal')]` + visible filter |
+| Inside it: section button / field (edit mode) / button | `.//button[starts-with(normalize-space(),'Sales')]` · `.//*[@name='carpetAreaPricing']` · `.//button[normalize-space()='Save Sales & Recalculate Pricing']` |
+| Pricing Matrix table / rows | `//main//table[contains(@class,'crm-pricing-matrix-table')]` · `…/tbody/tr[td]` (two header rows: groups with colspan, then columns) |
+| Pricing Matrix row / its button (⊞ Breakdown, Edit) / unit code | `…/tbody/tr[td[1]//button[normalize-space()='PEX-APT-0102']]` · `…//button[normalize-space()='⊞ Breakdown']` · `…/tbody/tr/td[1]//button[normalize-space()='PEX-APT-0102']` |
+| Pricing Matrix view buttons (Exact ($) / Compact ($k/$M) / Standard View / Full 2-Layer; `aria-pressed`) | `//main//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()='Full 2-Layer']` |
+| Pricing Matrix filter (Project: / Block: / Product: / Status: / Tier:) | `//main//label[span[normalize-space()='Block:']]/select` |
+| Pricing Matrix summary line | `//main//div[starts-with(normalize-space(),'Showing')][contains(normalize-space(),'Operative GDV')][not(.//div[starts-with(normalize-space(),'Showing')][contains(normalize-space(),'Operative GDV')])]` |
+| 2-layer breakdown window (title in capitals by CSS: matched ignoring case) | `(//*[@role='dialog' or contains(@class,'crm-modal')][.//*[translate(normalize-space(),'abc…z','ABC…Z')='2-LAYER UNIT PRICING FORMULA BREAKDOWN']])[last()]` |
+| Business Rules → engine button / rule tab | `//main//button[contains(@class,'crm-configuration-engine-button')][starts-with(normalize-space(),'Unit Pricing Matrix Rules')]` · `//main//button[contains(@class,'crm-tab-button')][normalize-space()='2. Floor Bands']` |
+| Rule row input by its first cell (1. Base Rates: product code) | `(//main//table)[last()]/tbody/tr[td[1][normalize-space()='APT-3BR-A']]//input` |
+| Rules table of the tab / field by label (Governance, Live Simulator) | `(//main//table)[last()]` · `//main//label[starts-with(normalize-space(),'Carpet Area (sqm)')]//*[self::input or self::select]` |
+## Admin & Governance (`/currencies`, `/reference-data`, `/preferences`, `/configuration`)
+
+| Element | XPath |
+|---|---|
+| Tab with its count ("Exchange Rates22") | `//main//button[contains(@class,'crm-tab-button')][starts-with(normalize-space(),'Exchange Rates')]` |
+| Check box by its label ("Active only") | `//main//label[starts-with(normalize-space(),'Active only')]//input[@type='checkbox']` |
+| Field by its label (rules, test sends) | `//main//label[starts-with(normalize-space(),'Minimum age')]//*[self::input or self::select or self::textarea]` |
+| Rule engine button | `//main//button[contains(@class,'crm-configuration-engine-button')][starts-with(normalize-space(),'Lead Scoring Matrix')]` |
+
 ## Opportunities (`/opportunities`)
 
 Captured from build v1.0 1910-49 on 2026-10-20. The Opportunity Detail and Lead Detail modals share their

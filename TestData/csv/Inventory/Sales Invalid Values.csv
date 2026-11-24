@@ -1,0 +1,13 @@
+﻿Case ID,Field Label,Value,Expected Message Contains,Checked When
+IVP-087,Carpet Area for Pricing (sqm),abc,,On save
+IVP-087,Carpet Area for Pricing (sqm),-10,,On save
+IVP-087,Carpet Area for Pricing (sqm),0,,On save
+IVP-087,Carpet Area for Pricing (sqm),,,On save
+IVP-087,Base Rate ($/sqm),abc,,On save
+IVP-087,Base Rate ($/sqm),-1,,On save
+IVP-087,Other Additive Adjustment %,abc,,On save
+IVP-087,Other Additive Adjustment %,150,,On save
+IVP-087,Discount Limit % (Price Floor),-1,,On save
+IVP-087,Discount Limit % (Price Floor),101,,On save
+IVP-087,Reservation Amount,-5,,On save
+IVP-087,Current Market Value,abc,,On save

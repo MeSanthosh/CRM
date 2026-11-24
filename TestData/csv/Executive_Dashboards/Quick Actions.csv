@@ -1,0 +1,9 @@
+﻿Label,Route
+Quick Individual,/leads/individual/quick
+Quick Corporate,/leads/corporate/quick
+Quick Customer,/customers/quick
+Opportunities,/opportunities
+Reservations,/reservations
+Follow-up,/activities-communication
+Search Unit,/inventory
+Search Customer,/customers

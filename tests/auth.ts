@@ -46,4 +46,17 @@ export const test = base.extend({
     }
     await use(file);
   },
+  // The "REMINDER · TASK" cards (.crm-reminder-stack, bottom right) lie on top of buttons and figures on every page and
+  // have no close button; their Dismiss / Mark done would change real tasks. So they are hidden on screen only (no data
+  // changes). SHOW_REMINDERS=1 keeps them, e.g. to show defect #232.
+  context: async ({ context }, use) => {
+    if (process.env.SHOW_REMINDERS !== '1') {
+      await context.addInitScript(() => {
+        const css = '.crm-reminder-stack{display:none !important}';
+        const add = () => { if (!document.getElementById('qa-hide-reminders')) { const s = document.createElement('style'); s.id = 'qa-hide-reminders'; s.textContent = css; (document.head ?? document.documentElement).appendChild(s); } };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
+      });
+    }
+    await use(context);
+  },
 });

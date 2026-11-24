@@ -1,0 +1,11 @@
+﻿Free Limit,Tier 1 Name,Tier 1 Up To,Discount %,Expected Tier
+2,Sales Manager,5,2,
+2,Sales Manager,5,3,Sales Manager
+2,Sales Manager,5,5,Sales Manager
+2,Sales Manager,5,6,Sales Director
+2,Sales Manager,5,10,Sales Director
+2,Sales Manager,5,11,CEO
+4,Sales Manager,5,3,
+4,Sales Manager,5,5,Sales Manager
+2,Sales Manager,7,6,Sales Manager
+2,Team Lead,5,3,Team Lead

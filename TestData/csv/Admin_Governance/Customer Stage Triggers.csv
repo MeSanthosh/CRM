@@ -1,0 +1,4 @@
+﻿Trigger,After Conversion,After Reservation Approved,After Proposal Accepted
+Contract / SPA signed,Prospect (pre-customer),Prospect (pre-customer),
+Reservation of Unit completed,Prospect (pre-customer),Customer,
+Proposal accepted (recommended — SPA equivalent),Prospect (pre-customer),Prospect (pre-customer),Customer

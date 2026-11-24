@@ -1,0 +1,10 @@
+﻿View,Group,Columns
+Standard View,Unit Identification,"Unit Code, Product, Blk/Flr, Status"
+Standard View,Base Setup (Carpet × Rate),"Carpet, Base Rate, Std Price"
+Standard View,Layer 1: Physical Attribute Premiums,"Total %, Net Adj, Adj Std"
+Standard View,Governance & Operative Price,"Tier, Current Price, Floor (-{discount}%), Details"
+Full 2-Layer,Unit Identification,"Unit Code, Product, Blk/Flr, Status"
+Full 2-Layer,Base Setup (Carpet × Rate),"Carpet, Base Rate, Std Price"
+Full 2-Layer,Layer 1: Physical Attribute Premiums,"Floor %, View, Orient., Pos., Other %, Total %, Net Adj, Adj Std"
+Full 2-Layer,Layer 2: Commercial Tiers,{tiers}
+Full 2-Layer,Governance & Operative Price,"Tier, Current Price, Floor (-{discount}%), Details"

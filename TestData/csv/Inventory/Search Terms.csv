@@ -1,0 +1,5 @@
+﻿Case ID,Take From Column,How,Expected
+IVP-074,Unit Code,whole code of a row,only that unit
+IVP-074,Blk/Flr,"floor number of a row (""D/05"" → ""05"")",every row shown has that floor or the text elsewhere in its row
+IVP-074,View,"view name of a row without its % (""Partial Ocean View"")",every row shown has that view
+IVP-074,Unit Code,a text no unit has: zzz{unique},no rows; the summary shows 0 units

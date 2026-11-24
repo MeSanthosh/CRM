@@ -1,0 +1,6 @@
+﻿Field Label,Kind,Typed,Expected
+Monthly Units Budget,units,-5,A negative number of units is not kept.
+Monthly Units Budget,units,2.5,Units stay a whole number.
+Monthly Units Forecast,units,abc,Letters are not kept.
+Monthly Revenue Budget (USD),revenue,-1000,A negative amount is not kept.
+Monthly Revenue Forecast (USD),revenue,abc,Letters are not kept.

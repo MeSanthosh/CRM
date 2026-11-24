@@ -1,0 +1,13 @@
+﻿Setting,Value,What it means
+Sales Section,Sales,Unit window section with the pricing
+Edit Mode Button,Edit,Switches a section to edit mode
+Save Button,Save Sales & Recalculate Pricing,Saves the Sales section (re-prices this unit only)
+New Button,New,Unit window button that opens Create Unit
+Create Unit Heading,Create Unit,Heading of the New form (never saved by the tests)
+Create Unit Button,Create Unit,Save button of the New form: never clicked
+Close Button,Close,Closes the unit window
+Discard Button,Discard,"Answer to ""Discard changes?"""
+Governance Line,Pricing Governance:,"Sales line ""Pricing Governance: Matrix Governed (Dynamic)Active Tier: STANDARD"""
+Override Word,Manual,The governance line names a manual price when the override is on
+New Unit Note,New units always start as Available.,Create Unit: Availability hint
+Default Currency Option,Default project currency,Create Unit: currency it starts with

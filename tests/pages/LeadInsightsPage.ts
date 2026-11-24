@@ -67,14 +67,42 @@ export class LeadInsightsPage {
     const p = at(this.page, XP.pagerText).first();
     return (await p.count()) ? Number((await p.innerText()).match(/ of (\d+)/)?.[1] ?? NaN) : NaN;
   }
+  /** Opens an Insights view by its address (Aging, Follow-up) and waits for its figures. */
+  async openView(route: string) {
+    await this.page.goto(route);
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await expect(this.page.locator('main .crm-kpi, main .crm-card').first()).toBeVisible({ timeout: 20_000 });
+    await this.page.waitForTimeout(800);
+  }
+  /** Aging buckets in page order: "0–7 days" → 248 */
+  async buckets(): Promise<{ label: string; count: number; active: boolean }[]> {
+    return at(this.page, XP.agingBucket).evaluateAll(bs => bs.map(b => {
+      const lines = (b as HTMLElement).innerText.split('\n').map(s => s.trim()).filter(Boolean);
+      return { label: lines[0] ?? '', count: Number((lines[1] ?? 'NaN').replace(/,/g, '')), active: b.classList.contains('is-active') || b.getAttribute('aria-pressed') === 'true' };
+    }));
+  }
+  async clickBucket(label: string) {
+    await at(this.page, XP.agingBucket).filter({ hasText: label }).first().click();
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(1000);
+  }
+  /** Active sub-tab name (Sources / Aging / Follow-up). */
+  async activeSubTab() {
+    return (await this.page.locator('main a.crm-leads-subtab.is-active').first().innerText().catch(() => '')).trim();
+  }
+  /** Rows of the list of an Aging bucket or of Follow-up, every page (follows Next). */
+  async listLeads(): Promise<(DrillLead & { no: string; idle: string; captured: string })[]> {
+    return (await this.drillLeads(XP.insightsListHeaders, XP.insightsListRows)) as any;
+  }
   /** Every lead of the drill-down list (follows Next). */
-  async drillLeads(): Promise<DrillLead[]> {
-    const heads = await this.headers(XP.insightsDrillHeaders);
+  async drillLeads(headersXp: string = XP.insightsDrillHeaders, rowsXp: string = XP.insightsDrillRows): Promise<DrillLead[]> {
+    const heads = await this.headers(headersXp);
     const col = (n: string) => heads.indexOf(n);
     const all: DrillLead[] = [];
     for (let guard = 0; guard < 30; guard++) {
-      const rows = await at(this.page, XP.insightsDrillRows).evaluateAll(trs => trs.map(tr => [...tr.querySelectorAll('td')].map(td => (td as HTMLElement).innerText.trim())));
-      for (const c of rows) all.push({ lead: (c[col('Lead')] ?? '').split('\n')[0], contact: c[col('Contact')] ?? '', source: c[col('Source')] ?? '', owner: c[col('Owner')] ?? '', text: c.join(' | ') });
+      const rows = await at(this.page, rowsXp).evaluateAll(trs => trs.map(tr => [...tr.querySelectorAll('td')].map(td => (td as HTMLElement).innerText.trim())));
+      for (const c of rows) all.push({ lead: (c[col('Lead')] ?? '').split('\n')[0], contact: c[col('Contact')] ?? '', source: c[col('Source')] ?? '', owner: c[col('Owner')] ?? '', text: c.join(' | '),
+        ...({ no: c[col('#')] ?? '', idle: c[col('Idle')] ?? '', captured: c[col('Captured')] ?? '' } as object) } as DrillLead);
       const next = at(this.page, XP.pagerNext).first();
       if (!(await next.count()) || !(await next.isEnabled())) break;
       const pager = await at(this.page, XP.pagerText).first().innerText();
@@ -82,7 +110,7 @@ export class LeadInsightsPage {
       await next.click();
       // the pager moves first ("Showing 21–40 …"), the rows a moment later: wait for both
       await expect.poll(() => at(this.page, XP.pagerText).first().innerText(), { timeout: 15_000 }).not.toBe(pager);
-      await expect.poll(async () => ((await at(this.page, XP.insightsDrillRows).first().locator('td').nth(1).innerText().catch(() => '')).split('\n')[0]), { timeout: 15_000 }).not.toBe(firstLead);
+      await expect.poll(async () => ((await at(this.page, rowsXp).first().locator('td').nth(1).innerText().catch(() => '')).split('\n')[0]), { timeout: 15_000 }).not.toBe(firstLead);
     }
     return all;
   }

@@ -17,3 +17,19 @@ Drill Columns,# | Lead | Contact | Source | Owner | Idle | Captured,Columns of t
 Unassigned Owner,Unassigned,Owner shown for a lead nobody owns
 Refresh Button,Refresh,Button that reloads the table
 Source For New Lead,Public Relations,Lead Source of the lead the count-update tests create (must be a Lead Source option of the form)
+Aging Route,/leads/aging,Leads → Insights → Aging
+Follow-up Route,/leads/follow-up,Leads → Insights → Follow-up
+Open Leads Card,Open Leads,Aging card with the number of open leads
+Aging Basis,"Idle days use last interaction, else capture date.",Aging: how idle days are counted
+Aging Hint,Select an aging bucket to list leads.,Aging: text before a bucket is chosen
+Aging Buckets,0–7 days | 8–14 days | 15–30 days | 31–60 days | 61+ days,"Aging buckets, in order"
+Follow-up Card,Due for follow-up,Follow-up card with the number of leads due
+Follow-up Rule,Open active leads with no conversion and 7+ idle days.,Follow-up: which leads are listed
+Follow-up Idle Days,7,A lead is due for follow-up from this many idle days
+Follow-up Columns,# | Lead | Contact | Source | Owner | Idle | Captured,Columns of the Follow-up list
+Page Size,20,Rows per page of the lists
+Closed Statuses,CONVERTED | DISQUALIFIED,Lead statuses that are not open
+Idle Tolerance Days,1,Allowed difference for idle days (time of day / time zone)
+Dashboards Active Leads,/dashboard/summary?period=this_month&view=audience,API of the Executive Dashboards with metrics.activeLeads
+Lead Detail Heading,Lead Detail,Heading of the panel that opens a lead
+Viewports,Desktop 1366x768 | Tablet 1024x768 | Phone 390x844,Widths checked for sideways scrolling

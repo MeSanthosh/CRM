@@ -75,13 +75,29 @@ export async function createLead(leads: LeadsPage, lead: LeadData, opts: { all?:
   return { form, result };
 }
 
+/**
+ * The Lead Detail panel of a lead just saved. Up to build 0711 the panel opened by itself after Create Lead; since
+ * build 1411-23 the form just closes, so the lead is opened from the list (by the Lead No. of the save response, or
+ * by its email).
+ */
+export async function openCreated(leads: LeadsPage, form: LeadForm, result: Awaited<ReturnType<LeadForm['submit']>>, lead: LeadData) {
+  const detail = form.detail();
+  if (await detail.root.waitFor({ state: 'visible', timeout: 3_000 }).then(() => true, () => false)) { await detail.waitOpen(); return detail; }
+  note('after Create Lead', `no "Lead Created" pop-up${result.notice ? ' (one was shown)' : ''} and no Lead Detail panel: lead opened from the list`);
+  if (result.leadNo) return leads.openLead(result.leadNo);
+  await leads.openRoute(leads.path);
+  await leads.search(lead.email);
+  await leads.page.locator('a.crm-record-link').first().click();
+  await detail.waitOpen();
+  return detail;
+}
+
 /** Creates a lead and returns its Lead No. (closes the success pop-up and the detail panel). */
 export async function createAndGetLeadNo(leads: LeadsPage, lead: LeadData): Promise<string> {
   const { form, result } = await createLead(leads, lead);
   expect(result.saved, `Lead saved (${result.notice?.text ?? 'no pop-up'})`).toBeTruthy();
   await form.closeNotice();
-  const detail = form.detail();
-  await detail.waitOpen();
+  const detail = await openCreated(leads, form, result, lead);
   const no = await detail.leadNo();
   note('lead created', `${no} · ${lead.name} · ${lead.email}`);
   return no;
@@ -103,8 +119,7 @@ export async function sharedLead(leads: LeadsPage, form: Form,
     createdHere = true;
     if (onCreated) await onCreated(f, result, lead);
     await f.closeNotice();
-    const detail = f.detail();
-    await detail.waitOpen();
+    const detail = await openCreated(leads, f, result, lead);
     const leadNo = await detail.leadNo();
     note('lead created', `${leadNo} · ${lead.name} · ${lead.email}`);
     return { lead, leadNo };

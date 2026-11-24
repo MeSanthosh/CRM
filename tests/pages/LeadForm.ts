@@ -16,6 +16,8 @@ export type SubmitResult = {
   saved: boolean;
   /** HTTP status of the save request, if one was sent */
   status?: number;
+  /** Lead No. of the saved lead, read from the save response */
+  leadNo?: string;
 };
 
 export class LeadForm {
@@ -105,15 +107,21 @@ export class LeadForm {
   /** Clicks Create Lead and reports the pop-up and whether a lead was saved. The pop-up is left open. */
   async submit(): Promise<SubmitResult> {
     let status: number | undefined;
+    let body: Promise<string> | undefined;
     const onResponse = (r: import('@playwright/test').Response) => {
-      if (r.request().method() === 'POST' && /\/api\/v1\/leads(\?|$)/.test(r.url())) status = r.status();
+      if (r.request().method() === 'POST' && /\/api\/v1\/leads(\?|$)/.test(r.url())) { status = r.status(); body = r.text().catch(() => ''); }
     };
     this.page.on('response', onResponse);
     try {
       await at(this.page, XP.leadFormSubmit).click();
-      const notice = await this.notice.wait(60_000); // the QA server can take > 20 s to save under load
+      // a refused form shows a pop-up without saving; a saved lead (build 1411-23) closes the form, often without a pop-up
+      const until = Date.now() + 60_000; // the QA server can take > 20 s to save under load
+      let notice = await this.notice.wait(500);
+      while (!notice && status === undefined && Date.now() < until) notice = await this.notice.wait(500);
+      if (!notice && status !== undefined) notice = await this.notice.wait(3_000);
       await this.page.waitForTimeout(300);
-      return { notice, saved: status !== undefined && status < 300, status };
+      const leadNo = ((await body) ?? '').match(/LD-[A-Z0-9]+-[A-Z0-9]+/)?.[0];
+      return { notice, saved: status !== undefined && status < 300, status, leadNo };
     } finally {
       this.page.off('response', onResponse);
     }

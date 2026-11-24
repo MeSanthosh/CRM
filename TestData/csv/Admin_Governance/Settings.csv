@@ -1,0 +1,62 @@
+﻿Setting,Value,What it means
+Currencies Route,/currencies,Currency Master
+Reference Route,/reference-data,Reference Data Management
+Preferences Route,/preferences,Organization preferences
+Rules Route,/configuration,Business Rules Configuration
+Currency Search,"Search code, name, symbol",Search box of the Currency Register
+Rate Search,"Search pair (e.g. KES to USD, EUR)",Search box of the Exchange Rate Register
+Reference Search,"Search category, group, code, name",Search box of the Reference Register
+Active Only,Active only,Register check box: active records only
+Active Rates Only,Active Rates only,Exchange Rate Register check box
+Currencies Tab,Currencies,Currency tab (shows its count)
+Policy Tab,Policy,Currency tab
+Rates Tab,Exchange Rates,Currency tab (shows its count)
+Edit Button,Edit,Row button
+Deactivate Button,Deactivate,Row button of the Reference Register
+Cancel Button,Cancel,Leaves a form without saving
+Create Currency Button,Create Currency,New Currency form: pressed only on the empty form
+Create Value Button,Create Reference Value,Reference forms: save button
+Update Value Button,Update Reference Value,Reference edit form: save button
+Inactive Status,INACTIVE,Status of a deactivated reference value
+Active Status,ACTIVE,Status of an active record
+Base Word,Base,Currency Register policy role of the base currency
+Payment Word,Payment,Currency Register policy role of an accepted payment currency
+Rate Formula,Formula: 1 [From Currency] = [Rate],Line in Add Exchange Rate
+Never Click,"Run Incremental ETL, Run Full ETL (Rebuild Snapshots), 🔄 Get Latest Exchange Rates, Save Policy Configuration, Save Security Policies, Save SMTP settings, Save Email Settings, Save WhatsApp Settings, Verify SMTP Handshake",Buttons the tests check are there but never press
+Version Word,Version,"Rule line ""Version N · Draft: PUBLISHED · Published <date>"""
+Save Draft Button,Save Draft,Rule: saves a draft
+Publish Button,Publish,Rule: makes it live
+Draft Status,DRAFT,Version line after Save Draft
+Dashboard Route,/dashboards,Page that compares sales with the Sales Velocity Targets
+Hold Project,Palm Exotica,Unit Hold tests: project chosen on the Stack Plan (holds are placed and released at once; the test project has only one unit)
+Dashboard Summary Api,/dashboard/summary,Request the dashboard reads its targets from
+Implied Price Caption,Implied Avg Price / Unit,Sales Velocity Targets: revenue ÷ units of each panel
+Sales Target Units Step,1,Units added to a units target by the tests (put back afterwards)
+Sales Target Revenue Step,100000,USD added to a revenue target by the tests (put back afterwards)
+Published Status,PUBLISHED,Version line after Publish
+Unpublished Text,Unpublished changes,Version line while a draft is waiting
+Scoring Total,100,Enabled Lead Scoring criteria must total this
+Band Range,0-100,Lead Classification Bands must cover this without gaps
+Page Size Change,50 rows,Rows per page used by ADM-037 (the original value is put back)
+Save Defaults Button,Save application defaults,Preferences: General → Application defaults
+Email Recipient Env,TEST_EMAIL_TO,.env variable with the test email address (kept out of the repo)
+WhatsApp Recipient Env,TEST_WHATSAPP_TO,".env variable with the test WhatsApp number, with + and country code"
+Email Send Button,Send Test Email Now,Communication Channels: sends a real test email
+WhatsApp Send Button,Send Test WhatsApp Now,Communication Channels: sends a real WhatsApp
+Email Recipient Label,Recipient Email,Field of the test email
+WhatsApp Recipient Label,Recipient WhatsApp Number,Field of the test WhatsApp
+WhatsApp Preset,Meta Sandbox (hello_world · en_US),Template preset of the test WhatsApp
+Setup Needed,Setup Needed,Badge of a channel whose provider is not connected
+Save Wait Seconds,60,Longest wait for a save or a test send
+Inventory Route,/inventory,Inventory page (Unit Hold Rules are compared with its Hold form)
+Availability Tab,Availability Summary,Inventory tab with the Stack Plan
+Stack Plan View,🏢 Stack Plan,View with the unit tiles
+Hold Button Prefix,Hold for,"Unit window button ""Hold for 48h"""
+Hold Submit Button,Hold Unit,Hold form: never pressed by this suite
+Broken Values,"NaN, undefined, null, Infinity, [object Object]",Texts that must never appear
+Qualify Warning Title,Score Below Threshold,Pop-up when a lead is qualified below the minimum score
+Qualify Anyway Button,Qualify Anyway,Button of that pop-up
+Qualify Cancel Button,Cancel,Button of that pop-up
+Warning Text,Automated integration warning text,Warning message published by the integration tests
+Band Label Text,Zeta Band,Band label published by the integration test
+Empty Rating,—,Current rating of a lead with no rating yet

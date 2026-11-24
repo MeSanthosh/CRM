@@ -1,0 +1,5 @@
+﻿Field Label,Kind,Api Field
+Monthly Units Budget,units,monthlyUnitsBudget
+Monthly Revenue Budget (USD),revenue,monthlyRevenueBudgetUsd
+Monthly Units Forecast,units,monthlyUnitsForecast
+Monthly Revenue Forecast (USD),revenue,monthlyRevenueForecastUsd

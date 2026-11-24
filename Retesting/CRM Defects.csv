@@ -553,3 +553,114 @@ Steps to reproduce (CRM Administrator with open task reminders):
 Actual: the click lands on the reminder text ""Lead assigned: LD-20261104182433-3X6V - ..."" instead of the pencil. When the pencil is reached another way, the Edit Lead form opens with the right name, mobile and email.
 Expected: nothing lies on top of the list's buttons, so a lead can be edited from the list.
 Same cause as NEW-03 (the reminder card stack).","","Medium","New","1","11/5/2026 12:43 AM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found in the Leads page run of 5 Nov 2026: LP-089 (reports/Leads_Page_Final_Test_Report_2026-11-05_0043.xlsx). Screenshot: Retesting/evidence/Leads_Edit_Button_Covered_LP-089.png","5 Nov 2026","v2.0 0411-16"
+"NEW-05","Frontend","Pricing Matrix → Unit Sales edit saves wrong values without any message","1. Sign in as CRM Administrator.
+2. Inventory → Pricing Matrix tab.
+3. Click Edit on an Available unit (this run: PEX-APT-0102 (first Available unit of the Pricing Matrix at run time; its values were put back after every test)).
+4. Sales section → Edit.
+5. Type a wrong value in one field: Carpet Area for Pricing ""abc"", ""0"" or empty; Base Rate ""abc""; Other Additive Adjustment % ""abc""; Current Market Value ""abc"".
+6. Click Save Sales & Recalculate Pricing.
+
+Actual: every one is saved (PUT /api/v1/inventory/units/<id>/sales-information → 200) and the message ""Catalogue Updated — Unit catalogue updated."" is shown. No field message.
+Expected: the save is refused with a message naming the field and the rule (number, greater than 0).","","High","New","1","11/5/2026 10:40 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Pricing Matrix run of 5 Nov 2026: IVP-087.1, .3, .4, .5, .7, .12 (reports/Inventory_Pricing_Matrix_Test_Report_2026-11-05_2240.xlsx). Screenshot: Retesting/evidence/Pricing_Sales_Edit_Wrong_Values_IVP-087.png","5 Nov 2026","v2.0 0411-16"
+"NEW-06","Backend","Pricing Matrix → Other Additive Adjustment % has no upper limit (150% saved)","1. Sign in as CRM Administrator.
+2. Inventory → Pricing Matrix tab.
+3. Click Edit on an Available unit (this run: PEX-APT-0102 (first Available unit of the Pricing Matrix at run time; its values were put back after every test)).
+4. Sales section → Edit.
+5. Other Additive Adjustment % = 150.
+6. Save Sales & Recalculate Pricing.
+
+Actual: saved. PEX-APT-0102: Total % +2% → +152%, Current Price $881,280 → $2,177,280, Floor $854,842 → $2,111,962.
+Expected: a sensible limit (like the other premiums) with a message; a typing slip must not multiply a unit price.","","High","New","1","11/5/2026 10:40 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Pricing Matrix run of 5 Nov 2026: IVP-087.8 (reports/Inventory_Pricing_Matrix_Test_Report_2026-11-05_2240.xlsx). Screenshot: Retesting/evidence/Pricing_Other_Adj_150_IVP-087.8.png","5 Nov 2026","v2.0 0411-16"
+"NEW-07","Backend","Pricing Matrix → Carpet area, base rate and discount limit edits are saved but not used for the price","1. Sign in as CRM Administrator.
+2. Inventory → Pricing Matrix tab.
+3. Click Edit on an Available unit (this run: PEX-APT-0102 (first Available unit of the Pricing Matrix at run time; its values were put back after every test)).
+4. Sales section → Edit.
+5. Change Carpet Area for Pricing +5 m² (180 → 185), or Base Rate +100 (4,800 → 4,900), or Discount Limit % 0 / 5 / 10.
+6. Save Sales & Recalculate Pricing.
+
+Actual: each save returns 200 ""Catalogue Updated"", but Standard Base Price stays 864,000 (180 × 4,800), current price and floor do not change, and ""Discount Limit: 3%"" stays. (Changing the tier or Other % does re-price the unit correctly.)
+Expected: either these fields re-price the unit (standard = carpet × rate, floor = price × (1 − discount limit)) or they are read-only because Business Rules govern them.","","High","New","1","11/5/2026 10:40 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Pricing Matrix run of 5 Nov 2026: IVP-088.4, .5, .6 (reports/Inventory_Pricing_Matrix_Test_Report_2026-11-05_2240.xlsx). Screenshot: Retesting/evidence/Pricing_Sales_Edit_Ignored_IVP-088.png","5 Nov 2026","v2.0 0411-16"
+"NEW-08","Backend","Pricing Matrix → Manual price override does not change the price","1. Sign in as CRM Administrator.
+2. Inventory → Pricing Matrix tab.
+3. Click Edit on an Available unit (this run: PEX-APT-0102 (first Available unit of the Pricing Matrix at run time; its values were put back after every test)).
+4. Sales section → Edit.
+5. Tick Enable Manual Price Override, Approved Selling Price = current price + 25,000 (906,280).
+6. Save Sales & Recalculate Pricing.
+
+Actual: saved (200); the governance line says ""Manual Override Active"", but Operative Current Price stays 881,280 USD in Sales and $881,280 in the matrix; the price floor stays 854,842.
+Expected: while the override is on, the operative current price is the approved price and the floor follows it.","","High","New","1","11/5/2026 10:40 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Pricing Matrix run of 5 Nov 2026: IVP-089 (reports/Inventory_Pricing_Matrix_Test_Report_2026-11-05_2240.xlsx). Screenshot: Retesting/evidence/Pricing_Manual_Override_IVP-089.png","5 Nov 2026","v2.0 0411-16"
+"NEW-09","Backend","Pricing Matrix → Units use views that are not in the pricing rules","1. Sign in as CRM Administrator.
+2. Inventory → Pricing Matrix tab.
+3. Click Full 2-Layer and read the View column.
+4. ⚙ Pricing Rules → 3. View %.
+
+Actual: units use the views ""Garden View"", ""Ocean Front"" and ""Ocean View"", but the View % rules list only V1 – V8 (Panoramic Ocean View, Direct Ocean View, Partial Ocean View …). The premium of those units does not come from a rule.
+Expected: every view used by a unit has a View % rule (or the units use the rule names).","","Medium","New","1","11/5/2026 10:40 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Pricing Matrix run of 5 Nov 2026: IVP-080 (reports/Inventory_Pricing_Matrix_Test_Report_2026-11-05_2240.xlsx). Screenshot: Retesting/evidence/Pricing_Views_Not_In_Rules_IVP-080.png","5 Nov 2026","v2.0 0411-16"
+"NEW-10","Frontend","Pricing Matrix → Reminder cards cover the ⊞ Breakdown and Edit buttons","1. Sign in as CRM Administrator.
+2. Inventory → Pricing Matrix tab.
+3. With open task reminders (bottom right), scroll the matrix and try ⊞ Breakdown / Edit on the rows behind the cards.
+
+Actual: the reminder cards lie on top of ⊞ Breakdown / Edit of 267 rows (the click lands on ""Lead assigned: …"").
+Expected: nothing lies on top of the list buttons. Same cause as NEW-03 / NEW-04 (Leads page).","","Medium","New","1","11/5/2026 10:40 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Pricing Matrix run of 5 Nov 2026: IVP-092 (reports/Inventory_Pricing_Matrix_Test_Report_2026-11-05_2240.xlsx). Screenshot: Retesting/evidence/Pricing_Buttons_Covered_IVP-092.png","5 Nov 2026","v2.0 0411-16"
+"NEW-11","Frontend","Pricing Matrix → Closing a unit opened with Edit lands on the Units tab","1. Sign in as CRM Administrator.
+2. Inventory → Pricing Matrix tab.
+3. Click Edit on any row (this run: PEX-APT-0101).
+4. Close the unit window.
+
+Actual: the Units tab (Unit Register) is shown, not the Pricing Matrix; the matrix view, filters and scroll position are lost.
+Expected: Close returns to the Pricing Matrix as it was.","","Low","New","1","11/5/2026 10:40 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Pricing Matrix run of 5 Nov 2026: IVP-083 (reports/Inventory_Pricing_Matrix_Test_Report_2026-11-05_2240.xlsx). Screenshot: Retesting/evidence/Pricing_Close_Lands_On_Units_IVP-083.png","5 Nov 2026","v2.0 0411-16"
+"NEW-12","Frontend","Availability Summary → Summary line does not follow the Block filter","1. Sign in as CRM Administrator.
+2. Inventory → Availability Summary tab.
+3. Choose a block in the Block filter (e.g. Block D (86)).
+
+Actual: the table shows only Block D, but the summary line still reads ""Palm Exotica: 133 total units across 4 blocks · 128 Available ($205.79M) · 1 Reserved ($857k) · 4 Sold ($3.83M)"". Same for Block R (27), Block V (14) and Block P (6).
+Expected: the summary line counts the chosen block only (86 total units …), as it does when a category chip is chosen.","","Medium","New","1","11/6/2026 9:05 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Availability Summary run of 6 Nov 2026: AVS-007 (reports/Availability_Summary_Test_Report_2026-11-06_2123.xlsx). Screenshot: Retesting/evidence/Availability_Block_Filter_Summary_AVS-007.png","6 Nov 2026","v2.0 0411-16"
+"NEW-13","Frontend","Availability Summary → ""Open in Unit Register"" does not show the unit","1. Sign in as CRM Administrator.
+2. Inventory → Availability Summary tab.
+3. Click 🏢 Stack Plan, click an Available unit tile (this run: PEX-APT-1101).
+4. Click Open in Unit Register.
+
+Actual: the Units tab opens on page 1 with an empty search; the unit is not on the list, so the user has to search for it again.
+Expected: the Unit Register opens searched on (or opened at) that unit.","","Low","New","1","11/6/2026 9:05 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Availability Summary run of 6 Nov 2026: AVS-024 (reports/Availability_Summary_Test_Report_2026-11-06_2123.xlsx). Screenshot: Retesting/evidence/Availability_Open_In_Unit_Register_AVS-024.png","6 Nov 2026","v2.0 0411-16"
+"NEW-14","Frontend","Inventory → Holds: reminder cards cover the Release button","1. Sign in as CRM Administrator with open task reminders (bottom right).
+2. Hold a unit (Availability Summary → Stack Plan → tile → Hold for … → Hold Unit).
+3. Inventory → Holds → All → find the hold → click Release.
+
+Actual: the reminder cards lie on top of the Release button of the hold row, so the click lands on the reminder; the hold cannot be released without first dismissing the reminders.
+Expected: nothing lies on top of the row buttons. Same cause as NEW-03 / NEW-04 / NEW-10.","","Medium","New","0","11/6/2026 9:05 PM","Santhoshkumar S","Babu Ramasamy","v2.0 0411-16","","Failed","Found by the Availability Summary run of 6 Nov 2026: AVS-028 (seen while releasing the test holds) (reports/Availability_Summary_Test_Report_2026-11-06_2123.xlsx).","6 Nov 2026","v2.0 0411-16"
+"NEW-15","Backend","Date of Birth Rules are not applied when a lead is qualified","1. Sign in as CRM Administrator.
+2. Leads → create an Individual lead with Date of Birth 10 Nov 2001 (age 25). This run: first name Nndsqjcmut, last name Timigycvcx.
+3. Settings → Business Rules Configuration → Date of Birth Rules → Minimum age 30, Maximum age 60 → Publish.
+4. Open the lead → fill the qualification checklist → Qualify lead.
+
+Actual: ""Lead Qualified - was qualified successfully""; the status becomes Qualified. The server holds the date 2001-11-10 for this lead, while the Date of Birth field on the Qualify form is empty.
+Expected: the lead is not qualified and a message names the date of birth. The rule page says ""Applies to Date of Birth on lead create, edit and qualify"" (create and edit do refuse the date).
+
+Why it matters: a person outside the allowed ages can move forward in the sales process, so the age policy is not enforced at this step.","","High","New","1","11/10/2026 1:00 AM","Santhoshkumar S","Babu Ramasamy","v2.0 0711-18a","","Failed","Found by the rule integration run of 9-10 Nov 2026: ADM-109 (reports/Admin_Rule_Integration_DOB_Rerun_2026-11-10_0057.xlsx). Screenshot: Retesting/evidence/Rule_DOB_Not_Applied_On_Qualify_ADM-109.png","10 Nov 2026","v2.0 0711-18a"
+"NEW-16","Frontend","Lead Classification Bands: a changed band label is not shown on the lead","1. Sign in as CRM Administrator.
+2. Leads → open a lead → Recalculate Score (this run: LD-20261109181938-QBMZ, score 5, band NURTURE).
+3. Settings → Business Rules Configuration → Lead Classification Bands → change the label of the NURTURE band to ""Zeta Band"" → Publish.
+4. Open the lead again → Recalculate Score.
+
+Actual: the lead reads ""Suggested rating: Nurture"". The published label appears nowhere on the lead.
+Expected: the lead shows the published label, ""Zeta Band"".
+
+Why it matters: the label can be edited and published but has no effect, so an administrator believes a change was made that users never see.","","Medium","New","1","11/10/2026 1:00 AM","Santhoshkumar S","Babu Ramasamy","v2.0 0711-18a","","Failed","Found by the rule integration run of 9-10 Nov 2026: ADM-106 (reports/Admin_Rule_Integration_Leads_Test_Report_2026-11-09_2251.xlsx). Screenshot: Retesting/evidence/Rule_Band_Label_Not_Shown_ADM-106.png","10 Nov 2026","v2.0 0711-18a"
+"NEW-17","Frontend","Live Simulator and Default Commercial Tier list always show the original tier percentages","1. Sign in as CRM Administrator.
+2. Settings → Business Rules Configuration → Unit Pricing Matrix Rules → 6. Commercial Tiers & Governance.
+3. Change Early Bird Adjustment from -5 to -4 (or Premium Tier 1 from 3 to 4) → Publish.
+4. Open the 🔍 Live Simulator tab and read Commercial Tier Pricing and the Commercial Tier list.
+
+Actual: the amount follows the new rule but the name does not: ""Early Bird (-5%): $895,104"" on an Adjusted Standard Price of $932,400, which is -4%. Likewise ""Premium I (+3%): $969,696"", which is +4%. The dropdown lists show the old percentages too.
+Expected: the names show the published percentages: ""Early Bird (-4%)"", ""Premium I (+4%)"".
+
+Why it matters: whoever checks a pricing change sees an amount that does not match the percentage beside it, so the simulator cannot be relied on to confirm the change.","","Medium","New","1","11/10/2026 1:00 AM","Santhoshkumar S","Babu Ramasamy","v2.0 0711-18a","","Failed","Found by the rule integration run of 9-10 Nov 2026: ADM-117.5, ADM-117.6 (reports/Admin_Rule_Integration_Inventory_Rerun_2026-11-10_0048.xlsx). Screenshot: Retesting/evidence/Rule_Simulator_Tier_Name_ADM-117.5.png","10 Nov 2026","v2.0 0711-18a"
+"NEW-18","Frontend","Live Simulator ignores the Rounding Rule","1. Sign in as CRM Administrator.
+2. Settings → Business Rules Configuration → Unit Pricing Matrix Rules → 6. Commercial Tiers & Governance.
+3. Set Rounding Rule to Nearest Hundred ($100) → Publish.
+4. Open the 🔍 Live Simulator tab and read Commercial Tier Pricing.
+
+Actual: ""Early Bird (-5%): $885,780""; the amounts are still to the nearest dollar.
+Expected: the simulated amounts follow the published Rounding Rule ($885,800).
+
+Why it matters: the simulator is the way to preview a pricing rule before units are recalculated, and it previews different prices from the rule. Unit prices were not recalculated in this test (⚡ Recalculate All Units Live is never pressed), so whether the recalculation itself applies the rule is not known.","","Medium","New","1","11/10/2026 1:00 AM","Santhoshkumar S","Babu Ramasamy","v2.0 0711-18a","","Failed","Found by the rule integration run of 9-10 Nov 2026: ADM-117.8 (reports/Admin_Rule_Integration_Inventory_Rerun_2026-11-10_0048.xlsx). Screenshot: Retesting/evidence/Rule_Simulator_Rounding_ADM-117.8.png","10 Nov 2026","v2.0 0711-18a"

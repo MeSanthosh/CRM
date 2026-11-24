@@ -1,0 +1,9 @@
+﻿Case ID,Engine,Fields,Changes,What it changes
+ADM-055,LEAD_DUPLICATE,label:Match Mode,to:Minimum matched fields,match mode
+ADM-055,LEAD_SCORING,number:0 | number:1,-1 | +1,"two scores, total stays 100"
+ADM-055,LEAD_QUALIFICATION,label:Warning message,&(automated test),warning text
+ADM-055,LEAD_CLASSIFICATION,text:0,& Test,a band label
+ADM-055,DATE_OF_BIRTH,label:Maximum age,-1,maximum age
+ADM-055,UNIT_HOLD,label:Active holds per sales rep,+1,holds per rep
+ADM-055,DISCOUNT_APPROVAL,label:Tier name,& Test,a tier name
+ADM-055,SALES_TARGETS,label:Monthly Units Forecast,+1,units forecast

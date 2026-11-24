@@ -1,0 +1,27 @@
+﻿Form,Field Label,Field Name,Field Type,Mandatory
+Currency,Currency Code,currencyCode,Text,Yes
+Currency,Currency Name,currencyName,Text,Yes
+Currency,Symbol,symbol,Text,No
+Currency,Decimal Places,decimalPlaces,Number,No
+Currency,Rate Source,exchangeRateSource,Text,No
+Currency,Rate Frequency,exchangeRateFrequency,Text,No
+Currency,Sort Order,sortOrder,Number,No
+Currency,Status,status,Dropdown,No
+Currency,Active in System,isActive,Checkbox,No
+Currency,Remarks,remarks,Text,No
+Rate,From Currency,fromCurrencyCode,Dropdown,Yes
+Rate,To Currency,toCurrencyCode,Dropdown,Yes
+Rate,Exchange Rate,rate,Number,Yes
+Rate,Source,source,Text,No
+Rate,Source Reference,sourceReference,Text,No
+Rate,Remarks,remarks,Text,No
+Reference,Category,referenceCategory,Text or Dropdown,Yes
+Reference,Group Code,level1Code,Text or Dropdown,Yes
+Reference,Group Name,level1Name,Text,Yes
+Reference,Value Code,level2Code,Text,Yes
+Reference,Value Name,level2Name,Text,Yes
+Reference,Sort Order,sortOrder,Text,No
+Reference,Status,status,Dropdown,No
+Reference,Available for application use,isActive,Checkbox,No
+Reference,Description,description,Text,No
+Reference,Remarks,remarks,Text,No

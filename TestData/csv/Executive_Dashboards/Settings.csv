@@ -1,0 +1,40 @@
+﻿Setting,Value,What it means
+Workspace Route,/,My Smart Workspace (home page)
+Dashboards Route,/dashboards,Executive Dashboards
+Tasks Route,/activities?tab=tasks&scope=mine,"Tasks & Calendar, my tasks"
+Leads Route,/leads,Leads module
+Opportunities Route,/opportunities,Opportunities module
+Inventory Route,/inventory,Inventory module
+Reservations Route,/reservations,Reservations module
+Contracts Route,/contracts,SPA / Sales Contracts module
+Side Menu Workspace,My Smart Workspace,Side-menu link to the home page
+Workspace Eyebrow,MY SMART WORKSPACE,Eyebrow above the welcome line
+Workspace Welcome,"Welcome,","Start of the welcome line, followed by the user name"
+Executive Button,Executive Dashboards,Workspace button that opens the dashboards
+Customize Button,Customize Deck,Workspace button that opens Customize
+Customize Note,Changes are saved immediately per user.,Text of the Customize window
+Done Button,Done,Closes the Customize window
+Pinned Text,★ Pinned,Button of a pinned item in Customize
+Pin Text,☆ Pin,Button of an item that is not pinned
+Deck Limit,5,"Most items a deck can hold (""Customize (n/5)"")"
+AI Hide Button,Hide AI Lead Magnet,Workspace button while the AI panel is shown
+AI Show Button,Show AI Lead Magnet,Workspace button while the AI panel is hidden
+Mine Scope,Mine,Today strip scope button
+Team Scope,Team,Today strip scope button
+Overdue Tag,OVERDUE,Tag of an overdue task card
+Pitch Brand,Palm Exotica,Project name as it must be spelled in the WhatsApp pitch
+Dashboard Heading,Executive Intelligence & Performance,Dashboards heading
+Dashboard Welcome,"Welcome back,","Dashboards welcome line, followed by the user name"
+Currency Text,Amounts in USD,Currency line of the dashboards
+Loading Text,Loading,Text shown while a tab loads
+AI Insights Button,AI Insights,Never clicked
+As Of Label,AS OF DATE (LAST EXPORT),Badge with the date of the figures
+Default Tab,Commercial / Sales,Tab shown when the page opens
+Default Period,This month,Period selected when the page opens
+Load Wait Ms,30000,Longest wait for a tab to finish loading
+Load Budget Ms,5000,A page or tab should be ready within this time
+Min Font Px,10,Smallest readable font size for a figure label
+Desktop Width,1366,Desktop viewport width
+Mobile Width,390,Phone viewport width
+Percent Tolerance,0.6,Allowed difference for a percentage shown rounded (points)
+Never Clicked,AI Insights; Ask AI; Edit Targets; a task tick (✓); reminder Open / Mark done / Dismiss,These change data or call the AI service

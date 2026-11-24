@@ -683,21 +683,25 @@ export class MediaPanel {
 // ── Inventory → Units → Open ─────────────────────────────────────────────────
 export class UnitView {
   constructor(readonly page: Page) {}
+  /** The unit window shown (a hidden "Create Unit" window can stay in the page after it). */
   get root(): Locator {
-    return at(this.page, XP.unitView);
+    return at(this.page, XP.unitViews).filter({ visible: true }).last();
+  }
+  section(name: string): Locator {
+    return this.root.locator(`xpath=${XP.unitSectionIn(name)}`).first();
   }
   /** Section buttons with their state: "Identification" → "VIEW", "Configuration" → "OPEN" … */
   async sections(names: string[]): Promise<Record<string, string>> {
     const out: Record<string, string> = {};
     for (const n of names) {
-      const b = at(this.page, XP.unitSection(n)).first();
+      const b = this.section(n);
       out[n] = (await b.count()) ? clean((await b.innerText()).slice(n.length)).toUpperCase() : '';
     }
     return out;
   }
   /** Opens a section and returns its lines (from its heading to the end of the view). */
   async open(name: string): Promise<string[]> {
-    await at(this.page, XP.unitSection(name)).first().click();
+    await this.section(name).click();
     await this.page.waitForTimeout(1200);
     const lines = (await this.root.innerText()).split('\n').map(s => s.trim()).filter(Boolean);
     const i = lines.lastIndexOf(name);

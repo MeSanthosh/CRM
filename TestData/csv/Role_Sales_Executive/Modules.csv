@@ -1,0 +1,23 @@
+﻿Permission,Module,Menu Label,Route,List API,Create API,Create Button,Edit Button,Export Button
+LEADS,Leads,Leads,/leads,/leads?limit=1&offset=0,/leads,Individual,,Export
+OPPORTUNITIES,Opportunities,Opportunities,/opportunities,/opportunities?limit=1&offset=0,/opportunities,,,Export
+RESERVATIONS,Reservations,Reservations,/reservations,/reservations?limit=1&offset=0,/reservations,New Reservation,,Export
+PROPOSALS,Proposals,Proposals,/proposals,/proposals?limit=1&offset=0,/proposals,New Proposal,,
+CONTRACTS,SPA / Sales Contracts,Sales Contracts,/spa-contracts,/contracts?limit=1&offset=0,/contracts,New Contract,,Export
+CUSTOMERS,Customers,Customers & Brokers,/customers,/customers?limit=1&offset=0,/customers,New Customer,,Export
+BROKERS,Brokers,,/brokers-channels,/brokers?limit=1&offset=0,/brokers,New Broker,,
+INVENTORY,Inventory,Inventory,/inventory,/inventory/units?limit=1&offset=0,/inventory/projects,New Project,Edit,
+ACTIVITIES,Tasks & Calendar,Tasks & Calendar,/activities,/activities?limit=1&offset=0,/activities,New task,,Export
+CONSTRUCTION_UPDATES,Construction Updates,Construction Updates,/construction-updates,/construction-updates?limit=1&offset=0,/construction-updates,New Update,,
+LAUNCHES,Marketing Campaigns,Marketing Campaigns,/marketing,,,,,
+DMS,Documents & Media (DMS),Documents & Media (DMS),/documents,,,Upload Document,,
+SERVICE_REQUESTS,Service Requests,Service Requests,/service-requests,/service-requests?limit=1&offset=0,/service-requests,New Request,,
+REPORTS,Reports & Analytics,Reports,/reports,,,,,
+DASHBOARD,Executive Dashboards,,/dashboards,/dashboard/summary?period=this_month&view=audience,,,,
+COMMUNICATIONS,Customer Communications,,/communications,,,,,
+CURRENCIES,Currency Master,,/currencies,/currencies,/currencies,New Currency,Edit,
+CONFIGURATION,Business Rules & Preferences,,/configuration,/configuration/LEAD_DUPLICATE,,,,
+REFERENCE_DATA,Reference Data,,/reference-data,,,,,
+USERS,Users & Roles,,/admin,/admin/users?limit=1&offset=0,/admin/users,,,
+ROLES,Roles & Permissions,,,/admin/roles?limit=1&offset=0,/admin/roles,,,
+AUDIT_LOG,Audit Log,,/admin/audit-log,,,,,

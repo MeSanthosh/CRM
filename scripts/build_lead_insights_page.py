@@ -26,6 +26,22 @@ S['Settings'] = (['Setting', 'Value', 'What it means'], [
     ['Unassigned Owner', 'Unassigned', 'Owner shown for a lead nobody owns'],
     ['Refresh Button', 'Refresh', 'Button that reloads the table'],
     ['Source For New Lead', 'Public Relations', 'Lead Source of the lead the count-update tests create (must be a Lead Source option of the form)'],
+    ['Aging Route', '/leads/aging', 'Leads → Insights → Aging'],
+    ['Follow-up Route', '/leads/follow-up', 'Leads → Insights → Follow-up'],
+    ['Open Leads Card', 'Open Leads', 'Aging card with the number of open leads'],
+    ['Aging Basis', 'Idle days use last interaction, else capture date.', 'Aging: how idle days are counted'],
+    ['Aging Hint', 'Select an aging bucket to list leads.', 'Aging: text before a bucket is chosen'],
+    ['Aging Buckets', '0–7 days | 8–14 days | 15–30 days | 31–60 days | 61+ days', 'Aging buckets, in order'],
+    ['Follow-up Card', 'Due for follow-up', 'Follow-up card with the number of leads due'],
+    ['Follow-up Rule', 'Open active leads with no conversion and 7+ idle days.', 'Follow-up: which leads are listed'],
+    ['Follow-up Idle Days', '7', 'A lead is due for follow-up from this many idle days'],
+    ['Follow-up Columns', '# | Lead | Contact | Source | Owner | Idle | Captured', 'Columns of the Follow-up list'],
+    ['Page Size', '20', 'Rows per page of the lists'],
+    ['Closed Statuses', 'CONVERTED | DISQUALIFIED', 'Lead statuses that are not open'],
+    ['Idle Tolerance Days', '1', 'Allowed difference for idle days (time of day / time zone)'],
+    ['Dashboards Active Leads', '/dashboard/summary?period=this_month&view=audience', 'API of the Executive Dashboards with metrics.activeLeads'],
+    ['Lead Detail Heading', 'Lead Detail', 'Heading of the panel that opens a lead'],
+    ['Viewports', 'Desktop 1366x768 | Tablet 1024x768 | Phone 390x844', 'Widths checked for sideways scrolling'],
 ])
 S['Count Changes'] = (['Action', 'Active Leads', 'Total', 'Qualified', 'Converted', 'Unassigned'], [
     ['Create Lead', '1', '1', '0', '0', '0'],
@@ -53,6 +69,9 @@ def C(id, uc, area, title, pre, steps, data, exp, pri='High', kind='Positive', a
 OPEN = 'Open Leads → Insights (Sources)'
 ADMIN = 'Signed in as CRM Administrator'
 UC1, UC2, UC3 = 'LIUC-01 Source overview & figures', 'LIUC-02 Leads of a source (drill-down)', 'LIUC-03 Figures follow lead changes'
+UC4, UC5, UC6 = 'LIUC-04 Source figures against the lead records', 'LIUC-05 Lead aging', 'LIUC-06 Lead follow-up tracking'
+AGE, FUP = 'Open Leads → Insights → Aging', 'Open Leads → Insights → Follow-up'
+LEADS_API = 'every lead of the Leads module (GET /leads), read at run time'
 
 A = 'Sources View'
 C('LSI-001', UC1, A, 'Sources view shows its cards, sub-tabs and table', ADMIN, st(OPEN, 'Read the description, cards, sub-tabs and table columns'), f'{TD} → Settings',
@@ -90,6 +109,57 @@ C('LSI-022', UC3, A, 'Qualifying a lead raises Qualified', 'The lead from LSI-02
 C('LSI-023', UC3, A, 'Converting a lead raises Converted', 'The lead from LSI-022', st(OPEN, 'Read the source row', 'Move the lead to Opportunity (Convert)', 'Open Insights again'), f'{TD} → Count Changes (Convert Lead)',
   'Converted of the source grows by 1 and Conv. % is recalculated; other figures as on Count Changes.')
 
+A = 'Source Figures'
+C('LSI-014', UC4, A, 'Active Leads card counts only open leads', ADMIN, st(OPEN, 'Read Active Leads', 'Open Aging and read Open Leads', 'Open Executive Dashboards → Lead & Customer Insights → Active Leads'), f'{TD} → Settings (Open Leads Card, Dashboards Active Leads)',
+  'The card called "Active Leads" equals the open leads (Aging Open Leads = dashboards Active Leads), or it is labelled as all leads.', 'Medium', 'Integration')
+C('LSI-015', UC4, A, 'Each source row equals its lead records', ADMIN, st(OPEN, 'Read every source row', 'Group the Leads module records by Lead Source'), LEADS_API,
+  'Per source: Total = its leads; Converted = leads with status Converted; Qualified = leads ever qualified; Unassigned = leads without an owner.', 'High', 'Integration')
+C('LSI-016', UC4, A, 'Every lead source of the records is listed', ADMIN, st(OPEN, 'Read the source names', 'List the Lead Sources used by the lead records'), LEADS_API,
+  'Every Lead Source that has leads appears in the table; none is missing.', 'Medium', 'Integration')
+
+A = 'Aging'
+C('LSI-031', UC5, A, 'Aging view shows Open Leads, the basis and the buckets', ADMIN, st(AGE, 'Read the card, the basis note and the buckets'), f'{TD} → Settings (Aging Route, Open Leads Card, Aging Basis, Aging Buckets, Aging Hint)',
+  'URL /leads/aging with Aging marked active; card Open Leads; "Idle days use last interaction, else capture date."; buckets 0–7, 8–14, 15–30, 31–60, 61+ days in that order; hint "Select an aging bucket to list leads."', 'Medium')
+C('LSI-032', UC5, A, 'Aging buckets add up to Open Leads', ADMIN, st(AGE, 'Add up the buckets'), '—', 'The buckets add up to Open Leads.', 'High')
+C('LSI-033', UC5, A, 'Open Leads equals the open leads of the Leads module', ADMIN, st(AGE, 'Read Open Leads', 'Count leads that are not Converted or Disqualified', 'Read Active Leads on Executive Dashboards'), f'{LEADS_API}; {TD} → Settings (Closed Statuses)',
+  'Open Leads = open leads of the Leads module = dashboards Active Leads.', 'High', 'Integration')
+C('LSI-034', UC5, A, 'Each bucket equals the open leads idle that long', ADMIN, st(AGE, 'Read each bucket', 'For every open lead count days since its last interaction (else capture date)'), f'{LEADS_API}; {TD} → Settings (Idle Tolerance Days)',
+  'Each bucket = open leads whose idle days fall in its range (one day of tolerance at the edges).', 'High', 'Integration')
+C('LSI-035', UC5, A, 'Clicking a bucket lists its leads', ADMIN, st(AGE, 'Click each bucket in turn', 'Read the list on every page'), f'{TD} → Settings (Page Size)',
+  "The list count and the pager total equal the bucket; every lead listed is open and its Idle falls in the bucket's range.", 'High')
+C('LSI-036', UC5, A, 'Clicking the bucket again clears the list', ADMIN, st(AGE, 'Click a bucket', 'Click it again'), f'{TD} → Settings (Aging Hint)',
+  'The list goes away and the hint shows again.', 'Low')
+C('LSI-037', UC5, A, 'A lead of the aging list can be opened', ADMIN, st(AGE, 'Click a bucket', 'Click the first lead'), f'{TD} → Settings (Lead Detail Heading)',
+  'The lead opens (Lead Detail with its Lead No.).', 'Medium')
+
+A = 'Follow-up'
+C('LSI-041', UC6, A, 'Follow-up view shows the count, the rule and the list', ADMIN, st(FUP, 'Read the card, the rule and the list columns'), f'{TD} → Settings (Follow-up Route, Follow-up Card, Follow-up Rule, Follow-up Columns)',
+  'URL /leads/follow-up with Follow-up marked active; card "Due for follow-up"; rule "Open active leads with no conversion and 7+ idle days."; columns #, Lead, Contact, Source, Owner, Idle, Captured.', 'Medium')
+C('LSI-042', UC6, A, 'Due for follow-up = leads listed', ADMIN, st(FUP, 'Read Due for follow-up, "Leads N matching" and the pager', 'Count the rows on every page'), '—',
+  'The card, "N matching", the pager total and the rows listed are the same number.', 'High')
+C('LSI-043', UC6, A, 'Due for follow-up equals the open leads idle 7+ days', ADMIN, st(FUP, 'Read Due for follow-up', 'Count open leads whose idle days are 7 or more', 'Compare with the Aging buckets'), f'{LEADS_API}; {TD} → Settings (Follow-up Idle Days)',
+  'Due for follow-up = open leads idle 7+ days (Leads module); it is not less than the Aging buckets 8–14 + 15–30 + 31–60 + 61+.', 'High', 'Integration')
+C('LSI-044', UC6, A, 'Every listed lead is open and idle 7+ days', ADMIN, st(FUP, 'Read every row on every page', 'Look each lead up in the Leads module'), LEADS_API,
+  'Each lead exists, is not Converted / Disqualified, its Idle is 7 days or more and equals the days since its last interaction (else capture date).', 'High', 'Integration')
+C('LSI-045', UC6, A, 'Owner, source and contact of each row equal the lead', ADMIN, st(FUP, 'Read Contact, Source, Owner and Captured of every row'), LEADS_API,
+  "Contact = the lead's name, Source = its Lead Source, Owner = its owner (\"Unassigned\" when none), Captured = its capture date.", 'Medium', 'Integration')
+C('LSI-046', UC6, A, 'Pages of the list', ADMIN, st(FUP, 'Click Next until the last page', 'Click Previous back to the first'), f'{TD} → Settings (Page Size)',
+  '20 rows a page; # runs on without gaps or repeats; "Showing a–b of N · Page x of y" follows; Previous is disabled on page 1 and Next on the last page.', 'Medium')
+C('LSI-047', UC6, A, 'The list shows the leads that need attention first', ADMIN, st(FUP, 'Read the Idle column of every page'), '—',
+  'Rows are ordered by idle days, most idle first.', 'Low')
+C('LSI-048', UC6, A, 'A lead of the follow-up list can be opened', ADMIN, st(FUP, 'Click the first Lead No. (or its row)'), f'{TD} → Settings (Lead Detail Heading)',
+  'The lead opens (Lead Detail), so the user can follow it up from the list.', 'Medium')
+C('LSI-049', UC6, A, 'Idle and Captured are formatted consistently', ADMIN, st(FUP, 'Read Idle and Captured of every row'), '—',
+  'Idle reads "<n>d" with a whole number; Captured reads "dd Mon yyyy"; no NaN, undefined or empty cells.', 'Low', 'Number Format')
+
+A = 'UI/UX'
+C('LSI-051', UC6, A, 'Sub-tabs open their views and can be opened by address', ADMIN, st('Open /leads/sources, /leads/aging and /leads/follow-up directly', 'Click Sources, Aging and Follow-up'), f'{TD} → Settings (Insights Route, Aging Route, Follow-up Route)',
+  'Each address opens its view with the right sub-tab marked active; the Insights tab stays active.', 'Low', 'UI/UX')
+C('LSI-052', UC6, A, 'Insights views fit desktop, tablet and phone widths', ADMIN, st('Open Sources, Aging and Follow-up at 1366, 1024 and 390 px'), f'{TD} → Settings (Viewports)',
+  'No sideways scrolling of the page; tables scroll inside their box.', 'Low', 'UI/UX')
+C('LSI-053', UC6, A, 'Insights views load without errors', ADMIN, st('Open Sources, Aging and Follow-up', 'Watch the requests'), '—',
+  'Every request succeeds; no script error; no NaN or undefined.', 'Medium')
+
 IMPACT = {
     'LSI-002': 'The Insights page and the Leads list disagree on how many leads are active, so marketing decisions are based on a different number than sales sees.',
     'LSI-004': 'Some active leads are not counted under any source (or counted twice), so source performance is misreported.',
@@ -103,14 +173,16 @@ IMPACT = {
     'LSI-022': 'Qualified leads are not reflected in the source figures.',
     'LSI-023': 'Conversions are not reflected in the source figures, so channel ROI is understated.',
 }
-AREA_IMPACT = {'Sources View': 'The source figures cannot be trusted for marketing / channel decisions.', 'Drill-down': 'The lead list behind a source does not match its figures.', 'Count Updates': 'Source figures do not follow lead changes.'}
+AREA_IMPACT = {'Sources View': 'The source figures cannot be trusted for marketing / channel decisions.', 'Source Figures': 'The source report disagrees with the lead records, so channel decisions use wrong numbers.',
+  'Aging': 'Old leads sit in the wrong bucket, so neglected leads are not noticed.', 'Follow-up': 'Leads that need a follow-up are missed or listed wrongly, so sales lose prospects.', 'UI/UX': 'The Insights views are hard to reach or read.', 'Drill-down': 'The lead list behind a source does not match its figures.', 'Count Updates': 'Source figures do not follow lead changes.'}
 FINDINGS = [
     ['F-01', 'To confirm', 'LSI-008', 'Similar source names listed separately', 'The table lists "Broker" and "Broker Channels", "Referrals" and "Referral Partner", "Events & Exhibitions" and "Exhibition", and "Google Ads" next to "Digital Marketing" (27 Oct 2026).', 'One name per channel (old names mapped), or confirm they are different channels.', 'Low'],
     ['F-02', 'To confirm', '—', 'Aging buckets do not add up to the active leads', 'Insights → Aging shows 98 + 12 + 7 + 0 + 0 = 117 leads while Active Leads is 193 (27 Oct 2026).', 'Buckets cover every active lead, or the page says which leads are left out.', 'Low'],
 ]
 OVERVIEW = [
-    ('Scope', 'Leads → Insights → Sources (/leads/sources), "Lead Source & Channel Insights Workspace": cards, the By source table, the drill-down list of a source and how the figures follow lead changes.'),
-    ('Use cases', 'LIUC-01 source overview & figures · LIUC-02 leads of a source · LIUC-03 figures follow lead changes'),
+    ('Scope', 'Leads → Insights: Sources (/leads/sources, "Lead Source & Channel Insights Workspace": cards, By source table, drill-down, figures following lead changes and against the lead records), Aging (/leads/aging) and Follow-up (/leads/follow-up, "Lead Follow-up Tracking Workspace").'),
+    ('Test types', 'Functional, Integration (every lead record of the Leads module, Executive Dashboards), Number Format, UI/UX.'),
+    ('Use cases', 'LIUC-01 source overview & figures · LIUC-02 leads of a source · LIUC-03 figures follow lead changes · LIUC-04 source figures against the records · LIUC-05 lead aging · LIUC-06 lead follow-up tracking'),
     ('Test data', f'{TD} (or TestData/csv/Lead_Insights/*.csv with TEST_DATA_FORMAT=csv). No figures are hard-coded: expected values come from other parts of the page.'),
     ('Automation', 'tests/lead-insights/*.spec.ts — run with: npm run test:lead-insights-page'),
     ('Report', 'reports/Lead_Insights_Page_Test_Report_<date>_<time>.xlsx'),

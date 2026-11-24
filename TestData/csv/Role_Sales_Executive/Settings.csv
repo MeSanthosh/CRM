@@ -1,0 +1,11 @@
+﻿Setting,Value,What it means
+Role Code,SALES_EXECUTIVE,Role under test (its permission matrix is read at run time)
+Role Name,Sales Executive,Name shown under the user in the header
+User Env,SALES_USERNAME,.env variable with the login of the user (password in SALES_PASSWORD)
+Denied Title,Permission Denied,Page shown for a module the role may not view
+Users Denied Title,Access Denied,Users & Roles page shows this wording instead
+Refused Code,PERMISSION_REQUIRED,Error code of a request the role may not make
+Mask Character,•,Character used to mask personal data
+Lead Detail Activity Buttons,Log call | Add task | Add meeting,"Lead Detail buttons that need Tasks, Calls & Calendar"
+Convert Button,Convert,"Button of the confirmation ""Convert lead to opportunity?"""
+Data Scope Expected,Own and team records,Which records a Sales Executive should see (to be confirmed by the business)

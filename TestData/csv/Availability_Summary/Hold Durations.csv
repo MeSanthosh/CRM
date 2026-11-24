@@ -1,0 +1,8 @@
+﻿Case ID,Option,Hours,Placed By Test
+AVS-028,4 hours,4,Yes
+AVS-028,12 hours,12,Only when a hold can be released
+AVS-028,1 day (24h),24,Only when a hold can be released
+AVS-028,2 days (48h),48,Only when a hold can be released
+AVS-028,3 days (72h),72,Only when a hold can be released
+AVS-028,4 days (96h),96,Only when a hold can be released
+AVS-028,7 days (168h),168,Only when a hold can be released

@@ -1,0 +1,9 @@
+﻿Field Label,Compared With
+Early Bird Adjustment %,"Tier header ""Early (-N%)"" and Tier filter ""Early Bird (-N%)"""
+Standard Tier Adjustment %,"Tier header ""Std (N%)"""
+Premium Tier 1 Adjustment %,"Tier header ""Prem I (+N%)"""
+Premium Tier 2 Adjustment %,"Tier header ""Prem II (+N%)"""
+Premium Tier 3 Adjustment %,"Tier header ""Prem III (+N%)"""
+Default Commercial Tier,Tier of units without a tier of their own
+Maximum Discount Limit % (Price Floor),"Header ""Floor (-N%)"""
+Rounding Rule,"Amounts shown (whole dollars for ""Nearest Integer"")"

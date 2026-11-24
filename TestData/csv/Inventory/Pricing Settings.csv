@@ -1,0 +1,46 @@
+﻿Setting,Value,What it means
+Pricing Tab,Pricing Matrix,Inventory tab with the Unit Pricing Structure Matrix
+Pricing Title,Unit Pricing Structure Matrix,Heading of the tab
+Pricing Subtitle,2-Layer Dynamic Calculation Engine (Layer 1 Physical Premiums + Layer 2 Commercial Tiers),Line under the heading
+Never Click Buttons,"⚡ Recalculate All, ⚡ Recalculate All Units Live, ⚡ Recalculate Pricing Matrix, Save Draft, Publish",Buttons the tests check are there but never click (they re-price or publish for every real unit)
+Search Placeholder,"Search unit, floor, view...",Search box of the Pricing Matrix
+Summary Start,Showing,"Summary line ""Showing N units (Total Carpet: … m² · Avg: … m²) · Standard Value: … · Net Uplift: … (…%) · Operative GDV: … · Total Price Floor: …"""
+Summary Labels,"Standard Value, Net Uplift, Operative GDV, Total Price Floor",Figures of the summary line
+Breakdown Button,⊞ Breakdown,Row button that opens the 2-layer formula breakdown
+Row Edit Button,Edit,Row button that opens the unit window on its Sales section
+Breakdown Title,2-LAYER UNIT PRICING FORMULA BREAKDOWN,Heading of the breakdown window
+Breakdown Steps,"STEP 1: BASE SETUP, STEP 2: LAYER 1 PHYSICAL ATTRIBUTE PREMIUMS, STEP 3: LAYER 2 COMMERCIAL RELEASE TIERS",Step headings of the breakdown (start of each heading)
+Breakdown Edit Button,Edit Unit Sales Config,Breakdown button that opens the unit Sales section
+Breakdown Close Button,Close,Breakdown button that closes it
+Breakdown Sample,6,"Breakdowns opened per run: one unit of each status / tier / product first, up to this number"
+Rules Button,⚙ Pricing Rules,Opens Business Rules → Unit Pricing Matrix Rules
+Rules Route,/configuration?engine=UNIT_PRICING_RULES,Page opened by the Rules button
+Rules Engine,Unit Pricing Matrix Rules,Engine selected on the Business Rules page
+Rules Version Word,Version,"Line ""Version 1 · Draft: PUBLISHED · Published …"""
+Export Button,Export CSV,Downloads the rows shown
+All Option Prefix,All,"First option of every filter (""All Projects"", ""All Blocks (4)"" …)"
+Available Status,Available,Status of the unit the Sales edit tests use (the first Available unit of the list)
+Active Tier Word,ACTIVE,"Breakdown: marks the tier in use (""Standard (0%) · ACTIVE"")"
+Broken Values,"NaN, undefined, null, Infinity, [object Object]",Texts that must never appear on the tab
+Layout Widths,"1280, 1440, 1920",Window widths for the layout check
+Rounding Tolerance,1,"Amounts are rounded to whole dollars (Rounding Rule ""Nearest Integer""): allowed difference per amount"
+Compact Tolerance %,0.1,"Compact view ($k / $M): allowed difference from the exact amount, % of the amount (rounded to 1 decimal of k / M)"
+Save Wait Seconds,60,Longest wait for a Sales save on QA
+Recalc All Button,⚡ Recalculate All,"Pricing Matrix: re-prices every unit of the project (pressed only by IVP-096, asked for on 5 Nov 2026)"
+Recalc Confirm Title,Recalculate pricing?,Confirmation of ⚡ Recalculate All
+Recalc Confirm Button,Recalculate,Confirms the recalculation
+Recalc Cancel Button,Cancel,Leaves the confirmation without recalculating
+Unit Recalc Button,⚡ Recalculate Pricing Matrix,Unit window → Sales: re-prices that unit (IVP-095)
+Rules Recalc Button,⚡ Recalculate All Units Live,Pricing Rules: re-prices every unit (IVP-097)
+Save Draft Button,Save Draft,Pricing Rules: saves the rules as a draft (IVP-098)
+Publish Button,Publish,Pricing Rules: publishes the rules (IVP-099)
+Draft Status,DRAFT,"Version line after Save Draft: ""Version N · Draft: DRAFT · … · Unpublished changes"""
+Published Status,PUBLISHED,"Version line after Publish: ""Version N · Draft: PUBLISHED · Published <date>"""
+Unpublished Text,Unpublished changes,Version line while a draft differs from the published rules
+Rule Change,+100,Change made to the base rate of one product for IVP-098 / IVP-099 (put back at the end)
+Empty Text,No units found matching the selected filters.,Line shown in the matrix when no unit matches the filters / search
+No Position Names,"-, Standard","Position shown for a unit without a position rule (0%): matrix ""-"", breakdown / tooltip ""Standard"""
+Floor Header Pattern,Floor (,"Matrix column ""Floor (-3%)"" (the price floor; ""Floor %"" is the floor premium)"
+Tier Title Word,Active Tier:,"Tooltip of the Tier cell: ""Active Tier: STANDARD"""
+Block Title Word,Code:,"Tooltip of the Blk/Flr cell: ""Block D (Code: T) · Floor 01"""
+Premium Title Parts,"Floor, View, Orient, Pos","Tooltip of Total %: ""Floor (01): -2% · View (…): +4% · Orient (…): 0% · Pos (…): 0%"""

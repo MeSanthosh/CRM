@@ -1,0 +1,9 @@
+﻿Case,Minimum Score,Allow Manual,Expected
+"score far below the minimum, manual allowed",top,On,warn
+"score far below the minimum, manual not allowed",top,Off,refuse
+"no minimum, manual allowed",zero,On,qualify
+"no minimum, manual not allowed",zero,Off,qualify
+"score equal to the minimum, manual allowed",exact,On,qualify
+"score equal to the minimum, manual not allowed",exact,Off,qualify
+"score one below the minimum, manual allowed",above,On,warn
+"score one below the minimum, manual not allowed",above,Off,refuse

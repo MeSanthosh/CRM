@@ -1,0 +1,52 @@
+﻿Setting,Value,What it means
+Inventory Route,/inventory,Inventory page
+Tab,Availability Summary,Inventory tab under test
+Pricing Tab,Pricing Matrix,Inventory tab the tiles and the unit window are compared with
+Pricing Full View,Full 2-Layer,Pricing Matrix view with every column
+Heading,Availability Summary,Heading of the tab
+As Of Word,As of,"Line ""As of 06 Nov 2026, 19:45"" under the heading"
+Refresh Button,Refresh,Reloads the figures
+Export Button,Export,Downloads the summary
+Export Total Word,total,"Export file: block rows read ""<block> total"" (and ""Grand total""); the other rows are floors (""Block D"" | ""Floor 43"")"
+Floor Tally Word,Floor Tally,"Row ""Floor Tally (43 floors)"" closing a block when its floors are shown (same figures as the block row)"
+Project Label,Project,Project filter
+Block Label,Block,"Block filter (""All blocks (4)"", ""Block D (86)"" …)"
+All Blocks Option,All blocks,First option of the Block filter
+Category Label,Category:,"Category chips ""Available 128/133"", ""Apartment 86/90"" …"
+All Category Chip,Available,Chip with every category (available / total units)
+Summary Units Word,total units,"Summary line ""<project>: N total units across M blocks · A Available ($…) · R Reserved ($…) · S Sold ($…)"""
+Category Word,Category:,"Summary line with a category chosen: ""<project> · Category: Apartment: N total units …"""
+Grand Total Row,Grand Total,Last row of the Summary Table
+Expand All Button,Expand all floors,Shows the floors of every block
+Expand Block Label,Show floors of,"aria-label of a block's ▸ button: ""Show floors of Block D"""
+Unit Mix Button,⊞ Unit Mix,Row button that opens the Unit Mix window (block / Grand Total)
+Stack Plan Button,🏢 Stack Plan,Row / view button that shows the Stack Plan
+Back Button,← Back to Summary Table,Stack Plan: back to the table
+Stack Search Placeholder,"Search unit code, product, view...",Stack Plan search box
+Stack All Chip,All,Stack Plan status chip with every unit
+Unit Mix Title,INVENTORY UNIT MIX & STACK PLAN,Heading of the Unit Mix window (capitals by CSS)
+Unit Mix Scope Label,Scope:,Scope selector of the Unit Mix window
+Unit Mix Total Card,TOTAL STOCK,Unit Mix status card with every unit
+Tallied Text,✓ Tallied,Unit Mix: shown when the rows add up to the total
+View Units Button,View Units,"Unit Mix row button ""View Units (43)"": closes the window and opens the drill-down unit selection"
+Drill Heading,DRILL-DOWN UNIT SELECTION,Unit list under the table (capitals by CSS)
+Drill Matching Word,matching units,"Its title ""<scope> · <product> · N matching units"""
+Drill Close Button,Close Selection,Hides the unit list
+Drill Quick View Button,Quick View,Drill-down row button: opens the unit window (same as a Stack Plan tile)
+Drill Hold Button,Hold,Drill-down row button of an Available unit: opens the Hold form (not shown for Reserved / Sold units)
+Drill Hold Duration,4 hours,Duration of the hold AVS-031 places (released at the end of the test)
+Close Button,Close,Closes a window
+X Close Button,✕ Close,Unit window: close button at the top
+Unit Register Button,Open in Unit Register,Unit window: opens the Units tab
+Units Tab,Units,Inventory tab Open in Unit Register shows
+Unit Search Placeholder,"Search unit, project, status",Search box of the Unit Register
+Hold Button Prefix,Hold for,"Unit window: ""Hold for 48h"""
+Start Reservation Button,Start Reservation,Unit window: goes to Reservations with the unit chosen
+Matrix Heading,Unit Pricing Matrix Structure,Unit window: pricing block (2-layer engine)
+Floor Limit Word,Floor Limit:,"Unit window: ""Floor Limit: 879,984 USD"""
+Available Status,Available,Status of the units the hold / reservation tests use
+Held Status,Held,Status chip / summary column of held units
+Value Tolerance %,0.5,"Allowed difference between amounts shown rounded ($73.79M, $857k)"
+Rounding Tolerance,1,Allowed difference per whole-dollar amount
+Broken Values,"NaN, undefined, null, Infinity, [object Object]",Texts that must never appear
+Save Wait Seconds,60,Longest wait for a save on QA

@@ -1,0 +1,4 @@
+﻿Card,Sub-line,Rule
+Units,N Avail + N Res + N Sold,Units = Avail + Res + Sold (+ held) of the sub-line = total units of the Availability Summary
+Available,P% of N units,Available = Available of the summary line; P = Available ÷ Units
+Value,Avail $ · Booked $,Value = Avail + Booked; Avail = Available value of the summary line; Booked = Reserved + Sold values

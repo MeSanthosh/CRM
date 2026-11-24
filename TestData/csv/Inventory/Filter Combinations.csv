@@ -1,0 +1,7 @@
+﻿Case ID,Filters,What it checks
+IVP-073,"Block, Status",every block with every status
+IVP-073,"Product, Status",every product with every status
+IVP-073,"Block, Product",every block with every product
+IVP-073,"Status, Tier",every status with every tier
+IVP-073,"Project, Block, Status",project + block + status
+IVP-073,"Block, Product, Status, Tier",four filters together (first option of each that has rows)

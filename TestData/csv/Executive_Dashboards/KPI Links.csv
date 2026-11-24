@@ -1,0 +1,11 @@
+﻿Card,Route
+Total Leads,/leads
+Active Leads,/leads?status=ACTIVE
+Open Opportunities,/opportunities
+Won / SPAs Executed,/contracts
+Disqualified Leads,/leads?status=DISQUALIFIED
+Units Available,/inventory?commitment=AVAILABLE
+Reserved Units,/reservations
+Sales Value (SPAs),/contracts
+Collections Received,/contracts
+Outstanding Amount,/contracts

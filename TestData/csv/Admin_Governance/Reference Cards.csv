@@ -1,0 +1,5 @@
+﻿Card,Equals
+Values,Total of the Reference Register
+Categories,Options of the Category filter
+Families,Options of the Group filter
+Inactive,Total minus the total with Active only

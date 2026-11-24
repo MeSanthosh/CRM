@@ -261,6 +261,11 @@ export const XP = {
   insightsSourceHeaders: `(//main//table)[1]/thead/tr[last()]/th`,
   insightsDrillRows: `(//main//table)[2]/tbody/tr[td]`,
   insightsDrillHeaders: `(//main//table)[2]/thead/tr[last()]/th`,
+  /** Insights → Aging: bucket cards "0–7 days 248" (buttons) */
+  agingBucket: `//main//button[contains(@class,'crm-aging-bucket')]`,
+  /** Insights → Aging / Follow-up: the one list table of the view */
+  insightsListRows: `(//main//table)[1]/tbody/tr[td]`,
+  insightsListHeaders: `(//main//table)[1]/thead/tr[last()]/th`,
   insightsDrillCount: (word: string) => `//main//*[self::h2 or self::h3 or self::h4 or self::span or self::strong][contains(normalize-space(),${xl(word)})]`,
   /** Toast message (Inventory forms): <div.crm-app-toast crm-error-banner role=alert><div.crm-app-toast-body><strong>Title</strong>… */
   toast: `//*[contains(concat(' ',normalize-space(@class),' '),' crm-app-toast ')]`,
@@ -297,6 +302,59 @@ export const XP = {
   /** Inventory → Unit view: section buttons "Identification VIEW", "Linked Modules OPEN" … */
   unitSection: (name: string) => `(//*[contains(@class,'crm-unit-detail-modal')])[last()]//button[starts-with(normalize-space(),${xl(name)})]`,
   unitView: `(//*[contains(@class,'crm-unit-detail-modal')])[last()]`,
+  /** Every unit window in the page: a hidden "Create Unit" one can stay after the shown one, so pick the visible one in code */
+  unitViews: `//*[contains(@class,'crm-unit-detail-modal')]`,
+  /** Inside a unit window: section button, field by name, button by text */
+  unitSectionIn: (name: string) => `.//button[starts-with(normalize-space(),${xl(name)})]`,
+  unitFieldIn: (name: string) => `.//*[@name=${xl(name)}]`,
+  unitButtonIn: (name: string) => `.//button[normalize-space()=${xl(name)}]`,
+  /** Inventory → Pricing Matrix (build 0411-16): table.crm-pricing-matrix-table, two header rows (groups with colspan, columns) */
+  pmTable: `//main//table[contains(@class,'crm-pricing-matrix-table')]`,
+  pmRows: `//main//table[contains(@class,'crm-pricing-matrix-table')]/tbody/tr[td]`,
+  /** A unit row by its code (first cell button) */
+  pmRow: (code: string) => `//main//table[contains(@class,'crm-pricing-matrix-table')]/tbody/tr[td[1]//button[normalize-space()=${xl(code)}]]`,
+  pmRowButton: (code: string, name: string) => `//main//table[contains(@class,'crm-pricing-matrix-table')]/tbody/tr[td[1]//button[normalize-space()=${xl(code)}]]//button[normalize-space()=${xl(name)}]`,
+  pmUnitCode: (code: string) => `//main//table[contains(@class,'crm-pricing-matrix-table')]/tbody/tr/td[1]//button[normalize-space()=${xl(code)}]`,
+  /** View segment buttons "Exact ($)", "Compact ($k/$M)", "Standard View", "Full 2-Layer" (aria-pressed) */
+  pmView: (name: string) => `//main//button[contains(@class,'crm-dashboard-view-segment-button')][normalize-space()=${xl(name)}]`,
+  /** Filter by its label: <label><span>Block:</span><select/></label> */
+  pmFilter: (label: string) => `//main//label[span[normalize-space()=${xl(label)}]]/select`,
+  /** Summary line "Showing N units (…) · Standard Value: … · Operative GDV: …": the smallest block holding both words */
+  pmSummary: (start: string, label: string) => `//main//div[starts-with(normalize-space(),${xl(start)})][contains(normalize-space(),${xl(label)})][not(.//div[starts-with(normalize-space(),${xl(start)})][contains(normalize-space(),${xl(label)})])]`,
+  /** 2-layer breakdown window, by its title (shown in capitals by CSS, so matched ignoring case) */
+  pmBreakdown: (title: string) => `(//*[@role='dialog' or contains(concat(' ',normalize-space(@class),' '),' crm-modal ')][.//*[translate(normalize-space(),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')=${xl(title.toUpperCase())}]])[last()]`,
+  /** Inventory → Availability Summary (build 0411-16): header with "As of" / Refresh / Export, filters (label wraps the select), chips, table */
+  avsHeader: (heading: string) => `//main//*[contains(@class,'crm-panel-header')][h3[normalize-space()=${xl(heading)}]]`,
+  avsFilter: (label: string) => `//main//label[starts-with(normalize-space(),${xl(label)})]//select`,
+  /** Category chips ("Apartment 86/90") are building chips without a status letter; status chips (Stack Plan) have one */
+  avsCategoryChips: `//main//button[contains(@class,'crm-building-chip')][not(.//span[contains(@class,'crm-status-pill')])][not(starts-with(normalize-space(),'All ('))]`,
+  avsCategoryChip: (name: string) => `//main//button[contains(@class,'crm-building-chip')][not(.//span[contains(@class,'crm-status-pill')])][starts-with(normalize-space(),${xl(name)})]`,
+  avsStatusChip: (name: string) => `//main//button[contains(@class,'crm-building-chip')][contains(normalize-space(),${xl(`${name} (`)})]`,
+  /** Summary Table: the table with block rows (one block chosen: no Grand Total row); block rows tr.crm-availability-block-row, total row tr.crm-availability-total-row */
+  avsTable: `(//main//table[.//tr[contains(@class,'crm-availability-block-row') or contains(@class,'crm-availability-total-row')]])[1]`,
+  avsRowButton: (row: string, button: string) => `(//main//table[.//tr[contains(@class,'crm-availability-block-row') or contains(@class,'crm-availability-total-row')]])[1]//tr[th[.//button[normalize-space()=${xl(row)}]] or th[starts-with(normalize-space(),${xl(row)})] or td[1][normalize-space()=${xl(row)}]]//button[starts-with(normalize-space(),${xl(button)})]`,
+  avsExpand: (block: string) => `//main//button[@aria-label=${xl(`Show floors of ${block}`)}]`,
+  /** Stack Plan tiles (aria-label "PEX-APT-4301, Available"; title has the exact operative price) */
+  avsTiles: `//main//button[contains(@class,'crm-building-tile')]`,
+  avsTile: (code: string) => `//main//button[contains(@class,'crm-building-tile')][starts-with(@aria-label,${xl(`${code},`)})]`,
+  /** Unit window opened from a tile, the Unit Mix window and the Hold form */
+  avsUnitWindow: `(//*[contains(@class,'crm-unit-quick-modal')])[last()]`,
+  /** Drill-down unit selection (View Units, block / floor links): its table has the "Unit Code" column */
+  avsDrill: `//main//section[contains(@class,'crm-availability-panel')]//table[.//th[normalize-space()='Unit Code']]`,
+  avsUnitMix: `(//*[contains(concat(' ',normalize-space(@class),' '),' crm-modal ')][.//h3[@id='avail-product-modal-title']])[last()]`,
+  avsHoldForm: (submit: string) => `(//*[contains(concat(' ',normalize-space(@class),' '),' crm-modal ')][.//button[normalize-space()=${xl(submit)}]])[last()]`,
+  /** Admin & Governance: tab with its count ("Exchange Rates22"), check box / field by its label */
+  admTab: (name: string) => `//main//button[contains(@class,'crm-tab-button')][starts-with(normalize-space(),${xl(name)})]`,
+  admCheck: (label: string) => `//main//label[starts-with(normalize-space(),${xl(label)})]//input[@type='checkbox']`,
+  admField: (label: string) => `//main//label[starts-with(normalize-space(),${xl(label)})]//*[self::input or self::select or self::textarea]`,
+  /** Business Rules → Unit Pricing Matrix Rules: tab buttons, the table of the tab, fields by label (Governance, Live Simulator) */
+  rulesTab: (name: string) => `//main//button[contains(@class,'crm-tab-button')][normalize-space()=${xl(name)}]`,
+  rulesEngine: (name: string) => `//main//button[contains(@class,'crm-configuration-engine-button')][starts-with(normalize-space(),${xl(name)})]`,
+  rulesTable: `(//main//table)[last()]`,
+  /** Input of a rule row by its first cell (1. Base Rates: product code) */
+  rulesRowInput: (first: string) => `(//main//table)[last()]/tbody/tr[td[1][normalize-space()=${xl(first)}]]//input`,
+  rulesField: (label: string) => `//main//label[starts-with(normalize-space(),${xl(label)})]//*[self::input or self::select]`,
+  rulesButton: (name: string) => `//main//button[normalize-space()=${xl(name)}]`,
   /** Inventory → Availability Summary: view buttons (⊞ Summary Table / 🏢 Stack Plan) of the page, not of a block row */
   availabilityView: (name: string) => `(//main//button[contains(@class,'crm-dashboard-view-segment-button')][contains(normalize-space(),${xl(name)})])[1]`,
   /** Report module page parts (checked on Sales Reports, build v1.0 1610-47) */
@@ -832,4 +890,77 @@ export const CUP = {
   success: 'main .crm-success-banner',
   /** error message ("Something Went Wrong …", "Publish Failed …"); field errors excluded */
   error: 'main [role="alert"]:not(.crm-field-error)',
+} as const;
+
+/**
+ * My Smart Workspace (/) and Executive Dashboards (/dashboards), build v2.0 1411-23. The Commercial / Sales and Monthly
+ * Sales & Marketing tabs are drawn with inline styles (no classes): their tiles and sections are read by their text
+ * (ExecutiveDashboardsPage), their tables are <table> elements after the section heading.
+ */
+export const EXD = {
+  // ── workspace
+  workspace: 'main .crm-smart-workspace',
+  eyebrow: 'main .crm-sw-eyebrow',
+  welcome: 'main .crm-sw-welcome-inline',
+  wsTitle: 'main .crm-sw-title',
+  wsSub: 'main .crm-sw-sub',
+  wsButton: (text: string) => `//main//div[contains(@class,'crm-sw-actions')]//*[self::a or self::button][contains(normalize-space(),${xl(text)})]`,
+  tasksCounts: 'main .crm-sw-tasks-counts',
+  scopeButton: (name: string) => `//main//button[contains(@class,'crm-sw-scope-btn')][normalize-space()=${xl(name)}]`,
+  taskCard: 'main .crm-sw-task-card',
+  taskTag: '.crm-sw-task-tag',
+  taskName: '.crm-sw-task-name',
+  taskSub: '.crm-sw-task-sub',
+  taskCheck: 'button.crm-sw-task-check',
+  tasksLink: 'main a.crm-sw-tasks-link',
+  deckSection: 'main section.crm-sw-deck-section, main .crm-sw-deck-section',
+  deckTitle: '.crm-sw-sec-title',
+  deckBadge: '.crm-sw-sec-badge',
+  deckCustomize: 'button.crm-sw-customize-inline-btn',
+  deckSlide: (dir: 'Prev' | 'Next') => `xpath=.//button[contains(@class,'crm-sw-slide-btn')][contains(normalize-space(),${xl(dir)})]`,
+  deckDot: 'button.crm-sw-slide-dot',
+  deckCard: '.crm-sw-deck-card',
+  deckStep: '.crm-sw-deck-step',
+  deckQuick: '.crm-sw-deck-quick',
+  deckCardTitle: '.crm-sw-deck-title',
+  deckNum: '.crm-sw-deck-kpi-num',
+  deckUnit: '.crm-sw-deck-kpi-unit',
+  deckSub: '.crm-sw-deck-sub',
+  aiPanel: 'main .crm-sw-ai-panel',
+  aiToggle: 'main button.crm-sw-btn-ai',
+  aiFit: 'main .crm-sw-ai-fit',
+  aiCount: 'main .crm-sw-ai-leads-count',
+  aiTitle: 'main .crm-sw-ai-segment-title',
+  aiScenario: 'main button.crm-sw-ai-sc-btn',
+  aiSignal: 'main .crm-sw-ai-sig',
+  aiSignalLabel: '.crm-sw-ai-sig-lbl',
+  aiSignalValue: '.crm-sw-ai-sig-val',
+  aiShowLeads: 'main button.crm-sw-ai-btn-primary',
+  aiCopyPitch: 'main button.crm-sw-ai-btn-ghost',
+  /** Customize window (filter it by its note "Changes are saved immediately per user.") */
+  customize: '[role="dialog"][aria-label^="Customize"], .crm-sw-modal',
+  customizeTab: '.crm-sw-modal-tab',
+  customizeItem: 'button.crm-sw-modal-item',
+  customizeItemName: '.crm-sw-modal-item-name',
+  customizeItemSub: '.crm-sw-modal-item-sub',
+  customizeClose: 'button.crm-sw-modal-close',
+  // ── header
+  tasksBadgeButton: 'header button[aria-label^="Tasks ("], .crm-title-banner button[aria-label^="Tasks ("]',
+  reminderStack: '.crm-reminder-stack',
+  userMenu: '.crm-user-menu-button',
+  // ── dashboards
+  dashTitle: 'main .crm-unified-dashboard-title',
+  dashSubtitle: 'main .crm-unified-dashboard-subtitle',
+  dashTab: (name: string) => `//main//button[contains(@class,'crm-unified-tab')][normalize-space()=${xl(name)}]`,
+  dashTabs: 'main button.crm-unified-tab',
+  dashPeriod: 'main select.crm-unified-select',
+  dashDate: (label: 'From date' | 'To date') => `main input[type="date"][aria-label="${label}"]`,
+  dashAsOf: 'main .crm-unified-as-of-badge',
+  dashCurrency: 'main .crm-unified-dashboard-top-actions, main .crm-unified-dashboard-header',
+  aiInsights: 'main button.crm-exec-ai-button',
+  quickAction: (label: string) => `//main//a[contains(@class,'crm-exec-quick-action')][normalize-space()=${xl(label)}]`,
+  quickActions: 'main a.crm-exec-quick-action',
+  kpiCard: 'main a.crm-exec-kpi-card',
+  pieCard: 'main .crm-exec-lead-pie-card',
+  pieLink: 'a.crm-exec-stage-pie-link',
 } as const;

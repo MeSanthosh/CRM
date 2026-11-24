@@ -1,0 +1,4 @@
+﻿Case ID,Button,Category Control,Group Control
+ADM-015,New Category,input,input
+ADM-015,New Group,select,input
+ADM-015,New Reference Value,select,select

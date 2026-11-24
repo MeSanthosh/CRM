@@ -1,0 +1,8 @@
+﻿Field Label,Kind
+Product Type,"option number (1 = first, last = last)"
+Carpet Area (sqm),number
+Floor Number,number
+View,option number
+Orientation,option number
+Position,option number
+Commercial Tier,option number

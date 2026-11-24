@@ -1,0 +1,7 @@
+﻿Case ID,Active Commercial Tier (Layer 2),Other Additive Adjustment %,Discount Limit % (Price Floor),Carpet Area for Pricing (sqm),Base Rate ($/sqm),What it covers
+IVP-088,Early Bird,0,3,,,Early Bird tier
+IVP-088,Premium Tier I,0,3,,,Premium I tier
+IVP-088,Premium Tier II,2.5,3,,,Premium II with a decimal extra adjustment
+IVP-088,Premium Tier III,-1.5,5,,,Premium III with a negative extra adjustment and a larger discount limit
+IVP-088,Standard,1,0,+5,,"no discount (floor = price), carpet +5 m²"
+IVP-088,Standard,0,10,,+100,"base rate +100 $/m², discount limit 10%"

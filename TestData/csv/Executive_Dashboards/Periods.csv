@@ -1,0 +1,6 @@
+﻿Key,Label,From,Notes
+today,Today,today,From = To = today
+this_month,This month,month,First day of the month to today
+this_year,This year,year,1 January to today
+upto_date,Upto Date,all,Everything up to today
+custom,Custom,custom,From date and To date fields

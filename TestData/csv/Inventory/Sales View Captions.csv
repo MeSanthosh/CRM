@@ -1,0 +1,9 @@
+﻿Field Name,Caption,How
+carpetAreaPricing,STANDARD BASE PRICE,"carpet of the line under it ""<carpet> m² × $<rate>/m²"""
+baseRatePerSqm,STANDARD BASE PRICE,rate of the same line
+otherAdjPct,Other Adj,percent
+discountLimitPct,PRICE FLOOR (MIN. PRICE),"percent of the line ""Discount Limit: N%"""
+reservationAmount,RESERVATION AMOUNT,amount
+currentMarketValue,CURRENT MARKET VALUE,amount
+salesStatusRefId,SALES STATUS,same
+remarks,REMARKS,same

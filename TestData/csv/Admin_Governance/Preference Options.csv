@@ -1,0 +1,7 @@
+﻿Section,Position,Label,Options
+Application defaults,0,Default landing page,"My Smart Workspace, Dashboard"
+Application defaults,1,Default theme,"Light (Standard), Dark (Coming soon), System (Coming soon)"
+Application defaults,2,Rows per page,"10 rows, 20 rows, 25 rows (Standard), 50 rows, 100 rows"
+Time & locale,1,Date format,"DD MMM YYYY (e.g. 17 Oct 2026), DD/MM/YYYY (e.g. 17/10/2026), MM/DD/YYYY (e.g. 10/17/2026), YYYY-MM-DD (e.g. 2026-10-17)"
+Time & locale,2,Timezone,"Africa/Nairobi (EAT; UTC+3), Asia/Kolkata (IST; UTC+5:30), Asia/Dubai (GST; UTC+4), UTC"
+Time & locale,3,Number format,"1;234;567.89 (Standard), 1.234.567;89 (European)"

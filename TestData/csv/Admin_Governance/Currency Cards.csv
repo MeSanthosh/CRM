@@ -1,0 +1,5 @@
+﻿Card,Equals
+Currencies,Total of the Currency Register
+Active,Total of the Currency Register with Active only
+Payment,Currencies with the Payment role in the register
+Contract,Currency code of the Base role (text)
