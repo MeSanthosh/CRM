@@ -51,6 +51,8 @@ import { RSV_CASES } from './reservations-page/catalog';
 import { CB_CASES } from './customers-brokers/catalog';
 import { BC_CASES } from './brokers-channels/catalog';
 import { CU_CASES } from './construction-updates/catalog';
+import { SR_CASES as SERVICE_REQUEST_CASES } from './service-request/catalog';
+import { REP_CASES } from './reports/catalog';
 import { HUB_MODULES, REPORT_PAGES, LEADS_TABS, DASHBOARD_KPIS, ROUTES } from './locators';
 
 export type Severity = 'Critical' | 'High' | 'Medium' | 'Low';
@@ -222,6 +224,26 @@ const PAGE_SUITES: Record<string, { cases: Record<string, PageCase>; module: str
 
 export function caseInfo(id: string, title: string): CaseInfo {
   if (C[id]) return C[id];
+  // SR- is shared by Sales Reports (SR-001…132) and Service Requests (Sharmila's workbook): a Service Requests test is
+  // recognised by its title, everything else keeps the Sales Reports mapping further down
+  const sreq = SERVICE_REQUEST_CASES[id];
+  if (id.startsWith('SR-') && sreq && (title.includes(sreq.title) || id === 'SR-COV-01' && /Service_Requests/.test(title))) {
+    const page = url(ROUTES.serviceRequests);
+    const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === sreq.priority) ?? 'Medium';
+    return { module: `Service Requests · ${sreq.area}`, page, severity, category: sreq.component,
+      steps: sreq.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')), expected: sreq.expected, hint: sreq.remarks || undefined };
+  }
+  if (id === 'SR-COV-01' && /Service_Requests/.test(title)) return { module: 'Service Requests · Coverage', page: url(ROUTES.serviceRequests), severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  if (id.startsWith('REP-')) {
+    const page = url(ROUTES.hub);
+    const c = REP_CASES[id];
+    if (c) {
+      const severity: Severity = (['High', 'Medium', 'Low'] as const).find(x => x === c.priority) ?? 'Medium';
+      return { module: `Reports · ${c.report}`, page, severity, category: c.component,
+        steps: c.steps.split(/\n/).map(x => x.replace(/^\d+\.\s*/, '')), expected: c.expected, hint: c.remarks || undefined };
+    }
+    return { module: 'Reports · Coverage', page, severity: 'Medium', category: 'Coverage', steps: [title], expected: 'See the expected result recorded by the test' };
+  }
   const suite = PAGE_SUITES[id.split('-')[0]];
   // Maha's Opportunities rows (with a Use Case ID) keep their own mapping below
   if (suite && !(id.startsWith('OPP-') && OPP_CASES[id]?.uc.length)) {

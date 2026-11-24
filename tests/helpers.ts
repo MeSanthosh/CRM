@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import fs from 'fs';
 import * as XLSX from 'xlsx';
 import { XP, at, kpiLocator, subReportOf, columnName } from './locators';
 
@@ -185,7 +186,13 @@ export function expectNear(actual: number, expected: number, what: string, rel =
 
 // ── Exports ──────────────────────────────────────────────────────────────────
 /** Data rows of the first sheet; `total` is the "Total" row panel exports add at the bottom, if any. */
-export type Sheet = { name: string; rows: Record<string, unknown>[]; header: string[]; total?: Record<string, unknown>; path?: string; sheetName?: string };
+export type Sheet = {
+  name: string; rows: Record<string, unknown>[]; header: string[]; total?: Record<string, unknown>;
+  /** Where the downloaded file was saved */
+  path?: string;
+  /** Name of the first sheet and the file's first bytes ("PK" for a real .xlsx) */
+  sheetName?: string; magic?: string;
+};
 
 /** Clicks an export button and reads the first sheet of the downloaded workbook. */
 export async function download(page: Page, button: Locator, timeout = 60_000): Promise<Sheet> {
@@ -196,7 +203,8 @@ export async function download(page: Page, button: Locator, timeout = 60_000): P
   const header = (XLSX.utils.sheet_to_json<unknown[]>(ws, { header: 1 })[0] ?? []).map(String);
   const all = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws);
   const isTotal = (r: Record<string, unknown>) => /^\s*(grand\s+)?total\b/i.test(String(r[header[0]] ?? ''));
-  return { name: d.suggestedFilename(), rows: all.filter(r => !isTotal(r)), header, total: all.find(isTotal), path: file, sheetName: wb.SheetNames[0] };
+  return { name: d.suggestedFilename(), rows: all.filter(r => !isTotal(r)), header, total: all.find(isTotal), path: file,
+    sheetName: wb.SheetNames[0], magic: fs.readFileSync(file).subarray(0, 2).toString('latin1') };
 }
 
 // ── Dates ────────────────────────────────────────────────────────────────────

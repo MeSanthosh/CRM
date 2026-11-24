@@ -27,6 +27,7 @@ export const ROUTES = {
   dashboard: '/', // "Executive Reports" card also opens this
   /** Executive dashboards since build 3110-10 (Commercial / Sales, Monthly Sales & Marketing, Executive Operations, Lead) */
   dashboards: '/dashboards',
+  serviceRequests: '/service-requests',
   reports: {
     leads: '/reports/leads',
     sales: '/reports/sales',
@@ -50,8 +51,8 @@ export const XP = {
   execKpi: (label: string) => `//div[contains(@class,'crm-exec-kpi-copy')][span[normalize-space()=${xl(label)}]]/strong`,
   /** Leads page card value since v2.0: <button.crm-metric-card-button><h3>Label</h3><div.crm-kpi>39</div> */
   metricKpi: (label: string) => `//button[contains(@class,'crm-metric-card-button')][h3[normalize-space()=${xl(label)}]]/div[contains(@class,'crm-kpi')]`,
-  /** Report module card value: <article.crm-card><h3>Label</h3><div.crm-kpi>39</div> */
-  reportKpi: (label: string) => `//article[contains(@class,'crm-card')][h3[normalize-space()=${xl(label)}]]/div[contains(@class,'crm-kpi')]`,
+  /** Report module / Leads card value: <article|button class=crm-card><h3>Label</h3><div.crm-kpi>39</div> (Leads cards are buttons since v2.0) */
+  reportKpi: (label: string) => `//*[self::article or self::button][contains(@class,'crm-card')][h3[normalize-space()=${xl(label)}]]/div[contains(@class,'crm-kpi')]`,
   /** Report KPI tile (build 3110-10): div.crm-report-tile > span.crm-report-tile-label + strong.crm-report-tile-value */
   reportTile: (label: string) => `//div[contains(@class,'crm-report-tile')][span[contains(@class,'crm-report-tile-label')][normalize-space()=${xl(label)}]]/strong`,
   /** Sub-report pill "Reports in …: CUS-01 CUS-02 …", by the query it opens (e.g. "report=byResidence") */
@@ -67,8 +68,12 @@ export const XP = {
   reportPanel: (heading: string) => `//section[contains(@class,'crm-panel')][.//h3[normalize-space()=${xl(tableHeading(heading))}]]`,
   reportTable: (heading: string) => `${XP.reportPanel(heading)}//table[contains(@class,'crm-report-table') or contains(@class,'crm-availability-table')]`,
   reportTableRows: (heading: string) => `${XP.reportTable(heading)}/tbody/tr`,
+  /** Total row of a report table (in <tfoot>) */
+  reportTableTotal: (heading: string) => `${XP.reportTable(heading)}/tfoot/tr`,
   reportPanelExport: (heading: string) => `${XP.reportPanel(heading)}//button[contains(@class,'crm-export-button')]`,
   navLink: (href: string) => `//a[contains(@class,'crm-nav-link')][@href=${xl(href)}]`,
+  /** Side-nav mode switch ("Frequent" / "All Modules"); Frequent lists only pinned modules. */
+  navMode: (label: string) => `//button[contains(@class,'crm-sidebar-mode-btn')][contains(normalize-space(),${xl(label)})]`,
 
   // single elements
   leadsStatusFilter: `//select[@aria-label='Filter by status']`,
@@ -140,7 +145,6 @@ export const XP = {
   moduleTab: (name: string) => `//main//*[self::button or self::a][contains(@class,'crm-tab-button')][normalize-space()=${xl(name)}]`,
   moduleTabs: `//main//*[self::button or self::a][contains(@class,'crm-tab-button')]`,
   /** Report table parts: Total row (tfoot) and record links in the body */
-  reportTableTotal: (heading: string) => `${XP.reportTable(heading)}/tfoot/tr`,
   reportTableLinks: (heading: string) => `${XP.reportTable(heading)}/tbody//a`,
   /** Empty-list message on report tables */
   reportEmpty: `//main//*[normalize-space()='Nothing matches these filters.']`,
@@ -380,6 +384,74 @@ export const XP = {
   opportunityDetail: `//section[@role='dialog'][.//h3[normalize-space()='Opportunity Detail']]`,
   opportunityWorkflowSteps: `//section[@role='dialog'][.//h3[normalize-space()='Opportunity Detail']]//button[contains(@class,'crm-workflow-step')]/strong`,
 };
+
+// ── Service Requests (/service-requests), taken from frontend bundle index-BDfmsX8C.js on 2026-10-22 ──
+// Two panels side by side: the queue (left) and the detail panel (right), which shows "Select a request",
+// the "New service request" form or the open ticket.
+const srHeader = `//main//section[contains(@class,'crm-module-header')]`;
+const srQueue = `//main//section[contains(@class,'crm-panel')][.//h3[starts-with(normalize-space(),'Queue (')]]`;
+const srDetail = `//main//section[contains(@class,'crm-detail-panel')]`;
+const srHistory = `${srDetail}//section[@aria-label='Change history']`;
+const srAttachments = `${srDetail}//div[contains(@class,'crm-section')][div[contains(@class,'crm-panel-header')]/h3[normalize-space()='Attachments']]`;
+const srRows = `${srQueue}//table/tbody/tr[not(td[contains(@class,'crm-empty-cell')])]`;
+
+export const SR_XP = {
+  eyebrow: `${srHeader}//p[contains(@class,'crm-eyebrow')]`,
+  heading: `${srHeader}//h2`,
+  subtitle: `${srHeader}//p[contains(@class,'crm-muted-text')]`,
+  /** Reads "Hide tips" while the help panel is shown, "Show tips" while hidden. */
+  tipsButton: `${srHeader}//button[normalize-space()='Hide tips' or normalize-space()='Show tips']`,
+  newRequest: `${srHeader}//button[normalize-space()='New Request']`,
+  helpPanel: `//main//section[contains(@class,'crm-help-panel')]`,
+  helpTitle: `//main//section[contains(@class,'crm-help-panel')]//h3`,
+  helpSteps: `//main//section[contains(@class,'crm-help-panel')]//ol/li`,
+  helpNote: `//main//section[contains(@class,'crm-help-panel')]//aside`,
+  // the inline banner; the same message also appears in a toast (role=status) further down the page
+  successBanner: `(//main//div[contains(@class,'crm-success-banner')])[1]`,
+
+  // queue
+  queueHeading: `${srQueue}//h3[starts-with(normalize-space(),'Queue (')]`,
+  search: `${srQueue}//input[@placeholder='Search request no, customer, subject']`,
+  statusFilter: `${srQueue}//select[option[1][normalize-space()='All statuses']]`,
+  queueColumns: `${srQueue}//table/thead//th`,
+  /** Ticket rows only (not the "No service requests…" row). */
+  queueRows: srRows,
+  queueEmpty: `${srQueue}//table/tbody//td[contains(@class,'crm-empty-cell')]`,
+  queueRow: (requestNo: string) => `${srRows}[.//button[normalize-space()=${xl(requestNo)}]]`,
+  requestLink: (requestNo: string) => `${srRows}//button[contains(@class,'crm-link-button')][normalize-space()=${xl(requestNo)}]`,
+
+  // detail panel: empty state and new-request form
+  detailPanel: srDetail,
+  emptyState: `${srDetail}//div[contains(@class,'crm-empty-state')]`,
+  emptyNewRequest: `${srDetail}//div[contains(@class,'crm-empty-state')]//button[normalize-space()='New Request']`,
+  /** h3 of the detail panel: "New service request" or "SR-… — subject". */
+  detailTitle: `${srDetail}/div[contains(@class,'crm-panel-header')]//h3`,
+  detailSubtitle: `${srDetail}/div[contains(@class,'crm-panel-header')]//p`,
+  detailDescription: `${srDetail}/p[contains(@class,'crm-aftersales-body')]`,
+  form: `${srDetail}//form`,
+  cancel: `${srDetail}//button[normalize-space()='Cancel']`,
+  createButton: `${srDetail}//form//button[@type='submit']`,
+  /** A form/detail field by its label: Customer, Type, Priority, Subject, Description, Status, Assigned to. */
+  fieldLabel: (label: string) => `${srDetail}//label[contains(@class,'crm-field')][span[normalize-space()=${xl(label)}]]`,
+  field: (label: string) => `${srDetail}//label[contains(@class,'crm-field')][span[normalize-space()=${xl(label)}]]/*[self::select or self::input or self::textarea]`,
+
+  // detail panel: open ticket
+  timelineItems: `${srDetail}//div[contains(@class,'crm-section')][h3[normalize-space()='Progress timeline']]/ol/li`,
+  timelineEmpty: `${srDetail}//div[contains(@class,'crm-section')][h3[normalize-space()='Progress timeline']]/p`,
+  history: srHistory,
+  historyRefresh: `${srHistory}//button[normalize-space()='Refresh' or normalize-space()='Refreshing...']`,
+  historyEntries: `${srHistory}//li[contains(@class,'crm-audit-entry')]`,
+  historyShowAll: `${srHistory}//button[starts-with(normalize-space(),'Show all')]`,
+  conversation: `${srDetail}//div[contains(@class,'crm-section')][h3[normalize-space()='Conversation']]`,
+  comments: `${srDetail}//div[contains(@class,'crm-aftersales-thread')]/div[contains(@class,'crm-aftersales-bubble')]`,
+  replyBox: `${srDetail}//label[contains(@class,'crm-field')][span[normalize-space()='Reply to customer']]/textarea`,
+  postReply: `${srDetail}//button[normalize-space()='Post Reply' or normalize-space()='Posting…']`,
+  attachments: srAttachments,
+  addFile: `${srAttachments}//label[contains(@class,'crm-file-button')]`,
+  fileInput: `${srAttachments}//label[contains(@class,'crm-file-button')]/input[@type='file']`,
+  attachmentLinks: `${srAttachments}//ul/li/a`,
+};
+
 
 // ── CSS equivalents (for tools that prefer CSS) ─────────────────────────────
 export const CSS = {
@@ -967,3 +1039,298 @@ export const EXD = {
   pieCard: 'main .crm-exec-lead-pie-card',
   pieLink: 'a.crm-exec-stage-pie-link',
 } as const;
+
+/** Service Requests: texts as they appear on the page (index-BDfmsX8C.js). */
+export const SR_TEXT = {
+  eyebrow: 'After-Sales',
+  heading: 'Service Requests',
+  subtitle: 'Staff ticket queue — assign owners, update status, reply to customers, and attach files.',
+  helpTitle: 'How to work Service Requests',
+  helpNote: 'Not a chat inbox',
+  emptyTitle: 'Select a request',
+  emptyText: 'Open a ticket from the queue to assign an owner, change status, and reply to the customer.',
+  formTitle: 'New service request',
+  formSubtitle: 'Create a staff ticket on behalf of a customer.',
+  queueEmpty: 'No service requests in this filter. Portal tickets will appear here when customers submit them.',
+  columns: ['Request', 'Customer', 'Priority', 'Status', 'Opened'],
+  formFields: ['Customer', 'Type', 'Priority', 'Subject', 'Description'],
+  requiredFields: ['Customer', 'Subject', 'Description'],
+  detailFields: ['Status', 'Priority', 'Type', 'Assigned to'],
+  /** Success banners (message body). */
+  created: (requestNo: string) => `Created ${requestNo}.`,
+  updated: 'Request updated.',
+  replyPosted: 'Reply sent to customer.', // was "Reply posted to customer." before build index-DGibO5LD
+  attachmentUploaded: 'Attachment uploaded.',
+  required: (label: string) => `${label} is required.`,
+};
+
+// ── Reports catalogue (/reports-analytics, build v2.0 0411) and single reports — tests/reports ──
+const repCard = (code: string) => `//main//article[contains(@class,'crm-report-catalog-card')][.//span[contains(@class,'crm-report-code-badge')][normalize-space()=${xl(code)}]]`;
+const repHeader = `//main//section[contains(@class,'crm-module-header')]`;
+export const REP_XP = {
+  /** Category tab: <button role=tab class=crm-report-tab-btn><span…label>Lead Reports</span><span…badge>7</span></button> */
+  catalogTab: (label: string) => `//main//button[@role='tab'][.//span[contains(@class,'crm-report-tab-btn-label')][normalize-space()=${xl(label)}]]`,
+  catalogTabBadge: (label: string) => `${REP_XP.catalogTab(label)}//span[contains(@class,'crm-report-tab-badge')]`,
+  catalogCards: `//main//article[contains(@class,'crm-report-catalog-card')]`,
+  /** Labels of every category tab, and the code badge of every card on the open tab */
+  catalogTabLabels: `//main//button[@role='tab']//span[contains(@class,'crm-report-tab-btn-label')]`,
+  catalogCardCodes: `//main//article[contains(@class,'crm-report-catalog-card')]//span[contains(@class,'crm-report-code-badge')]`,
+  catalogCard: repCard,
+  cardTitle: (code: string) => `${repCard(code)}//h4[contains(@class,'crm-report-catalog-card-title')]`,
+  cardDescription: (code: string) => `${repCard(code)}//p[contains(@class,'crm-report-catalog-card-desc')]`,
+  cardColumns: (code: string) => `${repCard(code)}//span[contains(@class,'crm-report-metric-tag')]`,
+  cardCategory: (code: string) => `${repCard(code)}//span[contains(@class,'crm-report-catalog-card-cat')]`,
+  cardOpen: (code: string) => `${repCard(code)}//a[contains(@class,'crm-report-open-btn')]`,
+  /** Single report page */
+  backLink: `//main//div[contains(@class,'crm-single-report-nav-bar')]/a`,
+  siblingPill: (code: string) => `//main//a[contains(@class,'crm-single-report-pill')][normalize-space()=${xl(code)}]`,
+  reportCode: `${repHeader}//span[contains(@class,'crm-report-code-badge')]`,
+  reportTitle: `${repHeader}//h2`,
+  reportDescription: `${repHeader}//p[contains(@class,'crm-muted-text')]`,
+  /** Header metadata chip value: <div.crm-report-meta-chip>…<span…label>Total Records</span><strong…val>41</strong> (tiles before build index-DGibO5LD) */
+  tile: (label: string) => `//main//div[contains(@class,'crm-report-meta-chip-content')][span[contains(@class,'crm-report-meta-chip-label')][normalize-space()=${xl(label)}]]/strong`,
+  /** The report's table panel: <section class=crm-panel id="leadRegister05"> */
+  panelTable: (panelId: string) => `//main//section[@id=${xl(panelId)}]//table[contains(@class,'crm-report-table')]`,
+  panelExport: (panelId: string) => `//main//section[@id=${xl(panelId)}]//button[contains(@class,'crm-export-button')]`,
+  definitionTerms: `//main//details[contains(@class,'crm-report-definitions')]//li/strong`,
+  /** The whole "How these numbers are calculated" section (its text holds the stated targets) */
+  definitions: `//main//details[contains(@class,'crm-report-definitions')]`,
+  /** Every entry of that section, nested ones included ("Owner: … (CFO, Sales Director, …)") */
+  definitionItems: `//main//details[contains(@class,'crm-report-definitions')]//li`,
+  userName: `//button[contains(@class,'crm-user-menu-button')]//span[contains(@class,'crm-user-menu-text')]/strong`,
+  /** Any element showing exactly this text (e.g. a Lead ID in the Leads module detail) */
+  exactText: (text: string) => `//main//*[normalize-space()=${xl(text)}]`,
+  /** Filter dropdown by its label: <label class=crm-field><span class=crm-label>Project</span><select> */
+  // filters sit in the report toolbar since build index-DGibO5LD (section.crm-report-filters before)
+  filter: (label: string) => `//main//section[contains(@class,'crm-report-toolbar')]//label[span[contains(@class,'crm-label')][normalize-space()=${xl(label)}]]/select`,
+  /** Any visible message containing this text (inline error or toast) */
+  message: (text: string) => `//*[not(self::script)][contains(normalize-space(),${xl(text)})][not(*[contains(normalize-space(),${xl(text)})])]`,
+  /** Leads module "Lead Detail" dialog opened from a report's Lead ID link */
+  leadDetail: `//section[@role='dialog'][contains(@class,'crm-lead-detail-modal')]`,
+  /** "LD-2026-0037 · Sebastian Weber" under the dialog title */
+  leadDetailSubtitle: `//section[@role='dialog'][contains(@class,'crm-lead-detail-modal')]/div[contains(@class,'crm-panel-header')]//p`,
+  leadDetailTile: (label: string) => `//section[@role='dialog'][contains(@class,'crm-lead-detail-modal')]//div[contains(@class,'crm-lead-summary-tile')][.//div[contains(@class,'crm-lead-summary-tile-label')][normalize-space()=${xl(label)}]]/div[contains(@class,'crm-lead-summary-tile-value')]`,
+};
+
+/** Cells of a Leads module row (CSS, relative to the <tr>). */
+export const LEADS_ROW = {
+  name: 'div.crm-leads-lead-cell > strong',
+  leadNo: 'div.crm-leads-lead-cell a.crm-record-link',
+  source: 'td.crm-leads-source-cell',
+  status: 'span.crm-leads-status-chip',
+  assigned: 'td.crm-leads-assigned-cell',
+};
+
+/** Reports catalogue texts and the reports covered by tests/reports. */
+export const REP_TEXT = {
+  leadRegister: {
+    code: 'RPT-05',
+    category: 'Lead Reports',
+    title: 'Report #05 — Lead Register',
+    route: '/reports/governance',
+    query: 'report=leadRegister05',
+    panelId: 'leadRegister05',
+    columns: ['Lead ID', 'Prospect Name', 'Channel Source', 'Assigned Broker / Rep', 'Qualification Status',
+      'Target Unit Interest', 'Budget Range ($)', 'Current Stage', 'Next Follow-up Date'],
+    backLabel: '← Back to Lead Reports',
+    /** Filter label → query parameter the report request carries for it */
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId' },
+  },
+  executiveDashboard: {
+    code: 'RPT-01',
+    category: 'Executive & Governance',
+    title: 'Report #01 — Executive Dashboard (KPI vs Target)',
+    route: '/reports/governance',
+    query: 'report=executiveDashboard01',
+    panelId: 'executiveDashboard01',
+    columns: ['Metric Category', 'Baseline Target', 'Current Actual', 'Variance ($)', 'Variance (%)', 'Status Flag',
+      'Primary Driver', 'Control Action'],
+    backLabel: '← Back to Executive & Governance',
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId' },
+    /** Rows of the scorecard, in order (the methodology lists the same five) */
+    metrics: { gross: 'Gross Portfolio Realization', spas: 'Executed SPAs', escrow: 'Escrow Collections',
+      broker: 'Broker Commissions Accrued', roas: 'Marketing ROAS' },
+    /** Other reports of the category, shown as pills next to RPT-01 */
+    siblings: ['RPT-03', 'RPT-23'],
+    exportSheet: 'Executive Dashboard',
+    /** Status flags as the methodology defines them: performing well / within a cost budget */
+    goodFlags: ['ON_TARGET', 'EXCEEDED', 'HEALTHY', 'OPTIMAL'],
+    budgetFlag: 'ON_BUDGET',
+    /** Section headings of the methodology ("Baseline Target: … targets …"), in page order */
+    methodology: { baseline: 'Baseline Target', actual: 'Current Actual' },
+  },
+  /** RPT-03 Control & Assumptions Register: the commercial parameters RPT-01 and the CRM models use */
+  controlAssumptions: {
+    code: 'RPT-03',
+    category: 'Executive & Governance',
+    title: 'Report #03 — Control & Assumptions Register',
+    route: '/reports/governance',
+    query: 'report=controlAssumptions03',
+    panelId: 'controlAssumptions03',
+    columns: ['Parameter', 'Base Value', 'Optimistic', 'Conservative', 'Unit of Measure', 'Owner', 'Review', 'Control Logic'],
+    backLabel: '← Back to Executive & Governance',
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId' },
+    exportSheet: 'Control & Assumptions',
+    brokerRate: 'Standard Broker Commission Rate',
+    tierBonus: 'Tier 1 Gold Broker Bonus Accelerator',
+    /** Unit of Measure values: a percentage, and a rate per area (its parameter name ends in the unit types) */
+    percentUnit: 'Percentage',
+    perArea: '/ sqm',
+  },
+  /** RPT-23 Master Data Dictionary & Report Index: KPI definitions, formulas and source sheets */
+  dataDictionary: {
+    code: 'RPT-23',
+    category: 'Executive & Governance',
+    title: 'Report #23 — Master Data Dictionary & Report Index',
+    route: '/reports/governance',
+    query: 'report=dataDictionary23',
+    panelId: 'dataDictionary23',
+    columns: ['Term Code', 'KPI / Control Term', 'Technical Definition', 'Standard Formula / Calculation', 'Primary Data Source', 'Governance Control'],
+    backLabel: '← Back to Executive & Governance',
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId' },
+    exportSheet: 'Data Dictionary & Controls',
+    /** Words of the report description that promise more than KPI definitions */
+    indexPromise: 'all business reports',
+    cadencePromise: 'refresh cadence',
+    /** Prefix of the numbered reports in the catalogue ("RPT-04" ↔ "Sheet 04") */
+    reportPrefix: 'RPT-',
+  },
+  /** RPT-21 Summary by Property Type: inventory and sales totals per property category */
+  propertySummary: {
+    code: 'RPT-21',
+    category: 'Inventory Reports',
+    title: 'Report #21 — Summary by Property Type',
+    route: '/reports/inventory',
+    query: 'report=propertyTypeSummary21',
+    panelId: 'propertyTypeSummary21',
+    columns: ['Property Category', 'Total Keys', 'Total Carpet Area (sqm)', 'Base Gross Value ($)', 'SPA Sold Keys',
+      'Contracted SPA Value ($)', 'Unsold Value ($)', 'Absorption %'],
+    backLabel: '← Back to Inventory Reports',
+    /** This report has no Salesperson filter */
+    filters: { Project: 'projectCode' },
+    filterLabels: ['Period', 'Project'],
+    siblings: ['RPT-18', 'RPT-04'],
+    exportSheet: 'Summary by Property Type',
+    totalLabel: 'TOTAL PORTFOLIO SUMMARY',
+    /** Data keys of the columns: inventory columns (no period) and sales columns (executed SPAs) */
+    keys: { category: 'propertyCategory', keys: 'totalKeys', area: 'totalCarpetAreaSqm', base: 'baseGrossValue',
+      sold: 'spaSoldKeys', contracted: 'contractedSpaValue', unsold: 'unsoldValue', absorption: 'absorptionPct' },
+  },
+  /** RPT-18 Revenue Management Engine: quarterly absorption and dynamic rate action per product (sub-category) */
+  revenueManagement: {
+    code: 'RPT-18',
+    category: 'Inventory Reports',
+    title: 'Report #18 — Revenue Management Engine',
+    route: '/reports/inventory',
+    query: 'report=revenueManagement18',
+    panelId: 'revenueManagement18',
+    columns: ['Property Sub-Category', 'Total Units', 'Target Qtr Absorption', 'Actual Qtr Absorption', 'Target Achievement %',
+      'Demand Trigger Status', 'Automated Pricing Action', 'Rate Adjustment %', 'Base Avg Rate / sqm', 'Adjusted Rate / sqm'],
+    backLabel: '← Back to Inventory Reports',
+    filters: { Project: 'projectCode' },
+    filterLabels: ['Period', 'Project'],
+    siblings: ['RPT-21', 'RPT-04'],
+    exportSheet: 'Revenue Management Engine',
+    keys: { name: 'propertySubCategory', units: 'totalUnits', target: 'targetQtrAbsorption', actual: 'actualQtrAbsorption',
+      achievement: 'targetAchievementPct', status: 'demandTriggerStatus', action: 'automatedPricingAction',
+      adjustment: 'rateAdjustmentPct', base: 'baseAvgRateSqm', adjusted: 'adjustedRateSqm' },
+    /**
+     * The engine's pricing rule as its methodology states it: status → action ("Escalate Price (+3.0%) … for high-demand
+     * apartments", "(+5.0%) … for high-demand penthouses", Maintain for on-target, Discount for slowdown).
+     */
+    actions: {
+      HIGH_DEMAND: { premium: 'Escalate Price (+5.0%)', standard: 'Escalate Price (+3.0%)' },
+      ON_TARGET: 'Maintain Base Rate',
+      CRITICAL_SLOWDOWN: 'Apply Discount (-5.0%)',
+    },
+    /** Unit type priced at the premium escalation */
+    premiumType: 'Penthouse',
+    /** Reservation statuses that count as a confirmed reservation (cancelled ones do not) */
+    confirmedReservations: ['APPROVED', 'CONVERTED_TO_CONTRACT'],
+  },
+  /** RPT-16 Sales Funnel & Conversion Analysis: five pipeline stages from lead intake to executed SPA */
+  salesFunnel: {
+    code: 'RPT-16',
+    category: 'Sales Reports',
+    title: 'Report #16 — Sales Funnel & Conversion Analysis',
+    route: '/reports/sales',
+    query: 'report=salesFunnel16',
+    panelId: 'salesFunnel16',
+    columns: ['Stage Code', 'Funnel Stage Name', 'Prospect Count', 'Aggregate Value ($)', 'Stage Conversion %',
+      'Cumulative Conversion %', 'Avg Stage Velocity (Days)', 'Leakage Control Strategy'],
+    backLabel: '← Back to Sales Reports',
+    filters: { Project: 'projectCode', Salesperson: 'ownerUserId', Broker: 'brokerId', Campaign: 'campaignId' },
+    filterLabels: ['Period', 'Project', 'Salesperson', 'Broker', 'Campaign'],
+    siblings: ['RPT-19', 'RPT-20', 'RPT-07', 'SLS-04'],
+    exportSheet: 'Sales Funnel & Conversion',
+    keys: { code: 'stageCode', name: 'funnelStageName', count: 'prospectCount', value: 'aggregateValue',
+      stage: 'stageConversionPct', cumulative: 'cumulativeConversionPct', velocity: 'avgStageVelocityDays', leakage: 'leakageControlStrategy' },
+    /** The five stages in funnel order (the methodology lists the same names); each is counted from its own module */
+    stages: ['Lead Intake', 'SQL (Qualified)', 'Opportunity / VR Presentation', 'Reservation (Hold)', 'SPA Executed & Active'],
+    /** Lead statuses that have passed qualification, and the reservation status that left the funnel */
+    qualifiedStatuses: ['QUALIFIED', 'CONVERTED'],
+    cancelledReservation: 'CANCELLED',
+  },
+  /** RPT-19 Smart Sales Forecast: probability-weighted pipeline and unit absorption per forecast month */
+  smartForecast: {
+    code: 'RPT-19',
+    category: 'Sales Reports',
+    title: 'Report #19 — Smart Sales Forecast',
+    route: '/reports/sales',
+    query: 'report=smartForecast19',
+    panelId: 'smartForecast19',
+    columns: ['Forecast Period', 'Pipeline Opportunity Volume', 'Weighted Conversion Probability %', 'Expected Unit Sales Absorption',
+      'Avg Selling Price / Unit ($)', 'Projected Monthly Contract Sales ($)', 'Cumulative Projected Sales ($)'],
+    backLabel: '← Back to Sales Reports',
+    /** No filters or All / Mine since build index-Dmirkzo4 (the toolbar is hidden on this report) */
+    filters: {},
+    siblings: ['RPT-16', 'RPT-20', 'RPT-07', 'SLS-04'],
+    exportSheet: 'Smart Sales Forecast',
+    totalLabel: 'TOTAL FORECAST',
+    keys: { period: 'forecastPeriod', volume: 'pipelineOpportunityVolume', probability: 'weightedConversionProbabilityPct',
+      absorption: 'expectedUnitSalesAbsorption', price: 'avgSellingPriceUnit', monthly: 'projectedMonthlyContractSales',
+      cumulative: 'cumulativeProjectedSales' },
+    /** Opportunity statuses: still in the pipeline, won and lost (the closing yield is won ÷ won + lost) */
+    openStatus: 'OPEN',
+    wonStatus: 'WON',
+    lostStatus: 'LOST',
+    /** Inventory availability of a unit that is for sale */
+    available: 'AVAILABLE',
+    /** RPT-20 Project Cash Flow, whose forecast months use the same "Mnn (Mon YYYY)" labels */
+    cashFlow: { code: 'RPT-20', panelId: 'projectCashFlow20', period: 'forecastPeriod' },
+  },
+  /** RPT-20 Project Cash Flow Forecast: monthly buyer inflows, outflows, net cash and escrow runway */
+  cashFlow: {
+    code: 'RPT-20',
+    category: 'Sales Reports',
+    title: 'Report #20 — Project Cash Flow Forecast',
+    route: '/reports/sales',
+    query: 'report=projectCashFlow20',
+    panelId: 'projectCashFlow20',
+    columns: ['Forecast Period', 'Estimated Buyer Inflows ($)', 'Projected Dev Outflows ($)', 'Broker Comm Outflows ($)',
+      'Mkt OpEx Outflows ($)', 'Net Monthly Cash ($)', 'Closing Escrow Fund Balance ($)'],
+    backLabel: '← Back to Sales Reports',
+    /** No filters or All / Mine since build index-Dmirkzo4 */
+    filters: {},
+    siblings: ['RPT-16', 'RPT-19', 'RPT-07', 'SLS-04'],
+    exportSheet: 'Project Cash Flow Forecast',
+    totalLabel: 'TOTAL CASH FLOW',
+    keys: { period: 'forecastPeriod', inflows: 'estimatedBuyerInflows', dev: 'projectedDevOutflows', broker: 'brokerCommOutflows',
+      mkt: 'mktOpexOutflows', net: 'netMonthlyCash', balance: 'closingEscrowFundBalance' },
+    /** Methodology entries that state the escrow formula and the horizon totals */
+    runwayTerm: 'Escrow Cash Reserve Runway',
+    summaryTerm: 'Total Cash Flow Summary',
+    /** Broker commission timing as the methodology states it: half at signing, half once this share is collected */
+    brokerSplit: 0.5,
+    /** RPT-10 Buyer Payment Ledger: receipts and their escrow status */
+    ledger: { route: '/reports/collections', panelId: 'buyerPaymentLedger10', received: 'amountReceived', status: 'bankStatus', cleared: 'Cleared in Escrow' },
+  },
+  // chip labels since build index-DGibO5LD (were "Total Records in Report" / "Report Created Date & Time")
+  tiles: { total: 'Total Records', created: 'Report Created', createdBy: 'Created By' },
+  periods: ['This month', 'Last month', 'This quarter', 'Last quarter', 'Year to date', 'Last 12 months', 'Custom dates'],
+  /** The app's own rule for custom dates (shown when an export is rejected) */
+  rangeError: 'To date must be on or after From date',
+  leadDetail: { source: 'Source' },
+  myLeadsTab: 'My Leads',
+  allLeadsTab: 'All Leads',
+};

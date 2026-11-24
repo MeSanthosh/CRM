@@ -11,7 +11,7 @@
     "db:discover": "node scripts/db-discover.mjs",
     "test:db": "playwright test db",
     "test:scenarios": "playwright test --grep @scenario",
-    "test:core": "playwright test --grep-invert \"@scenario|@pages|@lead-workbook|@customer-workbook|@broker-workbook|@marketing-workbook|@reservation-workbook|@spa-workbook|@collection-workbook|@exception-workbook|@executive-workbook|@leads-page|@lead-detail|@security|@inventory-page|@availability-summary|@admin-governance|@proposals-page|@contracts-page|@lead-insights-page|@opportunities-page|@reservations-page|@sales-workbook|@cb-workbook|@bc-workbook|@cu-workbook|@currency-workbook|@reference-data-workbook|@preferences-workbook\"",
+    "test:core": "playwright test --grep-invert \"@scenario|@pages|@lead-workbook|@customer-workbook|@broker-workbook|@marketing-workbook|@reservation-workbook|@spa-workbook|@collection-workbook|@exception-workbook|@executive-workbook|@leads-page|@lead-detail|@security|@inventory-page|@availability-summary|@admin-governance|@proposals-page|@contracts-page|@lead-insights-page|@opportunities-page|@reservations-page|@sales-workbook|@cb-workbook|@bc-workbook|@cu-workbook|@currency-workbook|@reference-data-workbook|@preferences-workbook|@service-requests|@reports-workbook\"",
     "test:pages": "playwright test --grep @pages",
     "test:hub": "playwright test --grep @hub",
     "test:lead-reports": "playwright test --grep @lead-reports",
@@ -54,7 +54,9 @@
     "test:construction-updates": "playwright test tests/construction-updates",
     "test:currency-master": "playwright test tests/currency-master --workers=1",
     "test:reference-data": "playwright test tests/reference-data --workers=1",
-    "test:preferences": "playwright test tests/preferences --workers=1"
+    "test:preferences": "playwright test tests/preferences --workers=1",
+    "test:service-requests": "playwright test tests/service-request",
+    "test:reports": "playwright test tests/reports/"
   },
   "devDependencies": {
     "@playwright/test": "^1.47.0",
