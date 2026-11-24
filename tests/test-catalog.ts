@@ -20,6 +20,8 @@ import { ED_CASES } from './executive-dashboards/shared';
 import { RSE_CASES } from './role-sales-executive/shared';
 import { OPPORTUNITY_CASES } from './opportunities-page/shared';
 import { RESERVATION_CASES } from './reservations-page/shared';
+import { REFERENCE_DATA_CASES } from './reference-data/shared';
+import { PREFERENCES_CASES } from './preferences/shared';
 import type { PageCase } from './leads-page/catalog';
 import path from 'path';
 import * as XLSX from 'xlsx';
@@ -214,6 +216,8 @@ const PAGE_SUITES: Record<string, { cases: Record<string, PageCase>; module: str
   EXD: { cases: ED_CASES, module: 'Executive Dashboards', path: '/dashboards' },
   MSW: { cases: ED_CASES, module: 'Executive Dashboards', path: '/' },
   RSE: { cases: RSE_CASES, module: 'Role Sales Executive', path: '/' },
+  RDM: { cases: REFERENCE_DATA_CASES, module: 'Reference Data Management', path: ROUTES.referenceData },
+  PREF: { cases: PREFERENCES_CASES, module: 'Preferences', path: ROUTES.preferences },
 };
 
 export function caseInfo(id: string, title: string): CaseInfo {
